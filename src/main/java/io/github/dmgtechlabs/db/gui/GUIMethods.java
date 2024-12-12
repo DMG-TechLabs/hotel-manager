@@ -18,7 +18,7 @@ import java.nio.file.StandardCopyOption;
 import javax.swing.JLabel;
 import org.imgscalr.Scalr;
 
-import kdesp73.themeLib.*;
+// import kdesp73.themeLib.*;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -210,11 +210,11 @@ public class GUIMethods {
 		return Scalr.resize(originalImage, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, targetWidth, targetHeight,
 				Scalr.OP_ANTIALIAS);
 	}
-
-	public static ThemeCollection getThemes() {
-		ThemeCollection themeCollection = new ThemeCollection();
-		themeCollection.loadThemes(new File(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/"));
-
-		return themeCollection;
-	}
+	//
+	// public static ThemeCollection getThemes() {
+	// 	ThemeCollection themeCollection = new ThemeCollection();
+	// 	themeCollection.loadThemes(new File(System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/themes/"));
+	//
+	// 	return themeCollection;
+	// }
 }
