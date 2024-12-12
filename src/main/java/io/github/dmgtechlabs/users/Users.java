@@ -8,6 +8,12 @@ class Users {
   }
 
   public void login() {
-    System.out.println("User is logging in");
+    boolean user = true;
+    if (user) {
+      this.name = "John Doe";
+      System.out.println("User is logged in");
+    } else {
+      System.out.println("User is not logged in");
+    }
   }
 }
