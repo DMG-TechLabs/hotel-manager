@@ -1,5 +1,5 @@
 
-package com.mycompany.app.files;
+package io.github.dmgtechlabs.files;
 
 import java.util.regex.Pattern;
 

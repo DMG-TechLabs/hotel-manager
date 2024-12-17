@@ -1,5 +1,5 @@
 
-package com.mycompany.app.gui;
+package io.github.dmgtechlabs.gui;
 
 import java.awt.CardLayout;
 import java.awt.Font;

@@ -1,4 +1,4 @@
-package io.github.dmgtechlabs.users;
+package io.github.dmgtechlabs.models;
 
 class Users {
   private String name;

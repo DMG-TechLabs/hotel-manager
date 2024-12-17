@@ -1,5 +1,5 @@
 
-package com.mycompany.app.gui;
+package io.github.dmgtechlabs.gui;
 
 public class MainFrame extends javax.swing.JFrame {
 	private HelpFrame helpFrame;

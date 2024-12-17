@@ -1,4 +1,4 @@
-package com.mycompany.app.gui;
+package io.github.dmgtechlabs.gui;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
-import com.mycompany.app.files.FileOperations;
+import io.github.dmgtechlabs.files.FileOperations;
 import com.github.rjeschke.txtmark.Processor;
 import java.awt.Dimension;
 import java.util.logging.Level;

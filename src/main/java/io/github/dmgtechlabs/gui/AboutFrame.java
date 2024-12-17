@@ -1,8 +1,8 @@
 
-package com.mycompany.app.gui;
+package io.github.dmgtechlabs.gui;
 
-import com.mycompany.app.files.FileOperations;
-import com.mycompany.app.files.Images;
+import io.github.dmgtechlabs.files.FileOperations;
+import io.github.dmgtechlabs.files.Images;
 import dorkbox.desktop.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;

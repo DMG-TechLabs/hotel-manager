@@ -89,7 +89,7 @@
   </dependencies>
   <properties>
     <maven.compiler.target>23</maven.compiler.target>
-    <exec.mainClass>com.mycompany.app.App</exec.mainClass>
+    <exec.mainClass>io.github.dmgtechlabs.Main</exec.mainClass>
     <maven.compiler.source>23</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
