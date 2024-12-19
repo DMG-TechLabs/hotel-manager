@@ -14,25 +14,46 @@ import java.util.List;
 public class Hotel implements Dao {
     private String name;
     private String address;
+	private long phoneNumber;
     private int id;
 
     public Hotel(){}
     // For writing
-    public Hotel(String name, String address){
+    public Hotel(String name, String address, long phoneNumber){
         this.name = name;
         this.address = address;
+		this.phoneNumber = phoneNumber;
     }
     // For loading
-    public Hotel(int id, String name, String address){
+    public Hotel(int id, String name, String address, long phoneNumber){
         this.id = id;
         this.name = name;
         this.address = address;
+		this.phoneNumber = phoneNumber;
     }
-    
+
+	public String getName() {
+		return name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public long getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public int getId() {
+		return id;
+	}
+	
+	
+
     @Override
     public boolean insert() {
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callProcedure("insert_hotel", name, address);
+            conn.callProcedure("insert_hotel", name, address, phoneNumber);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Hotel failed", e);
             return false;
@@ -42,8 +63,9 @@ public class Hotel implements Dao {
 
     @Override
     public boolean update(Object... values) {
-        if(values.length != 2)
-            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 2", values.length));
+        final int expectedParams = 3;
+		if(values.length != expectedParams)
+            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             conn.callProcedure("update_hotel", Utils.appendFront(id, values));

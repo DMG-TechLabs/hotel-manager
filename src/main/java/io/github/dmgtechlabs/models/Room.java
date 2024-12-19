@@ -82,6 +82,32 @@ public class Room implements Dao {
         this.hotelFk = hotelFk;
     }
 
+	public int getId() {
+		return id;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public int getFloor() {
+		return floor;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public int getHotelFk() {
+		return hotelFk;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+	
+	
+
     @Override
     public boolean insert() {
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
