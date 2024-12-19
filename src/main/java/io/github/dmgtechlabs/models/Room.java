@@ -119,6 +119,15 @@ public class Room implements Dao {
         return true;
     }
 
+	/**
+	 * Accepts exactly 4 values
+	 * floor (int), number (int), type (int), price (float)
+	 * 
+	 * update_room procedure should include the id (int) as the first parameter
+	 * 
+	 * @param values
+	 * @return success or not 
+	 */
     @Override
     public boolean update(Object... values) {
         if(values.length != 4)

@@ -196,7 +196,7 @@ public class RoomFrame extends javax.swing.JFrame {
 		
 		if(!validate(price)) return;
 		
-		if(room.update(floor, number, Room.Type.valueOf(type), price)){
+		if(room.update(floor, number, Room.Type.valueOf(type).getValue(), price)){
 			JOptionPane.showMessageDialog(this, "Room " + floor + "/" + number + " edited successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
 			this.dispose();
 		} else {

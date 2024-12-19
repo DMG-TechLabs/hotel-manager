@@ -61,6 +61,15 @@ public class Hotel implements Dao {
         return true;
     }
 
+	/**
+	 * Accepts exactly 3 values
+	 * name (string), address (string), phone (long)
+	 * 
+	 * update_hotel procedure should include the id (int) as the first parameter
+	 * 
+	 * @param values
+	 * @return success or not 
+	 */
     @Override
     public boolean update(Object... values) {
         final int expectedParams = 3;
