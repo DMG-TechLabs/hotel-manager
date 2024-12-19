@@ -20,7 +20,7 @@ public class Main {
 		}
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new MainFrame().setVisible(true);
+				new MainFrame(-1).setVisible(true);
 			}
 		});
 	}
