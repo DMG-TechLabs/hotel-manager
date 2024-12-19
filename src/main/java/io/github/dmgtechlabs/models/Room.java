@@ -53,11 +53,12 @@ public class Room implements Dao {
     private int number;
     private int floor;
     private Type type;
+    private int hotelFk;
     private float price;
 
     public Room() {}
     // For writing
-    public Room(int floor, int number, Type type, float price){
+    public Room(int floor, int number, Type type, float price, int hotelFk){
         if(floor < 0) throw new IllegalArgumentException("Room floor can't be a negative number");
         this.floor = floor;
 
@@ -68,20 +69,23 @@ public class Room implements Dao {
 
         if(price <= 0) throw new IllegalArgumentException("Room price can't be negative or zero");
         this.price = price;
+
+        this.hotelFk = hotelFk;
     }
     // For loading
-    public Room(int id, int floor, int number, Type type, float price){
+    public Room(int id, int floor, int number, Type type, float price, int hotelFk){
         this.id = id;
         this.floor = floor;
         this.number = number;
         this.type = type;
         this.price = price;
+        this.hotelFk = hotelFk;
     }
 
     @Override
     public boolean insert() {
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callProcedure("insert_room", floor, number, type.value);
+            conn.callProcedure("insert_room", floor, number, type.value, price, hotelFk);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Room failed", e);
             return false;
@@ -91,8 +95,8 @@ public class Room implements Dao {
 
     @Override
     public boolean update(Object... values) {
-        if(values.length != 4)
-            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
+        if(values.length != 5)
+            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 5", values.length));
 
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             conn.callProcedure("update_room", Utils.appendFront(id, values));
@@ -128,6 +132,10 @@ public class Room implements Dao {
 
     public static List<Room> selectAll() {
         return select("select_all_rooms");
+    }
+
+    public static List<Room> selectByHotel(int hotelFk){
+        return select("select_rooms_by_hotel", hotelFk);
     }
 
     public static List<Room> selectByFloor(int floor){
