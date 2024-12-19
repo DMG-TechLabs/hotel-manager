@@ -6,6 +6,9 @@ package io.github.dmgtechlabs.gui;
 
 import io.github.dmgtechlabs.models.Hotel;
 import io.github.dmgtechlabs.models.Room;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,30 +17,39 @@ import javax.swing.JOptionPane;
  */
 public class RoomFrame extends javax.swing.JFrame {
 	private Room room = null;
+	private int hotelId;
 	
 	/**
 	 * Creates new form HotelFrame
 	 */
-	public RoomFrame() {
+	public RoomFrame(int hotelId) {
 		initComponents();
-		GUIUtils.commonSetup(this);
+		GUIUtils.commonSetup(null, this);
 	
-		GUIUtils.setPlaceholder(this.nameTextField, "Name");
-		GUIUtils.setPlaceholder(this.addressTextField, "Address");
-		GUIUtils.setPlaceholder(this.phoneNumberFormattedTextField, "Phone");
+		this.hotelId = hotelId;
+		
+		GUIUtils.setPlaceholder(priceFormattedTextField, "Price");
+		
+		List<String> types = new ArrayList<>();
+		for(Room.Type type : Room.Type.class.getEnumConstants()){
+			types.add(type.name().toLowerCase());
+		}
+		
+		var model = new DefaultComboBoxModel(types.toArray());
+		this.typeComboBox.setModel(model);
 		
 		this.actionButton.setText("Add");
-		this.setTitle("Add a Hotel");
+		this.setTitle("Add a Room");
 	}
 	
 	public RoomFrame(Hotel hotel){
 		super();
 		this.actionButton.setText("Apply");
-		this.setTitle("Edit " + hotel.getName());
-			
-		this.nameTextField.setText(hotel.getName());
-		this.addressTextField.setText(hotel.getAddress());
-		this.phoneNumberFormattedTextField.setText(String.valueOf(hotel.getPhoneNumber()));
+		this.setTitle("Edit " + room.getFloor() + "/" + room.getNumber());
+
+		this.floorSpinner.setValue(room.getFloor());
+		this.numberSpinner.setValue(room.getNumber());
+		this.priceFormattedTextField.setText(String.valueOf(room.getPrice()));
 	}
 
 	/**
@@ -52,9 +64,12 @@ public class RoomFrame extends javax.swing.JFrame {
         bg = new javax.swing.JPanel();
         actionButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        nameTextField = new javax.swing.JTextField();
-        addressTextField = new javax.swing.JTextField();
-        phoneNumberFormattedTextField = new javax.swing.JFormattedTextField();
+        floorSpinner = new javax.swing.JSpinner();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        numberSpinner = new javax.swing.JSpinner();
+        priceFormattedTextField = new javax.swing.JFormattedTextField();
+        typeComboBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -72,34 +87,57 @@ public class RoomFrame extends javax.swing.JFrame {
             }
         });
 
-        phoneNumberFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        floorSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 0, 100, 1));
+
+        jLabel1.setText("Floor");
+
+        jLabel2.setText("Number");
+
+        numberSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 0, 100, 1));
+
+        priceFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+
+        typeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bgLayout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGap(25, 25, 25)
+                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(priceFormattedTextField)
                     .addGroup(bgLayout.createSequentialGroup()
-                        .addComponent(cancelButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(actionButton))
-                    .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addressTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(phoneNumberFormattedTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(floorSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)
+                        .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(bgLayout.createSequentialGroup()
+                                .addComponent(cancelButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(actionButton))
+                            .addGroup(bgLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(numberSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(typeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(floorSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(numberSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(addressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(priceFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(phoneNumberFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
+                .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(actionButton)
                     .addComponent(cancelButton))
@@ -121,58 +159,52 @@ public class RoomFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	
-	private boolean validate(String name, String address, long phone){
-		if(name.isBlank() || name.equals("Name")) {
-			GUIUtils.logUserError(this, "Name is empty");
-			return false;
-		}
-		
-		if(address.isBlank() || address.equals("Address")) {
-			GUIUtils.logUserError(this, "Address is empty");
-			return false;
-		}
-		
-		if(phone < 1000000000L || phone > 9999999999L){
-			GUIUtils.logUserError(this, "Invalid phone number");
+	private boolean validate(float price){
+		if(price <= 0) {
+			GUIUtils.logUserError(this, "Price has to be greater than zero");
 			return false;
 		}
 		return true;
 	}
 	
-	private void addHotel(){
-		String name = this.nameTextField.getText();
-		String address = this.addressTextField.getText();
-		long phone = Integer.parseInt(this.phoneNumberFormattedTextField.getText());
+	private void addRoom(){
+		int floor = (int) this.floorSpinner.getValue();
+		int number = (int) this.numberSpinner.getValue();
+		float price = Float.parseFloat(this.priceFormattedTextField.getText());
+		String type = (String) this.typeComboBox.getSelectedItem();
+		type = type.toUpperCase();
 		
-		if(!validate(name, address, phone)) return;
+		if(!validate(price)) return;
 		
-		if(new Hotel(name, address, phone).insert()){
-			JOptionPane.showMessageDialog(this, "Hotel " + name + " added successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
+		if(new Room(floor, number, Room.Type.valueOf(type), price, this.hotelId).insert()){
+			JOptionPane.showMessageDialog(this, "Room " + floor + "/" + number + " added successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			GUIUtils.logUserError(this, "Could not add Hotel");
+			GUIUtils.logUserError(this, "Could not add Room");
 		}
 	}
 	
-	private void editHotel(){
-		if(hotel == null) return;
+	private void editRoom(){
+		if(room == null) return;
 		
-		String name = this.nameTextField.getText();
-		String address = this.addressTextField.getText();
-		long phone = Integer.parseInt(this.phoneNumberFormattedTextField.getText());
+		int floor = (int) this.floorSpinner.getValue();
+		int number = (int) this.numberSpinner.getValue();
+		float price = Float.parseFloat(this.priceFormattedTextField.getText());
+		String type = (String) this.typeComboBox.getSelectedItem();
+		type = type.toUpperCase();
 		
-		if(!validate(name, address, phone)) return;
+		if(!validate(price)) return;
 		
-		if(hotel.update(name, address, phone)){
-			JOptionPane.showMessageDialog(null, "Hotel " + name + " updated successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
+		if(room.update(floor, number, Room.Type.valueOf(type), price)){
+			JOptionPane.showMessageDialog(this, "Room " + floor + "/" + number + " edited successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
 			this.dispose();
 		} else {
-			GUIUtils.logUserError(this, "Could not add Hotel");
+			GUIUtils.logUserError(this, "Could not add Room");
 		}
 	}
 	
     private void actionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionButtonActionPerformed
-		if(hotel != null) addHotel();
-		else editHotel();
+		if(room != null) addRoom();
+		else editRoom();
     }//GEN-LAST:event_actionButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -210,17 +242,20 @@ public class RoomFrame extends javax.swing.JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new RoomFrame().setVisible(true);
+				new RoomFrame(-1).setVisible(true);
 			}
 		});
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actionButton;
-    private javax.swing.JTextField addressTextField;
     private javax.swing.JPanel bg;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JTextField nameTextField;
-    private javax.swing.JFormattedTextField phoneNumberFormattedTextField;
+    private javax.swing.JSpinner floorSpinner;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JSpinner numberSpinner;
+    private javax.swing.JFormattedTextField priceFormattedTextField;
+    private javax.swing.JComboBox<String> typeComboBox;
     // End of variables declaration//GEN-END:variables
 }

@@ -121,8 +121,8 @@ public class Room implements Dao {
 
     @Override
     public boolean update(Object... values) {
-        if(values.length != 5)
-            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 5", values.length));
+        if(values.length != 4)
+            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
 
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             conn.callProcedure("update_room", Utils.appendFront(id, values));

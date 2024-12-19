@@ -19,7 +19,7 @@ public class HotelFrame extends javax.swing.JFrame {
 	 */
 	public HotelFrame() {
 		initComponents();
-		GUIUtils.commonSetup(this);
+		GUIUtils.commonSetup(null, this);
 	
 		GUIUtils.setPlaceholder(this.nameTextField, "Name");
 		GUIUtils.setPlaceholder(this.addressTextField, "Address");

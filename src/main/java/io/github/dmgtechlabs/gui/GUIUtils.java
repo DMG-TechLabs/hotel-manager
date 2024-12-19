@@ -82,9 +82,9 @@ public class GUIUtils {
 
 		frame.setVisible(true);
 	}
-
-	public static void commonSetup(JFrame frame) {
-		frame.setLocationRelativeTo(null);
+	
+	public static void commonSetup(JFrame parent, JFrame frame) {
+		frame.setLocationRelativeTo(parent);
 		GUIMethods.setFontFamilyRecursively(frame, "sans-serif", Font.PLAIN);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
