@@ -1,5 +1,5 @@
 
-package io.github.dmgtechlabs.files;
+package io.github.dmgtechlabs.db.files;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,76 +17,69 @@ public class FileOperations {
 	private static String os = System.getProperty("os.name").toLowerCase();
 	private static char slash = (os.contains("windows")) ? '\\' : '/';
 	public static HashSet<String> acceptedExtensions = new HashSet<>();
+	public static Boolean throwErrors = false;
+	public static int maxDepth = 10;
 
-	public static String getDirectoryFromPath(String path) {
-		if (path.lastIndexOf(slash) < 0) {
-			return null;
+	private static boolean chechPath(String path) throws IllegalArgumentException {
+		if (path == null || path == "" || path.lastIndexOf(slash) <= 0 || path.lastIndexOf(".") < 0) {
+			if (throwErrors)
+				throw new IllegalArgumentException("Invalid path");
+			return true;
 		}
+		return false;
+	}
+
+	public static String getDirectoryFromPath(String path) throws IllegalArgumentException {
+		if (chechPath(path))
+			return null;
 		return path.substring(0, path.lastIndexOf('/')) + slash;
 	}
 
-	public static String getFilenameFromPath(String path) {
-		if (path.lastIndexOf(slash) < 0) {
+	public static String getFilenameFromPath(String path) throws IllegalArgumentException {
+		if (chechPath(path))
 			return null;
-		}
 		return path.substring(path.lastIndexOf(slash) + 1, path.length());
 	}
 
-	public static String getJustFilenameFromPath(String path) {
-		if (path.lastIndexOf(slash) < 0 || path.isEmpty() || path.isBlank() || path.lastIndexOf('.') < path.lastIndexOf('/')) {
+	public static String getJustFilenameFromPath(String path) throws IllegalArgumentException {
+		if (chechPath(path))
 			return null;
-		}
 		return path.substring(path.lastIndexOf(slash) + 1, path.lastIndexOf('.'));
 	}
 
-	public static String getExtensionFromPath(String path) {
-		if (path.lastIndexOf('.') < 0) {
+	public static String getExtensionFromPath(String path) throws IllegalArgumentException {
+		if (chechPath(path))
 			return null;
-		}
 		return path.substring(path.lastIndexOf('.') + 1, path.length());
 	}
 
-	public static List<String> findFiles(String directory) throws IOException {
-		List<String> p = new ArrayList<>();
+	public static List<String> findFiles(String directory, HashSet<String> extensions)
+			throws IOException, IllegalArgumentException {
+		HashSet<String> temp = acceptedExtensions;
+		if (extensions != null) {
+			acceptedExtensions = extensions;
+		}
 		try (Stream<Path> paths = Files.walk(Path.of(directory), 10)) {
 			List<String> pathlist = paths
-					.map(path -> Files.isDirectory(path) ? path.toString() + '/' : path.toString())
+					.map(path -> (Files.isDirectory(path)
+							&& path.toString().contains(".")
+							&& acceptedExtensions.isEmpty()
+							|| acceptedExtensions.contains(FileOperations.getExtensionFromPath(path.toString())))
+									? path.toString() + slash
+									: path.toString())
 					.collect(Collectors.toList());
 
-			for (String path : pathlist) {
-				if (path.contains(".")) {
-					if (acceptedExtensions.isEmpty() || acceptedExtensions.contains(FileOperations.getExtensionFromPath(path))) {
-						p.add(path);
-					}
-				}
-			}
+			acceptedExtensions = temp;
+			return pathlist;
 
 		} catch (IOException e) {
+			acceptedExtensions = temp;
+			throw e;
 		}
-		return p;
 	}
 
-	public static List<String> findFiles(String directory, HashSet<String> extensions) throws IOException {
-		List<String> p = new ArrayList<>();
-		try (Stream<Path> paths = Files.walk(Path.of(directory), 10)) {
-			List<String> pathlist = paths
-					.map(path -> Files.isDirectory(path) ? path.toString() + slash : path.toString())
-					.collect(Collectors.toList());
+	public static List<String> getFilenames(List<String> paths) throws IllegalArgumentException {
 
-			for (String path : pathlist) {
-				if (path.contains(".")) {
-					if (extensions.contains(FileOperations.getExtensionFromPath(path))) {
-						p.add(path);
-					}
-				}
-			}
-
-		} catch (IOException e) {
-		}
-		return p;
-	}
-
-	public static List<String> getFilenames(List<String> paths) {
 		List<String> filenames = new ArrayList<>();
 		for (String path : paths) {
 			filenames.add(FileOperations.getFilenameFromPath(path));
@@ -94,28 +87,28 @@ public class FileOperations {
 
 		return filenames;
 	}
-	
-	public static String readFile(String path){
+
+	public static String readFile(String path) {
 		String content = "";
 		try {
-            // Create a FileReader to read the file
-            FileReader fileReader = new FileReader(path);
+			// Create a FileReader to read the file
+			FileReader fileReader = new FileReader(path);
 
-            // Create a BufferedReader to efficiently read the file line by line
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+			// Create a BufferedReader to efficiently read the file line by line
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                content += line + "\n";
-            }
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				content += line + "\n";
+			}
 
-            // Close the BufferedReader and FileReader when done
-            bufferedReader.close();
-            fileReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-		
+			// Close the BufferedReader and FileReader when done
+			bufferedReader.close();
+			fileReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return content;
 	}
 
