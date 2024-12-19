@@ -30,7 +30,7 @@ public class HotelFrame extends javax.swing.JFrame {
 	}
 	
 	public HotelFrame(Hotel hotel){
-		super();
+		this();
 		this.actionButton.setText("Apply");
 		this.setTitle("Edit " + hotel.getName());
 			

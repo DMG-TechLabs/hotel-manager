@@ -42,8 +42,10 @@ public class RoomFrame extends javax.swing.JFrame {
 		this.setTitle("Add a Room");
 	}
 	
-	public RoomFrame(Hotel hotel){
-		super();
+	public RoomFrame(int hotelId, Room room){
+		this(hotelId);
+		this.room = room;
+		
 		this.actionButton.setText("Apply");
 		this.setTitle("Edit " + room.getFloor() + "/" + room.getNumber());
 
