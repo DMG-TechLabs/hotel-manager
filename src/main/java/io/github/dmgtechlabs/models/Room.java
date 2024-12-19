@@ -1,0 +1,133 @@
+package io.github.dmgtechlabs.models;
+
+import io.github.dmgtechlabs.Utils;
+import io.github.dmgtechlabs.db.Dao;
+import io.github.kdesp73.databridge.connections.AvailableConnections;
+import io.github.kdesp73.databridge.connections.PostgresConnection;
+import io.github.kdesp73.databridge.helpers.Adapter;
+import io.github.kdesp73.databridge.helpers.SQLogger;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+public class Room implements Dao {
+    public enum Type {
+        SINGLE(1),
+        DOUBLE(2),
+        TWIN(3),
+        SUITE(4),
+        DELUXE(5),
+        FAMILY(6),
+        STUDIO(7),
+        KING(8),
+        QUEEN(9),
+        PRESIDENTIAL_SUITE(10),
+        EXECUTIVE(11),
+        ACCESSIBLE(12),
+        VILLA(13),
+        CABANA(14),
+        BUNGALOW(15);
+
+        private final int value;
+
+        Type(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static Type fromValue(int value) {
+            for (Type type : Type.values()) {
+                if (type.value == value) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Invalid value for Room Type: " + value);
+        }
+    }
+
+    private int id;
+    private int number;
+    private int floor;
+    private Type type;
+    private float price;
+
+    public Room() {}
+    // For writing
+    public Room(int floor, int number, Type type, float price){
+        this.floor = floor;
+        this.number = number;
+        this.type = type;
+        this.price = price;
+    }
+    // For loading
+    public Room(int id, int floor, int number, Type type, float price){
+        this.id = id;
+        this.floor = floor;
+        this.number = number;
+        this.type = type;
+        this.price = price;
+    }
+
+    @Override
+    public boolean insert() {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            conn.callProcedure("insert_room", floor, number, type.value);
+        } catch (SQLException e) {
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Room failed", e);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean update(Object... values) {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            conn.callProcedure("update_room", Utils.appendFront(id, values));
+        } catch (SQLException e) {
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Room failed", e);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean delete() {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
+            conn.callProcedure("delete_room", id);
+        } catch (SQLException e) {
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Room failed", e);
+            return false;
+        }
+        return true;
+    }
+
+    private List<Room> select(String function, Object... values){
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            ResultSet rs = conn.callFunction(function, values);
+            return Adapter.load(rs, Room.class);
+        } catch (Exception e) {
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select " + function + " failed", e);
+            return null;
+        }
+    }
+
+    public List<Room> selectAll() {
+        return select("select_all_rooms");
+    }
+
+    public List<Room> selectByFloor(int floor){
+        return select("select_rooms_by_floor", floor);
+    }
+
+    public List<Room> selectByType(Type type){
+        return select("select_rooms_by_type", type.value);
+    }
+
+    public List<Room> selectByPriceRange(float floor, float ceil){
+        return select("select_rooms_by_price_range", floor, ceil);
+    }
+}
