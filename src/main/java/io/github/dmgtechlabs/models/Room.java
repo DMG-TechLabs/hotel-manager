@@ -58,9 +58,15 @@ public class Room implements Dao {
     public Room() {}
     // For writing
     public Room(int floor, int number, Type type, float price){
+        if(floor < 0) throw new IllegalArgumentException("Room floor can't be a negative number");
         this.floor = floor;
+
+        if(number < 0) throw new IllegalArgumentException("Room number can't be a negative number");
         this.number = number;
+
         this.type = type;
+
+        if(price <= 0) throw new IllegalArgumentException("Room price can't be negative or zero");
         this.price = price;
     }
     // For loading
@@ -85,6 +91,9 @@ public class Room implements Dao {
 
     @Override
     public boolean update(Object... values) {
+        if(values.length != 4)
+            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
+
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             conn.callProcedure("update_room", Utils.appendFront(id, values));
         } catch (SQLException e) {
@@ -106,6 +115,8 @@ public class Room implements Dao {
     }
 
     private static List<Room> select(String function, Object... values){
+        assert(function != null);
+        assert(!function.isBlank());
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             ResultSet rs = conn.callFunction(function, values);
             return Adapter.load(rs, Room.class);
