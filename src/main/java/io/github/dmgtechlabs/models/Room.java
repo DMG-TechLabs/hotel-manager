@@ -105,7 +105,7 @@ public class Room implements Dao {
         return true;
     }
 
-    private List<Room> select(String function, Object... values){
+    private static List<Room> select(String function, Object... values){
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             ResultSet rs = conn.callFunction(function, values);
             return Adapter.load(rs, Room.class);
@@ -115,19 +115,19 @@ public class Room implements Dao {
         }
     }
 
-    public List<Room> selectAll() {
+    public static List<Room> selectAll() {
         return select("select_all_rooms");
     }
 
-    public List<Room> selectByFloor(int floor){
+    public static List<Room> selectByFloor(int floor){
         return select("select_rooms_by_floor", floor);
     }
 
-    public List<Room> selectByType(Type type){
+    public static List<Room> selectByType(Type type){
         return select("select_rooms_by_type", type.value);
     }
 
-    public List<Room> selectByPriceRange(float floor, float ceil){
+    public static List<Room> selectByPriceRange(float floor, float ceil){
         return select("select_rooms_by_price_range", floor, ceil);
     }
 }
