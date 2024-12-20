@@ -7,7 +7,6 @@ import io.github.kdesp73.databridge.*;
 class HotelManagment implements HotelManagmentInterface {
 
   private List<String> db_query = new ArrayList<String>();
-  private Database db = new Database();
 
   public boolean AddHotel() {
 

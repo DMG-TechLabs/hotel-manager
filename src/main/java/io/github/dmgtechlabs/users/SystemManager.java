@@ -1,7 +1,7 @@
 
 package io.github.dmgtechlabs.users;
 
-class SystemManager extends Users {
+class SystemManager extends User {
   private String role = "SysManager";
 
   SystemManager(UserRepository userRepository) {
