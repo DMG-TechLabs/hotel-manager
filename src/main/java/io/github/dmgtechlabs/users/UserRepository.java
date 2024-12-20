@@ -15,7 +15,7 @@ public class UserRepository implements Dao {
   public UserRepository(String db_url, String db_username, String db_password) {
   }
 
-  private boolean updateInsert(Object value, String procedure_name) {
+  private boolean dbProcedures(Object value, String procedure_name) {
     if (value instanceof User) {
       User user = (User) value;
       try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
@@ -33,7 +33,7 @@ public class UserRepository implements Dao {
   public boolean insert(Object... values) {
     boolean result = false;
     for (Object value : values) {
-      result = updateInsert(value, "insert_user");
+      result = dbProcedures(value, "insert_user");
       if (!result) {
         return false;
       }
@@ -46,7 +46,7 @@ public class UserRepository implements Dao {
   public boolean update(Object... values) {
     boolean result = false;
     for (Object value : values) {
-      result = updateInsert(value, "update_user");
+      result = dbProcedures(value, "update_user");
       if (!result) {
         return false;
       }
@@ -55,7 +55,14 @@ public class UserRepository implements Dao {
   }
 
   @Override
-  public boolean delete() {
+  public boolean delete(Object... values) {
+    boolean result = false;
+    for (Object value : values) {
+      result = dbProcedures(value, "delete_user");
+      if (!result) {
+        return false;
+      }
+    }
     return false;
   }
 }

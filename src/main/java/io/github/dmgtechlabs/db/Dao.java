@@ -8,7 +8,13 @@ public interface Dao {
 
 	public boolean update(Object... values);
 
-	public boolean delete();
+	default boolean delete() {
+		return false;
+	};
+
+	default boolean delete(Object... values) {
+		return false;
+	};
 
 	default boolean insert(Object... values) {
 		return false;
