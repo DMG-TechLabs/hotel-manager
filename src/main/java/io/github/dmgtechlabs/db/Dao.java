@@ -1,12 +1,16 @@
 package io.github.dmgtechlabs.db;
 
-
 public interface Dao {
 
-	public boolean insert();
+	default boolean insert() {
+		return false;
+	};
 
 	public boolean update(Object... values);
 
 	public boolean delete();
-	
+
+	default boolean insert(Object... values) {
+		return false;
+	};
 }

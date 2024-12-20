@@ -1,6 +1,6 @@
 package io.github.dmgtechlabs.users;
 
-class Users {
+class User {
   private String username = null;
   private String email = null;
   private String password = null;
@@ -8,10 +8,10 @@ class Users {
   private String LastName = null;
   private String role = null;
 
-  public Users() {
+  public User() {
   }
 
-  public Users(String username, String email, String password, String FirtName, String LastName) {
+  public User(String username, String email, String password, String FirtName, String LastName) {
     this.username = username;
     this.email = email;
     this.password = password;
