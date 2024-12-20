@@ -1,5 +1,5 @@
-package com.mycompany.app.db;
+package io.github.dmgtechlabs.db;
 
 public class Queries {
-	
+
 }

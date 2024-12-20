@@ -1,11 +1,15 @@
 package io.github.dmgtechlabs.users;
 
 class Users {
-  private String username;
-  private String email;
-  private String password;
-  private String FirtName;
-  private String LastName;
+  private String username = null;
+  private String email = null;
+  private String password = null;
+  private String FirtName = null;
+  private String LastName = null;
+  private String role = null;
+
+  public Users() {
+  }
 
   public Users(String username, String email, String password, String FirtName, String LastName) {
     this.username = username;
@@ -57,7 +61,9 @@ class Users {
 
   public void login() {
     boolean user = true;
+    String user_role_from_db = "SysManager";
     if (user) {
+      this.role = user_role_from_db;
       this.username = "John Doe";
       System.out.println("User is logged in");
     } else {
