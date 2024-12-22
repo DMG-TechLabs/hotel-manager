@@ -4,7 +4,9 @@ CREATE TABLE USER (
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(50) NOT NULL,
     user_type INT,
-    FOREIGN KEY (hotel_id) REFERENCES HOTEL (hotel_id)
+    hotel_id INT NULL, --Allowed null for system administrator
+    FOREIGN KEY (hotel_id) REFERENCES HOTEL (hotel_id),
+    FOREIGN KEY (user_type) REFERENCES USER_TYPE(user_type_id)
 );
 
 -- USER_TYPE Table
@@ -14,6 +16,7 @@ CREATE TABLE USER_TYPE (
 );
 
 -- CUSTOMER Table
+--When a new table is created a new guest for the new hotel must be also added into the user table
 CREATE TABLE CUSTOMER (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
