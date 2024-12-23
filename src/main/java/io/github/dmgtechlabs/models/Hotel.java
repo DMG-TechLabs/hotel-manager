@@ -4,6 +4,7 @@ import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
+import io.github.kdesp73.databridge.connections.OracleConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 
@@ -14,20 +15,23 @@ import java.util.List;
 public class Hotel implements Dao {
     private String name;
     private String address;
-	private long phoneNumber;
+    private long phoneNumber;
     private int id;
+    //We should add
+    //private String amenities;
 
     public Hotel(){}
     // For writing
     public Hotel(String name, String address, long phoneNumber){
         this.name = name;
         this.address = address;
-		this.phoneNumber = phoneNumber;
+            this.phoneNumber = phoneNumber;
     }
     // For loading
     public Hotel(int id, String name, String address, long phoneNumber){
         this.id = id;
         this.name = name;
+        
         this.address = address;
 		this.phoneNumber = phoneNumber;
     }

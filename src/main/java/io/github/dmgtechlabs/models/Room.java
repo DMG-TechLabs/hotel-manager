@@ -4,6 +4,7 @@ import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
+import io.github.kdesp73.databridge.connections.OracleConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 
@@ -111,6 +112,7 @@ public class Room implements Dao {
     @Override
     public boolean insert() {
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            //Test with insertRoom using oracle connection
             conn.callProcedure("insert_room", floor, number, type.value, price, hotelFk);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Room failed", e);
