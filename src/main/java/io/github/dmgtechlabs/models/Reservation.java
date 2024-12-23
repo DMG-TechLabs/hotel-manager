@@ -1,6 +1,5 @@
 package io.github.dmgtechlabs.models;
 
-import io.github.dmgtechlabs.Utils;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.OracleConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
@@ -20,7 +19,7 @@ public class Reservation {
 	}
 	
 	private int roomId;
-//	private int customerId;
+	private int customerId;
 	private String checkInDate;
 	private String checkOutDate;
 	private float cost;
@@ -29,8 +28,9 @@ public class Reservation {
 	public Reservation() {
 	}
 
-	public Reservation(int roomId, String checkInDate, String checkOutDate, float cost, Status status) {
+	public Reservation(int roomId, int customerId, String checkInDate, String checkOutDate, float cost, Status status) {
 		this.roomId = roomId;
+		this.customerId = customerId;
 		this.checkInDate = checkInDate;
 		this.checkOutDate = checkOutDate;
 		this.cost = cost;
@@ -39,6 +39,10 @@ public class Reservation {
 	
 	public int getRoomId(){
 		return roomId;
+	}
+	
+	public int getCustomerId(){
+		return customerId;
 	}
 
 	public String getCheckInDate() {
@@ -63,6 +67,10 @@ public class Reservation {
 
 	public void setCost(float cost) {
 		this.cost = cost;
+	}
+	
+	public Status getStatus() {
+		return status;
 	}
 	
 	public static Status int2Status(int status) {
@@ -126,6 +134,22 @@ public class Reservation {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select " + function + " failed", e);
             return null;
         }
+    }
+	
+	public static List<Reservation> selectAll() {
+        return select("select_all_reservations");
+    }
+	
+	public static List<Reservation> selectByCustomerId(int customerId) {
+        return select("select_reservations_by_customer_id");
+    }
+	
+	public static List<Reservation> selectByRoomId(int roomId) {
+        return select("select_reservations_by_room_id");
+    }
+	
+	public static List<Reservation> selectByCheckInCheckOut(String checkInDate, String checkOutDate) {
+        return select("select_reservations_by_check_in_check_out");
     }
 
 }
