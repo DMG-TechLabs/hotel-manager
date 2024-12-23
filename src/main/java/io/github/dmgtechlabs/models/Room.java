@@ -3,7 +3,7 @@ package io.github.dmgtechlabs.models;
 import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
-import io.github.kdesp73.databridge.connections.PostgresConnection;
+import io.github.kdesp73.databridge.connections.OracleConnection;
 import io.github.kdesp73.databridge.connections.OracleConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
@@ -111,7 +111,7 @@ public class Room implements Dao {
 
     @Override
     public boolean insert() {
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
             //Test with insertRoom using oracle connection
             conn.callProcedure("insert_room", floor, number, type.value, price, hotelFk);
         } catch (SQLException e) {
@@ -135,7 +135,7 @@ public class Room implements Dao {
         if(values.length != 4)
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
 
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
             conn.callProcedure("update_room", Utils.appendFront(id, values));
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Room failed", e);
@@ -146,7 +146,7 @@ public class Room implements Dao {
 
     @Override
     public boolean delete() {
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()){
             conn.callProcedure("delete_room", id);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Room failed", e);
@@ -158,7 +158,7 @@ public class Room implements Dao {
     private static List<Room> select(String function, Object... values){
         assert(function != null);
         assert(!function.isBlank());
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
             ResultSet rs = conn.callFunction(function, values);
             return Adapter.load(rs, Room.class);
         } catch (Exception e) {
