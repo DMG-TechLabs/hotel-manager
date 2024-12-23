@@ -18,6 +18,7 @@ public class Reservation {
 		PENDING, ACCEPTED, DECLINED
 	}
 	
+	private int id;
 	private int roomId;
 	private int customerId;
 	private String checkInDate;
@@ -28,13 +29,18 @@ public class Reservation {
 	public Reservation() {
 	}
 
-	public Reservation(int roomId, int customerId, String checkInDate, String checkOutDate, float cost, Status status) {
+	public Reservation(int id, int roomId, int customerId, String checkInDate, String checkOutDate, float cost, Status status) {
+		this.id = id;
 		this.roomId = roomId;
 		this.customerId = customerId;
 		this.checkInDate = checkInDate;
 		this.checkOutDate = checkOutDate;
 		this.cost = cost;
 		this.status = status;
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public int getRoomId(){
@@ -94,9 +100,9 @@ public class Reservation {
 
 	/**
 	 * Accepts exactly 4 values
-	 * floor (int), number (int), type (int), price (float)
+	 * checkInDate (String), checkOutDate (String), cost (float), status (int)
 	 * 
-	 * update_room procedure should include the id (int) as the first parameter
+	 * update_reservation procedure should include the id (int) as the first parameter
 	 * 
 	 * @param values
 	 * @return success or not 
@@ -138,6 +144,10 @@ public class Reservation {
 	
 	public static List<Reservation> selectAll() {
         return select("select_all_reservations");
+    }
+	
+	public static List<Reservation> selectByReservationId(int id) {
+        return select("select_reservations_by_reservation_id");
     }
 	
 	public static List<Reservation> selectByCustomerId(int customerId) {
