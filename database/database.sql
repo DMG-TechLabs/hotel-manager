@@ -369,7 +369,7 @@ END updateHotelLogs;
 /
 
 
---Delete procedures
+--Delete by id procedures
 
 CREATE OR REPLACE PROCEDURE deleteUserType (
     p_user_type_id IN NUMBER
@@ -473,6 +473,112 @@ EXCEPTION
     WHEN OTHERS THEN
         RAISE_APPLICATION_ERROR(-20001, 'Error occurred while deleting from HOTEL_LOGS: ' || SQLERRM);
 END deleteHotelLogs;
+/
+
+--Select by id
+
+CREATE OR REPLACE PROCEDURE selectUserTypeById (
+    p_user_type_id IN NUMBER
+) AS
+BEGIN
+    SELECT *
+    FROM USER_TYPE
+    WHERE user_type_id = p_user_type_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Error occurred while selecting from USER_TYPE: ' || SQLERRM);
+END selectUserTypeById;
+/
+
+CREATE OR REPLACE PROCEDURE selectHotelById (
+    p_hotel_id IN NUMBER
+) AS
+BEGIN
+    SELECT *
+    FROM HOTEL
+    WHERE hotel_id = p_hotel_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Error occurred while selecting from HOTEL: ' || SQLERRM);
+END selectHotelById;
+/
+
+CREATE OR REPLACE PROCEDURE selectSystemUserById (
+    p_user_id IN NUMBER
+) AS
+BEGIN
+    SELECT *
+    FROM SYSTEM_USER
+    WHERE user_id = p_user_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Error occurred while selecting from SYSTEM_USER: ' || SQLERRM);
+END selectSystemUserById;
+/
+
+CREATE OR REPLACE PROCEDURE selectCustomerById (
+    p_customer_id IN NUMBER
+) AS
+BEGIN
+    SELECT *
+    FROM CUSTOMER
+    WHERE customer_id = p_customer_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Error occurred while selecting from CUSTOMER: ' || SQLERRM);
+END selectCustomerById;
+/
+
+CREATE OR REPLACE PROCEDURE selectRoomTypeById (
+    p_type_id IN NUMBER
+) AS
+BEGIN
+    SELECT *
+    FROM ROOM_TYPE
+    WHERE type_id = p_type_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Error occurred while selecting from ROOM_TYPE: ' || SQLERRM);
+END selectRoomTypeById;
+/
+
+CREATE OR REPLACE PROCEDURE selectRoomById (
+    p_room_id IN NUMBER
+) AS
+BEGIN
+    SELECT *
+    FROM ROOM
+    WHERE room_id = p_room_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Error occurred while selecting from ROOM: ' || SQLERRM);
+END selectRoomById;
+/
+
+CREATE OR REPLACE PROCEDURE selectReservationById (
+    p_reservation_id IN NUMBER
+) AS
+BEGIN
+    SELECT *
+    FROM RESERVATION
+    WHERE reservation_id = p_reservation_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Error occurred while selecting from RESERVATION: ' || SQLERRM);
+END selectReservationById;
+/
+
+CREATE OR REPLACE PROCEDURE selectHotelLogsById (
+    p_log_id IN NUMBER
+) AS
+BEGIN
+    SELECT *
+    FROM HOTEL_LOGS
+    WHERE log_id = p_log_id;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Error occurred while selecting from HOTEL_LOGS: ' || SQLERRM);
+END selectHotelLogsById;
 /
 
 
