@@ -84,9 +84,9 @@ public class Reservation {
 	
     public boolean insert() {
         try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-            
+            //todo
         } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Room failed", e);
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Reservation failed", e);
             return false;
         }
         return true;
@@ -106,9 +106,9 @@ public class Reservation {
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
 
         try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-            
+            //todo
         } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Room failed", e);
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Reservation failed", e);
             return false;
         }
         return true;
@@ -116,9 +116,9 @@ public class Reservation {
 
     public boolean delete() {
         try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()){
-            
+            //todo
         } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Room failed", e);
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Reservation failed", e);
             return false;
         }
         return true;
