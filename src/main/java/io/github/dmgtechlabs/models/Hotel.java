@@ -6,6 +6,7 @@ import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
+import kdesp73.databridge.helpers.QueryBuilder;
 
 import java.math.BigInteger;
 import java.sql.ResultSet;
@@ -48,7 +49,7 @@ public class Hotel implements Dao {
     private String name;
     private String address;
     private BigInteger phone;
-    private int hotelId;
+    private int id;
     private List<Amenity> amenities;
 
     public Hotel(){}
@@ -60,7 +61,7 @@ public class Hotel implements Dao {
     }
     // For loading
     public Hotel(int id, String name, String address, BigInteger phoneNumber){
-        this.hotelId = id;
+        this.id = id;
         this.name = name;
         
         this.address = address;
@@ -80,8 +81,8 @@ public class Hotel implements Dao {
 		return phone;
 	}
 
-	public int getHotelId() {
-		return hotelId;
+	public int getId() {
+		return id;
 	}
 
     public List<Amenity> getAmenities() {
@@ -115,7 +116,7 @@ public class Hotel implements Dao {
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callProcedure("update_hotel", Utils.appendFront(hotelId, values));
+            conn.callProcedure("update_hotel", Utils.appendFront(id, values));
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
             return false;
@@ -126,7 +127,7 @@ public class Hotel implements Dao {
     @Override
     public boolean delete() {
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
-            conn.callProcedure("delete_hotel", hotelId);
+            conn.callProcedure("delete_hotel", id);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Hotel failed", e);
             return false;
@@ -157,7 +158,7 @@ public class Hotel implements Dao {
     public List<Amenity> selectAmenities() {
         List<Amenity> result = new ArrayList<>();
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            ResultSet rs = conn.callFunction("select_amenities", hotelId);
+            ResultSet rs = conn.callFunction("select_amenities", id);
             while(rs.next()){
                 result.add(Amenity.fromValue(rs.getInt("AMENITY")));
             }
@@ -167,5 +168,28 @@ public class Hotel implements Dao {
         }
         this.amenities = result;
         return result;
+    }
+
+    public boolean insertAmenities(Amenity... amenities) {
+        if(amenities.length == 0) return false;
+        for(Amenity a : amenities) {
+            try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+                String query = new QueryBuilder().insertInto("amenities").columns("amenity", "hotel_id").values(a.value, this.id).build();
+                conn.executeUpdate(query);
+            } catch (Exception e) {
+                SQLogger.getLogger().log(SQLogger.LogLevel.INFO, "Insert Amenities failed", e);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean updateAmenities(Amenity... amenities) {
+        List<Amenity> current = selectAmenities();
+
+        for(Amenity a : amenities) {
+
+        }
+        return true;
     }
 }
