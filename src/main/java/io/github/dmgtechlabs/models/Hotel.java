@@ -55,6 +55,8 @@ public class Hotel implements Dao {
     private List<Amenity> amenities;
 
     public Hotel(){}
+    public Hotel(int id){ this.id = id; }
+
     // For writing
     public Hotel(String name, String address, BigInteger phoneNumber){
         this.name = name;
@@ -140,30 +142,47 @@ public class Hotel implements Dao {
     private static List<Hotel> select(String function, Object... values){
         assert(function != null);
         assert(!function.isBlank());
+
+        List<Hotel> result = new ArrayList<>();
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             ResultSet rs = conn.callFunction(function, values);
-            return Adapter.load(rs, Hotel.class);
-        } catch (Exception e) {
+            while (rs.next()){
+                Hotel h = new Hotel(
+                        rs.getInt("hotelid"),
+                        rs.getString("name"),
+                        rs.getString("address"),
+                        BigInteger.valueOf(rs.getBigDecimal("phone").longValue())
+                );
+                result.add(h);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select " + function + " failed", e);
             return null;
         }
+        return result;
     }
 
+    public static List<Hotel> selectAll(){
+        return select("select_all_hotels");
+    }
     public static List<Hotel> selectById(int id){
-        return select("select_hotel_by_id", id);
+        return select("select_hotels_by_id", id);
     }
 
     public static List<Hotel> selectByName(String name) {
-        return select("select_hotel_by_name", name);
+        return select("select_hotels_by_name", name);
     }
 
     public List<Amenity> selectAmenities() {
         List<Amenity> result = new ArrayList<>();
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            ResultSet rs = conn.callFunction("select_amenities", id);
+            ResultSet rs = conn.callFunction("select_amenities_by_hotel", id);
             while(rs.next()){
-                result.add(Amenity.fromValue(rs.getInt("AMENITY")));
+                result.add(Amenity.fromValue(rs.getInt("amenity")));
             }
+            rs.close();
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select amenities failed", e);
             return null;
@@ -188,7 +207,7 @@ public class Hotel implements Dao {
 
     public boolean deleteAmenity(Amenity amenity) {
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.executeUpdate(new QueryBuilder().deleteFrom("amenities").where("hotel_id = " + id).build());
+            conn.executeUpdate(new QueryBuilder().deleteFrom("amenities").where("hotel_id = " + id + " AND amenity = " + amenity.value).build());
         } catch (SQLException e) {
             return false;
         }
@@ -197,6 +216,11 @@ public class Hotel implements Dao {
 
     public boolean updateAmenities(Amenity... amenities) {
         List<Amenity> current = selectAmenities(); // Fetch current amenities
+        if(current == null || current.isEmpty()) {
+            insertAmenities(amenities);
+            return true;
+        }
+
         Set<Amenity> newAmenities = new HashSet<>(Arrays.asList(amenities)); // Convert new amenities to a set for easy lookup
         Set<Amenity> currentAmenities = new HashSet<>(current); // Convert current amenities to a set
 
@@ -209,15 +233,39 @@ public class Hotel implements Dao {
 
         for (Amenity amenity : current) {
             if (!newAmenities.contains(amenity)) {
-                if(!deleteAmenity(amenity)) return false;
+                System.out.println("Deleting " + amenity);
+                if(!deleteAmenity(amenity)) {
+                    System.err.println("Could not delete amenity: " + amenity);
+                }
             }
         }
 
         for (Amenity amenity : amenities) {
             if (!currentAmenities.contains(amenity)) {
-                if(!insertAmenities(amenity)) return false;
+                System.out.println("Adding " + amenity);
+                if(!insertAmenities(amenity)) {
+                    System.err.println("Could not insert amenity " + amenity);
+                }
             }
         }
 
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Could not close connection after updating amenities", e);
+        }
+
         return true;
-    }}
+    }
+
+    @Override
+    public String toString() {
+        return "Hotel{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phone=" + phone +
+                ", id=" + id +
+                ", amenities=" + amenities +
+                '}';
+    }
+}

@@ -9,6 +9,7 @@ import io.github.kdesp73.databridge.helpers.SQLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Room implements Dao {
@@ -158,13 +159,27 @@ public class Room implements Dao {
     private static List<Room> select(String function, Object... values){
         assert(function != null);
         assert(!function.isBlank());
+        List<Room> result = new ArrayList<>();
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             ResultSet rs = conn.callFunction(function, values);
-            return Adapter.load(rs, Room.class);
+            while(rs.next()){
+                result.add(new Room(
+                        rs.getInt("id"),
+                        rs.getInt("floor"),
+                        rs.getInt("number"),
+                        Type.fromValue(rs.getInt("type")),
+                        rs.getFloat("price"),
+                        rs.getInt("room_hotel_fk"),
+                        rs.getBoolean("occupied")
+                ));
+            }
+            rs.close();
         } catch (Exception e) {
+            System.err.println(e.getMessage());
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select " + function + " failed", e);
             return null;
         }
+        return result;
     }
 
     public static List<Room> selectAll() {
@@ -185,5 +200,18 @@ public class Room implements Dao {
 
     public static List<Room> selectByPriceRange(float floor, float ceil){
         return select("select_rooms_by_price_range", floor, ceil);
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "roomId=" + roomId +
+                ", number=" + number +
+                ", floor=" + floor +
+                ", type=" + type +
+                ", hotelId=" + hotelId +
+                ", price=" + price +
+                ", occupied=" + occupied +
+                '}';
     }
 }

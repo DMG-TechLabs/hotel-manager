@@ -11,6 +11,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.math.BigInteger;
 import java.sql.SQLException;
+import java.util.List;
 
 import io.github.dmgtechlabs.models.Customer;
 
@@ -32,13 +33,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-            
-
-		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
-			new Room(1, 1, Room.Type.DOUBLE, 40.2f, 1).insert();
-
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+		List<Room> rooms = Room.selectByPriceRange(43, 100);
+		rooms.forEach(System.out::println);
 	}
 }
