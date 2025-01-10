@@ -15,8 +15,8 @@ import java.util.List;
 
 public class User implements Dao {
     public enum UserType {
-        WORKER(1),
-        ADMIN(2);
+        ADMIN(1),
+        GUEST(2);
 
         private final int value;
 
@@ -143,7 +143,7 @@ public class User implements Dao {
         assert (!password.isBlank());
         assert (!"".equals(password));
         
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.ORACLE.getConnection()) {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             ResultSet rs = conn.callFunction("select_user_with_username_password", username, password);
             return Adapter.load(rs, User.class);
         } catch (Exception e) {
