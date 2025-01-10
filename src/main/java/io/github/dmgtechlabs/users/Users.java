@@ -1,5 +1,7 @@
 package io.github.dmgtechlabs.users;
 
+//import io.github.dmgtechlabs.users.UserRepository;
+
 class User {
   private String username = null;
   private String email = null;
@@ -59,12 +61,13 @@ class User {
     this.LastName = LastName;
   }
 
-  public void login() {
+  static User login(String username, String password) {
+    // User user = UserRepository().login(username, password);
+    //
+
     boolean user = true;
-    String user_role_from_db = "SysManager";
+//    String user_role_from_db = "SysManager";
     if (user) {
-      this.role = user_role_from_db;
-      this.username = "John Doe";
       System.out.println("User is logged in");
     } else {
       System.out.println("User is not logged in");
