@@ -8,6 +8,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.sql.SQLException;
 
+import io.github.dmgtechlabs.models.Customer;
+
 /**
  *
  * @author kdesp73
@@ -26,6 +28,9 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+            
+            Customer c =  new Customer(1, "First name", "Last name", 123, "email");
+            c.insert();
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
 			connection.execute("SET search_path TO hoteldb;");
 
