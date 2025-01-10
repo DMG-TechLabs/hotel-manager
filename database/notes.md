@@ -9,8 +9,8 @@ Hotel class needs an update (needs the field string Amenities to match the table
 ## Conventions
 
 - Access Methods
- + insert_[table]
- + update_[table]
- + delete_[table]
- + select_[table]s_by_[field]
- + select_all_[table]s
+    + insert_[table]
+    + update_[table]
+    + delete_[table]
+    + select_[table]s_by_[field]
+    + select_all_[table]s
