@@ -8,6 +8,7 @@ import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.exceptions.PermissionDenied;
 import java.sql.ResultSet;
 import io.github.kdesp73.databridge.helpers.Adapter;
+import java.util.ArrayList;
 import java.util.List;
 //import io.github.dmgtechlabs.users.UserRepository;
 
@@ -16,7 +17,9 @@ import java.util.List;
 public class User implements Dao {
     public enum UserType {
         ADMIN(1),
-        GUEST(2);
+        GUEST(2),
+        EMPLOYEE(3),
+        MANAGER(4);
 
         private final int value;
 
@@ -34,18 +37,18 @@ public class User implements Dao {
                     return type;
                 }
             }
-            throw new IllegalArgumentException("Invalid value for Hotel Amenity: " + value);
+            throw new IllegalArgumentException("Invalid value for User Type: " + value);
         }
     }
     
-    private int user_id;
+    private int id;
     private String username;
     private String password;
-    private UserType user_type;
-    private int hotel_id;
+    private int type;
+    private int accountHotelFk;
 
-    public int getUser_id() {
-        return user_id;
+    public int getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -56,16 +59,16 @@ public class User implements Dao {
         return password;
     }
 
-    public UserType getUser_type() {
-        return user_type;
+    public int getType() {
+        return type;
     }
 
-    public int getHotel_id() {
-        return hotel_id;
+    public int getAccountHotelFk() {
+        return accountHotelFk;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setUsername(String username) {
@@ -76,21 +79,21 @@ public class User implements Dao {
         this.password = password;
     }
 
-    public void setUser_type(UserType user_type) {
-        this.user_type = user_type;
+    public void setType(int type) {
+        this.type = type;
     }
 
-    public void setHotel_id(int hotel_id) {
-        this.hotel_id = hotel_id;
+    public void setAccountHotelFk(int accountHotelFk) {
+        this.accountHotelFk = accountHotelFk;
     }
     
     
 
-  public User(int user_id, String username, String password, UserType user_type, int hotel_id) {
-      this.hotel_id = hotel_id;
+  public User(int id, String username, String password, int type, int account_hotel_fk) {
+      this.accountHotelFk = account_hotel_fk;
       this.password = password;
-      this.user_id = user_id;
-      this.user_type = user_type;
+      this.id = id;
+      this.type = type;
       this.username = username;
     
   }
@@ -98,15 +101,27 @@ public class User implements Dao {
   
   
   @Override
-  public boolean insert(){
+  public boolean insert() {
       try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-        conn.callProcedure("insert_new_user", user_id, hotel_id, username, password, user_type.value);
+        conn.callProcedure("insert_account",username, password, type,  accountHotelFk);
       } catch (SQLException e) {
         SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert User failed", e);
         return false;
       }
       return true;
   };
+  
+  @Override
+  public boolean insertWithException() throws Exception {
+      try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+        conn.callProcedure("insert_account",username, password, type,  accountHotelFk);
+      } catch (SQLException e) {
+        SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert User failed", e);
+        throw new Exception(e.getMessage());
+//        return false;
+      }
+      return true;
+  }
 
   @Override
   public boolean update(Object... values){
@@ -115,7 +130,7 @@ public class User implements Dao {
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.ORACLE.getConnection()) {
-            conn.callProcedure("update_user", Utils.appendFront(this.hotel_id, values));
+            conn.callProcedure("update_user", Utils.appendFront(this.accountHotelFk, values));
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
             return false;
@@ -126,7 +141,7 @@ public class User implements Dao {
   @Override
    public boolean delete(){
        try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-        conn.callProcedure("delete_user_with_id", this.user_id);
+        conn.callProcedure("delete_user_with_id", this.id);
       } catch (SQLException e) {
         SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete User failed", e);
         return false;
@@ -145,7 +160,17 @@ public class User implements Dao {
         
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             ResultSet rs = conn.callFunction("select_user_with_username_password", username, password);
-            return Adapter.load(rs, User.class);
+//            while(rs.next()){
+//                System.out.println(rs.getString(0));
+//            }
+            List<User> users = new ArrayList<User>();
+            while(rs.next()){
+//                int id, String username, String password, int type, int account_hotel_fk
+                System.out.println("aaaa");
+                users.add(new User(rs.getInt("id"),rs.getString("username"),rs.getString("password"),rs.getInt("type"),rs.getInt("account_hotel_fk")));
+            }
+//            return Adapter.load(rs, User.class);
+            return users;
         } catch (Exception e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
             throw new Exception(e.getMessage());
@@ -155,6 +180,7 @@ public class User implements Dao {
    
    public static User login(String username, String password) throws IllegalArgumentException, Exception{
        List<User> users_list = User.selectWithUsernamePassword(username, password);
+       System.out.println(users_list);
        if(users_list.size() == 1){
            return users_list.get(0);
        }else{
@@ -163,7 +189,7 @@ public class User implements Dao {
    }
    
    public List<User> Admin_SelectAllUsers() throws PermissionDenied{
-       if(this.user_type.value == User.UserType.ADMIN.value){
+       if( this.type == User.UserType.ADMIN.value){
            try(PostgresConnection conn = (PostgresConnection) AvailableConnections.ORACLE.getConnection()) {
                 ResultSet rs = conn.callFunction("select_user_with_username_password", username, password);
                 return Adapter.load(rs, User.class);

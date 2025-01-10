@@ -5,11 +5,12 @@ import io.github.dmgtechlabs.State;
 import io.github.dmgtechlabs.models.User;
 
 public class MainFrame extends javax.swing.JFrame {
-        private State state;
+        private State state = new State();
 	private HelpFrame helpFrame;
 	private AboutFrame aboutFrame;
 	private HotelFrame hotelFrame;
 	private RoomFrame roomFrame;
+        private CreateUserFrame userAddFrame;
 	
 	/**
 	 * Creates new form MainFrame
@@ -18,9 +19,10 @@ public class MainFrame extends javax.swing.JFrame {
 	 */
         
         public MainFrame(User user, int hotelId){
-            initComponents();
-		this.state.activeHotelId = hotelId;
+            this.state.activeHotelId = hotelId;
                 this.state.LoggedInUser = user;
+            initComponents();
+		
 		
 		this.setTitle("Hotel Manager");
 		this.setLocationRelativeTo(null);
@@ -53,6 +55,17 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         addMenu.add(addRoomMenuItem);
+
+        if(state.LoggedInUser != null && state.LoggedInUser.getType() == User.UserType.MANAGER.getValue()) {
+            addUserMenuItem = new javax.swing.JMenuItem();
+            addUserMenuItem.setText("User");
+            addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    addUserMenuItemActionPerformed(evt);
+                }
+            });
+            addMenu.add(addUserMenuItem);
+        }
 
         jMenuBar1.add(addMenu);
 
@@ -121,6 +134,11 @@ public class MainFrame extends javax.swing.JFrame {
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
+    private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                
+		this.userAddFrame = new CreateUserFrame(this.state.LoggedInUser.getAccountHotelFk());
+		GUIUtils.showFrame(this.userAddFrame);
+    }
+
     private void editRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoomMenuItemActionPerformed
         this.roomFrame = new RoomFrame(this.state.activeHotelId, null); // TODO: get selected room
 		GUIUtils.showFrame(this.roomFrame);
@@ -142,6 +160,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addRoomMenuItem;
+    private javax.swing.JMenuItem addUserMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem editRoomMenuItem;
     private javax.swing.JMenu helpMenu;

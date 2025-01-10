@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.sql.SQLException;
 
 import io.github.dmgtechlabs.models.Customer;
+import io.github.dmgtechlabs.models.User;
 
 /**
  *
@@ -25,7 +26,8 @@ public class Main {
 			System.err.println("Failed to initialize LaF");
 		}
 		java.awt.EventQueue.invokeLater(() -> {
-			new LoginFrame(-1).setVisible(true);
+			new MainFrame(new User(0, "manager", "manager", User.UserType.MANAGER.getValue(), 1), 1).setVisible(true);
+//                        new LoginFrame(1).setVisible(true);
 		});
 	}
 
