@@ -28,6 +28,7 @@ public class Main {
 	public static void main(String[] args) {
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
 			connection.execute("SET search_path TO hoteldb;");
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
