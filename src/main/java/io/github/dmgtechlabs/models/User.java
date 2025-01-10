@@ -125,12 +125,12 @@ public class User implements Dao {
 
   @Override
   public boolean update(Object... values){
-      final int expectedParams = 5;
+      final int expectedParams = 3;
 		if(values.length != expectedParams)
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.ORACLE.getConnection()) {
-            conn.callProcedure("update_user", Utils.appendFront(this.accountHotelFk, values));
+            conn.callProcedure("update_account", Utils.appendFront(this.id, values));
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
             return false;

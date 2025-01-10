@@ -10,7 +10,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private AboutFrame aboutFrame;
 	private HotelFrame hotelFrame;
 	private RoomFrame roomFrame;
-        private CreateUserFrame userAddFrame;
+        private UserFrame userFrame;
 	
 	/**
 	 * Creates new form MainFrame
@@ -40,6 +40,7 @@ public class MainFrame extends javax.swing.JFrame {
         addRoomMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         editRoomMenuItem = new javax.swing.JMenuItem();
+        editUserMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -56,17 +57,6 @@ public class MainFrame extends javax.swing.JFrame {
         });
         addMenu.add(addRoomMenuItem);
 
-        if(state.LoggedInUser != null && state.LoggedInUser.getType() == User.UserType.MANAGER.getValue()) {
-            addUserMenuItem = new javax.swing.JMenuItem();
-            addUserMenuItem.setText("User");
-            addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    addUserMenuItemActionPerformed(evt);
-                }
-            });
-            addMenu.add(addUserMenuItem);
-        }
-
         jMenuBar1.add(addMenu);
 
         editMenu.setText("Edit");
@@ -78,6 +68,15 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         editMenu.add(editRoomMenuItem);
+
+        editUserMenuItem.setText("User");
+        editUserMenuItem.setToolTipText("");
+        editUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editUserMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(editUserMenuItem);
 
         jMenuBar1.add(editMenu);
 
@@ -135,14 +134,19 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
     private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                
-		this.userAddFrame = new CreateUserFrame(this.state.LoggedInUser.getAccountHotelFk());
-		GUIUtils.showFrame(this.userAddFrame);
+		this.userFrame = new UserFrame(this.state.LoggedInUser.getAccountHotelFk());
+		GUIUtils.showFrame(this.userFrame);
     }
 
     private void editRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoomMenuItemActionPerformed
         this.roomFrame = new RoomFrame(this.state.activeHotelId, null); // TODO: get selected room
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_editRoomMenuItemActionPerformed
+
+    private void editUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserMenuItemActionPerformed
+        this.userFrame = new UserFrame(this.state.LoggedInUser); // TODO: get selected room
+		GUIUtils.showFrame(this.userFrame);
+    }//GEN-LAST:event_editUserMenuItemActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -160,9 +164,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addRoomMenuItem;
-    private javax.swing.JMenuItem addUserMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem editRoomMenuItem;
+    private javax.swing.JMenuItem editUserMenuItem;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JMenuBar jMenuBar1;

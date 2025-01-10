@@ -12,15 +12,34 @@ import javax.swing.JLabel;
  *
  * @author kostas
  */
-public class CreateUserFrame extends javax.swing.JFrame {
+public class UserFrame extends javax.swing.JFrame {
     private int hotelid;
+    private User user = null;
     /**
      * Creates new form CreateUserFrame
      */
-    public CreateUserFrame(int hotelId) {
+    public UserFrame(int hotelId) {
         initComponents();
         this.hotelid = hotelId;
         this.setLocationRelativeTo(null);
+    }
+    
+    public UserFrame(User user) {
+        this.user = user;
+        initComponents();
+        this.hotelid = user.getAccountHotelFk();
+        this.setLocationRelativeTo(null);
+        usernameField.setText(user.getUsername());
+        passwordField.setText("");
+        userType.setSelectedIndex(user.getType()-2);
+        userType.setEnabled(false);
+        jButton3.setText("Edit Account");
+        jButton3.removeActionListener(jButton3.getActionListeners()[0]);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformedUpdate(evt);
+            }
+        });
     }
 
     /**
@@ -107,8 +126,24 @@ public class CreateUserFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformedUpdate(java.awt.event.ActionEvent evt) {                                         
+        try{
+            if(usernameField.getText() == "" || passwordField.getPassword().toString() == "") throw new IllegalArgumentException("Empty username or password");
+//            User newUser = new User(0, usernameField.getText(), passwordField.getPassword().toString(), this.user.getType(), this.hotelid);
+            this.user.update(usernameField.getText(), passwordField.getPassword().toString(), this.user.getType());
+        } catch (Exception e){
+            JDialog j = new JDialog(this, "Error");
+            JLabel l = new JLabel(e.getMessage());
+            j.add(l);
+            j.setSize(100, 100);
+            j.setLocationRelativeTo(null);
+            j.setVisible(true);
+        }
+    }
+
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try{
+            if(usernameField.getText() == "" || passwordField.getPassword().toString() == "") throw new IllegalArgumentException("Empty username or password");
             User newUser = new User(0, usernameField.getText(), passwordField.getPassword().toString(), userType.getSelectedIndex()+2, this.hotelid);
             newUser.insert();
         } catch (Exception e){
@@ -138,20 +173,21 @@ public class CreateUserFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CreateUserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CreateUserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CreateUserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CreateUserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CreateUserFrame(-1).setVisible(true);
+                new UserFrame(-1).setVisible(true);
             }
         });
     }
