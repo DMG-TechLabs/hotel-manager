@@ -9,9 +9,11 @@ import io.github.kdesp73.databridge.helpers.SQLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Hotel implements Dao {
+
     public enum Amenity {
         POOL(1),
         GYM(2),
@@ -46,8 +48,7 @@ public class Hotel implements Dao {
     private String address;
     private long phone;
     private int hotelId;
-    //We should add
-    //private String amenities;
+    private List<Amenity> amenities;
 
     public Hotel(){}
     // For writing
@@ -63,6 +64,7 @@ public class Hotel implements Dao {
         
         this.address = address;
 		this.phone = phoneNumber;
+        this.amenities = selectAmenities();
     }
 
 	public String getName() {
@@ -80,8 +82,10 @@ public class Hotel implements Dao {
 	public int getHotelId() {
 		return hotelId;
 	}
-	
-	
+
+    public List<Amenity> getAmenities() {
+        return amenities;
+    }
 
     @Override
     public boolean insert() {
@@ -147,5 +151,20 @@ public class Hotel implements Dao {
 
     public static List<Hotel> selectByName(String name) {
         return select("select_hotel_by_name", name);
+    }
+
+    public List<Amenity> selectAmenities() {
+        List<Amenity> result = new ArrayList<>();
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
+            ResultSet rs = conn.callFunction("select_amenities", hotelId);
+            while(rs.next()){
+                result.add(Amenity.fromValue(rs.getInt("AMENITY")));
+            }
+        } catch (SQLException e) {
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select amenities failed", e);
+            return null;
+        }
+        this.amenities = result;
+        return result;
     }
 }
