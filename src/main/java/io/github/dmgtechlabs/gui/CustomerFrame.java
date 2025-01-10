@@ -6,6 +6,7 @@ package io.github.dmgtechlabs.gui;
 
 import io.github.dmgtechlabs.models.Hotel;
 import javax.swing.JOptionPane;
+import java.math.BigInteger;
 
 /**
  *
@@ -120,7 +121,7 @@ public class CustomerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	
-	private boolean validate(String name, String address, long phone){
+	private boolean validate(String name, String address, BigInteger phone){
 		if(name.isBlank() || name.equals("Name")) {
 			GUIUtils.logUserError(this, "Name is empty");
 			return false;
@@ -131,7 +132,7 @@ public class CustomerFrame extends javax.swing.JFrame {
 			return false;
 		}
 		
-		if(phone < 1000000000L || phone > 9999999999L){
+		if(phone.longValue() < 1000000000L || phone.longValue() > 9999999999L){
 			GUIUtils.logUserError(this, "Invalid phone number");
 			return false;
 		}
@@ -141,7 +142,7 @@ public class CustomerFrame extends javax.swing.JFrame {
 	private void addHotel(){
 		String name = this.nameTextField.getText();
 		String address = this.addressTextField.getText();
-		long phone = Integer.parseInt(this.phoneNumberFormattedTextField.getText());
+		BigInteger phone = BigInteger.valueOf(Integer.parseInt(this.phoneNumberFormattedTextField.getText()));
 		
 		if(!validate(name, address, phone)) return;
 		
@@ -157,7 +158,7 @@ public class CustomerFrame extends javax.swing.JFrame {
 		
 		String name = this.nameTextField.getText();
 		String address = this.addressTextField.getText();
-		long phone = Integer.parseInt(this.phoneNumberFormattedTextField.getText());
+		BigInteger phone = BigInteger.valueOf(Integer.parseInt(this.phoneNumberFormattedTextField.getText()));
 		
 		if(!validate(name, address, phone)) return;
 		

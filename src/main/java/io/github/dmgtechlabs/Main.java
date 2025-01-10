@@ -2,6 +2,7 @@ package io.github.dmgtechlabs;
 
 import io.github.dmgtechlabs.gui.MainFrame;
 import io.github.dmgtechlabs.models.Hotel;
+import io.github.dmgtechlabs.models.Room;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
 import io.github.kdesp73.databridge.helpers.QueryBuilder;
@@ -34,11 +35,10 @@ public class Main {
             
 
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
-			new Hotel("Name", "Address", BigInteger.valueOf(6969696969L)).insert();
+			new Room(1, 1, Room.Type.DOUBLE, 40.2f, 1).insert();
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-
 	}
 }
