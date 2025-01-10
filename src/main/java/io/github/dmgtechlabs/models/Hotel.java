@@ -11,12 +11,10 @@ import io.github.kdesp73.databridge.helpers.QueryBuilder;
 import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Hotel implements Dao {
-
-    public enum Amenity {
+    public enum Amenity implements Comparable<Amenity> {
         POOL(1),
         GYM(2),
         BAR(3),
@@ -35,16 +33,20 @@ public class Hotel implements Dao {
             return value;
         }
 
-        public static Hotel.Amenity fromValue(int value) {
-            for (Hotel.Amenity type : Hotel.Amenity.values()) {
-                if (type.value == value) {
-                    return type;
+        public static Amenity fromValue(int value) {
+            for (Amenity amenity : Amenity.values()) {
+                if (amenity.value == value) {
+                    return amenity;
                 }
             }
-            throw new IllegalArgumentException("Invalid value for Hotel Amenity: " + value);
+            throw new IllegalArgumentException("Invalid value for Amenity: " + value);
+        }
+
+        @Override
+        public String toString() {
+            return this.name() + "(" + value + ")";
         }
     }
-
 
     private String name;
     private String address;
@@ -184,12 +186,38 @@ public class Hotel implements Dao {
         return true;
     }
 
-    public boolean updateAmenities(Amenity... amenities) {
-        List<Amenity> current = selectAmenities();
-
-        for(Amenity a : amenities) {
-
+    public boolean deleteAmenity(Amenity amenity) {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            conn.executeUpdate(new QueryBuilder().deleteFrom("amenities").where("hotel_id = " + id).build());
+        } catch (SQLException e) {
+            return false;
         }
         return true;
     }
-}
+
+    public boolean updateAmenities(Amenity... amenities) {
+        List<Amenity> current = selectAmenities(); // Fetch current amenities
+        Set<Amenity> newAmenities = new HashSet<>(Arrays.asList(amenities)); // Convert new amenities to a set for easy lookup
+        Set<Amenity> currentAmenities = new HashSet<>(current); // Convert current amenities to a set
+
+        PostgresConnection conn = null;
+        try {
+             conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection();
+        } catch (SQLException e) {
+            return false;
+        }
+
+        for (Amenity amenity : current) {
+            if (!newAmenities.contains(amenity)) {
+                if(!deleteAmenity(amenity)) return false;
+            }
+        }
+
+        for (Amenity amenity : amenities) {
+            if (!currentAmenities.contains(amenity)) {
+                if(!insertAmenities(amenity)) return false;
+            }
+        }
+
+        return true;
+    }}
