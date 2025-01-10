@@ -5,6 +5,7 @@ import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
+import io.github.kdesp73.databridge.helpers.QueryBuilder;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 
 import java.sql.ResultSet;
@@ -59,6 +60,7 @@ public class Room implements Dao {
     private boolean occupied;
 
     public Room() {}
+    public Room(int id) { this.roomId = id; }
     // For writing
     public Room(int floor, int number, Type type, float price, int hotelFk){
         if(floor < 0) throw new IllegalArgumentException("Room floor can't be a negative number");
@@ -175,7 +177,6 @@ public class Room implements Dao {
             }
             rs.close();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select " + function + " failed", e);
             return null;
         }
@@ -200,6 +201,16 @@ public class Room implements Dao {
 
     public static List<Room> selectByPriceRange(float floor, float ceil){
         return select("select_rooms_by_price_range", floor, ceil);
+    }
+
+    public boolean markOccupiedAs(boolean occ){
+        try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
+            conn.executeUpdate(new QueryBuilder().update("room").set("occupied", occ).where("id = " + roomId).build());
+        } catch (SQLException e){
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Could not mark room occupancy", e);
+            return false;
+        }
+        return true;
     }
 
     @Override
