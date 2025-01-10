@@ -1,8 +1,9 @@
 package io.github.dmgtechlabs.models;
 
+import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
-import io.github.kdesp73.databridge.connections.OracleConnection;
+import io.github.kdesp73.databridge.connections.PostgresConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 import java.sql.ResultSet;
@@ -76,43 +77,22 @@ public class Reservation implements Dao {
 		return checkInDate;
 	}
 
-	public void setCheckInDate(String checkInDate) {
-		this.checkInDate = checkInDate;
-	}
-
 	public String getCheckOutDate() {
 		return checkOutDate;
-	}
-
-	public void setCheckOutDate(String checkOutDate) {
-		this.checkOutDate = checkOutDate;
 	}
 
 	public float getCost() {
 		return cost;
 	}
 
-	public void setCost(float cost) {
-		this.cost = cost;
-	}
-
 	public Status getStatus() {
 		return status;
 	}
 
-	public static Status int2Status(int status) {
-		for (Status g : Status.values()) {
-			if (status == g.ordinal()) {
-				return g;
-			}
-		}
-		return null;
-	}
-
 	@Override
 	public boolean insert() {
-		try (OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-			//todo
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("insert_reservation", customerId, roomId, checkInDate, checkOutDate, cost, status.value);
 		} catch (SQLException e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Reservation failed", e);
 			return false;
@@ -136,8 +116,8 @@ public class Reservation implements Dao {
 			throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
 		}
 
-		try (OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-			//todo
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("update_rerservation", Utils.appendFront(reservationId, values));
 		} catch (SQLException e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Reservation failed", e);
 			return false;
@@ -147,8 +127,8 @@ public class Reservation implements Dao {
 
 	@Override
 	public boolean delete() {
-		try (OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-			//todo
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("delete_reservation", reservationId);
 		} catch (SQLException e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Reservation failed", e);
 			return false;
@@ -159,7 +139,7 @@ public class Reservation implements Dao {
 	private static List<Reservation> select(String function, Object... values) {
 		assert (function != null);
 		assert (!function.isBlank());
-		try (OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 			ResultSet rs = conn.callFunction(function, values);
 			return Adapter.load(rs, Reservation.class);
 		} catch (Exception e) {
