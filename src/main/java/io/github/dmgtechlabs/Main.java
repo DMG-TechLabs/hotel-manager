@@ -33,8 +33,7 @@ public class Main {
 
 	public static void main(String[] args) {
             
-            Customer c =  new Customer(1, "First name", "Last name", 123, "email");
-            c.insert();
+
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
 			new Room(1, 1, Room.Type.DOUBLE, 40.2f, 1).insert();
 

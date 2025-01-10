@@ -77,7 +77,7 @@ public class Customer {
     // Insert a new customer
     public boolean insert() {
         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callFunction("insert_customer", fName, lName, phone, email);
+            conn.callProcedure("insert_customer", fName, lName, phone, email);
             return true;
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Customer failed", e);
@@ -92,7 +92,7 @@ public class Customer {
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callFunction("update_customer", id, values[0], values[1], values[2], values[3]);
+            conn.callProcedure("update_customer", id, values[0], values[1], values[2], values[3]);
             return true;
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Customer failed", e);
@@ -103,7 +103,7 @@ public class Customer {
     // Delete an existing customer
     public boolean delete() {
         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callFunction("delete_customer", id);
+            conn.callProcedure("delete_customer", id);
             return true;
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Customer failed", e);
