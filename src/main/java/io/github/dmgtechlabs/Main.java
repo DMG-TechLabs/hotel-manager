@@ -4,7 +4,7 @@ import io.github.dmgtechlabs.gui.MainFrame;
 import io.github.dmgtechlabs.models.Hotel;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
-import kdesp73.databridge.helpers.QueryBuilder;
+import io.github.kdesp73.databridge.helpers.QueryBuilder;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -32,7 +32,8 @@ public class Main {
 
 	public static void main(String[] args) {
             
-
+            Customer c =  new Customer(1, "First name", "Last name", 123, "email");
+            c.insert();
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
 			new Hotel("Name", "Address", BigInteger.valueOf(6969696969L)).insert();
 
