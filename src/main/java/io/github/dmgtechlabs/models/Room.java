@@ -4,7 +4,6 @@ import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.OracleConnection;
-import io.github.kdesp73.databridge.connections.OracleConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 
@@ -50,12 +49,13 @@ public class Room implements Dao {
         }
     }
 
-    private int id;
+    private int roomId;
     private int number;
     private int floor;
     private Type type;
-    private int hotelFk;
+    private int hotelId;
     private float price;
+    private boolean occupied;
 
     public Room() {}
     // For writing
@@ -71,20 +71,22 @@ public class Room implements Dao {
         if(price <= 0) throw new IllegalArgumentException("Room price can't be negative or zero");
         this.price = price;
 
-        this.hotelFk = hotelFk;
+        this.hotelId = hotelFk;
+        this.occupied = false;
     }
     // For loading
-    public Room(int id, int floor, int number, Type type, float price, int hotelFk){
-        this.id = id;
+    public Room(int id, int floor, int number, Type type, float price, int hotelFk, boolean occupied){
+        this.roomId = id;
         this.floor = floor;
         this.number = number;
         this.type = type;
         this.price = price;
-        this.hotelFk = hotelFk;
+        this.hotelId = hotelFk;
+        this.occupied = occupied;
     }
 
-	public int getId() {
-		return id;
+	public int getRoomId() {
+		return roomId;
 	}
 
 	public int getNumber() {
@@ -99,8 +101,8 @@ public class Room implements Dao {
 		return type;
 	}
 
-	public int getHotelFk() {
-		return hotelFk;
+	public int getHotelId() {
+		return hotelId;
 	}
 
 	public float getPrice() {
@@ -108,12 +110,11 @@ public class Room implements Dao {
 	}
 	
 	
-
     @Override
     public boolean insert() {
         try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
             //Test with insertRoom using oracle connection
-            conn.callProcedure("insert_room", floor, number, type.value, price, hotelFk);
+            conn.callProcedure("insert_room", floor, number, type.value, price, hotelId, occupied);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Room failed", e);
             return false;
@@ -123,7 +124,7 @@ public class Room implements Dao {
 
 	/**
 	 * Accepts exactly 4 values
-	 * floor (int), number (int), type (int), price (float)
+	 * floor (int), number (int), type (int), price (float), occupied (boolean)
 	 * 
 	 * update_room procedure should include the id (int) as the first parameter
 	 * 
@@ -136,7 +137,7 @@ public class Room implements Dao {
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
 
         try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-            conn.callProcedure("update_room", Utils.appendFront(id, values));
+            conn.callProcedure("update_room", Utils.appendFront(roomId, values));
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Room failed", e);
             return false;
@@ -147,7 +148,7 @@ public class Room implements Dao {
     @Override
     public boolean delete() {
         try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()){
-            conn.callProcedure("delete_room", id);
+            conn.callProcedure("delete_room", roomId);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Room failed", e);
             return false;

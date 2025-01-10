@@ -36,7 +36,7 @@ public class HotelFrame extends javax.swing.JFrame {
 			
 		this.nameTextField.setText(hotel.getName());
 		this.addressTextField.setText(hotel.getAddress());
-		this.phoneNumberFormattedTextField.setText(String.valueOf(hotel.getPhoneNumber()));
+		this.phoneNumberFormattedTextField.setText(String.valueOf(hotel.getPhone()));
 	}
 
 	/**
