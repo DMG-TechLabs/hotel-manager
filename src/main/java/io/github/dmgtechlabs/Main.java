@@ -1,9 +1,7 @@
 package io.github.dmgtechlabs;
 
 import io.github.dmgtechlabs.gui.MainFrame;
-import io.github.dmgtechlabs.models.Hotel;
-import io.github.dmgtechlabs.models.Room;
-import io.github.kdesp73.databridge.helpers.Config;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -25,8 +23,6 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-//		runGUI();
-		boolean done = new Hotel("TestName", "TestAddress", 6969696969L).insert();
-		System.out.println(done);
+		runGUI();
 	}
 }
