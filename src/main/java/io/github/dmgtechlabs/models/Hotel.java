@@ -3,10 +3,11 @@ package io.github.dmgtechlabs.models;
 import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
-import io.github.kdesp73.databridge.connections.OracleConnection;
+import io.github.kdesp73.databridge.connections.PostgresConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,19 +47,19 @@ public class Hotel implements Dao {
 
     private String name;
     private String address;
-    private long phone;
+    private BigInteger phone;
     private int hotelId;
     private List<Amenity> amenities;
 
     public Hotel(){}
     // For writing
-    public Hotel(String name, String address, long phoneNumber){
+    public Hotel(String name, String address, BigInteger phoneNumber){
         this.name = name;
         this.address = address;
         this.phone = phoneNumber;
     }
     // For loading
-    public Hotel(int id, String name, String address, long phoneNumber){
+    public Hotel(int id, String name, String address, BigInteger phoneNumber){
         this.hotelId = id;
         this.name = name;
         
@@ -75,7 +76,7 @@ public class Hotel implements Dao {
 		return address;
 	}
 
-	public long getPhone() {
+	public BigInteger getPhone() {
 		return phone;
 	}
 
@@ -89,8 +90,8 @@ public class Hotel implements Dao {
 
     @Override
     public boolean insert() {
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-            conn.callProcedure("INSERTHOTEL", name, address, phone);
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            conn.callProcedure("insert_hotel", name, address, phone);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Hotel failed", e);
             return false;
@@ -100,7 +101,7 @@ public class Hotel implements Dao {
 
 	/**
 	 * Accepts exactly 3 values
-	 * name (string), address (string), phone (long)
+	 * name (string), address (string), phone (BigInteger)
 	 * 
 	 * update_hotel procedure should include the id (int) as the first parameter
 	 * 
@@ -113,7 +114,7 @@ public class Hotel implements Dao {
 		if(values.length != expectedParams)
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             conn.callProcedure("update_hotel", Utils.appendFront(hotelId, values));
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
@@ -124,7 +125,7 @@ public class Hotel implements Dao {
 
     @Override
     public boolean delete() {
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()){
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
             conn.callProcedure("delete_hotel", hotelId);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Hotel failed", e);
@@ -136,7 +137,7 @@ public class Hotel implements Dao {
     private static List<Hotel> select(String function, Object... values){
         assert(function != null);
         assert(!function.isBlank());
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             ResultSet rs = conn.callFunction(function, values);
             return Adapter.load(rs, Hotel.class);
         } catch (Exception e) {
@@ -155,7 +156,7 @@ public class Hotel implements Dao {
 
     public List<Amenity> selectAmenities() {
         List<Amenity> result = new ArrayList<>();
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             ResultSet rs = conn.callFunction("select_amenities", hotelId);
             while(rs.next()){
                 result.add(Amenity.fromValue(rs.getInt("AMENITY")));

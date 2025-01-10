@@ -1,11 +1,14 @@
 package io.github.dmgtechlabs;
 
 import io.github.dmgtechlabs.gui.MainFrame;
+import io.github.dmgtechlabs.models.Hotel;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
+import kdesp73.databridge.helpers.QueryBuilder;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.math.BigInteger;
 import java.sql.SQLException;
 
 /**
@@ -27,7 +30,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
-			connection.execute("SET search_path TO hoteldb;");
+			new Hotel("Name", "Address", BigInteger.valueOf(6969696969L)).insert();
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
