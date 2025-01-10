@@ -3,7 +3,8 @@ package io.github.dmgtechlabs.models;
 import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
-import io.github.kdesp73.databridge.connections.PostgresConnection;
+import io.github.kdesp73.databridge.connections.OracleConnection;
+import io.github.kdesp73.databridge.connections.OracleConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 
@@ -53,29 +54,66 @@ public class Room implements Dao {
     private int number;
     private int floor;
     private Type type;
+    private int hotelFk;
     private float price;
 
     public Room() {}
     // For writing
-    public Room(int floor, int number, Type type, float price){
+    public Room(int floor, int number, Type type, float price, int hotelFk){
+        if(floor < 0) throw new IllegalArgumentException("Room floor can't be a negative number");
         this.floor = floor;
+
+        if(number < 0) throw new IllegalArgumentException("Room number can't be a negative number");
         this.number = number;
+
         this.type = type;
+
+        if(price <= 0) throw new IllegalArgumentException("Room price can't be negative or zero");
         this.price = price;
+
+        this.hotelFk = hotelFk;
     }
     // For loading
-    public Room(int id, int floor, int number, Type type, float price){
+    public Room(int id, int floor, int number, Type type, float price, int hotelFk){
         this.id = id;
         this.floor = floor;
         this.number = number;
         this.type = type;
         this.price = price;
+        this.hotelFk = hotelFk;
     }
+
+	public int getId() {
+		return id;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public int getFloor() {
+		return floor;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public int getHotelFk() {
+		return hotelFk;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+	
+	
 
     @Override
     public boolean insert() {
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callProcedure("insert_room", floor, number, type.value);
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
+            //Test with insertRoom using oracle connection
+            conn.callProcedure("insert_room", floor, number, type.value, price, hotelFk);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Room failed", e);
             return false;
@@ -83,9 +121,21 @@ public class Room implements Dao {
         return true;
     }
 
+	/**
+	 * Accepts exactly 4 values
+	 * floor (int), number (int), type (int), price (float)
+	 * 
+	 * update_room procedure should include the id (int) as the first parameter
+	 * 
+	 * @param values
+	 * @return success or not 
+	 */
     @Override
     public boolean update(Object... values) {
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+        if(values.length != 4)
+            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
+
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
             conn.callProcedure("update_room", Utils.appendFront(id, values));
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Room failed", e);
@@ -96,7 +146,7 @@ public class Room implements Dao {
 
     @Override
     public boolean delete() {
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()){
             conn.callProcedure("delete_room", id);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Room failed", e);
@@ -106,7 +156,9 @@ public class Room implements Dao {
     }
 
     private static List<Room> select(String function, Object... values){
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+        assert(function != null);
+        assert(!function.isBlank());
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
             ResultSet rs = conn.callFunction(function, values);
             return Adapter.load(rs, Room.class);
         } catch (Exception e) {
@@ -117,6 +169,10 @@ public class Room implements Dao {
 
     public static List<Room> selectAll() {
         return select("select_all_rooms");
+    }
+
+    public static List<Room> selectByHotel(int hotelFk){
+        return select("select_rooms_by_hotel", hotelFk);
     }
 
     public static List<Room> selectByFloor(int floor){

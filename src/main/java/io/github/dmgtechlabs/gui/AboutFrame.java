@@ -44,9 +44,9 @@ public final class AboutFrame extends javax.swing.JFrame {
 		this.setGithubURL(githubURL);
 		
 		int size = 20;
-		GUIMethods.loadImage(nameLabel, Images.developerWhite, new Dimension(size, size));
-		GUIMethods.loadImage(emailLabel, Images.mailWhite, new Dimension(size, size));
-		GUIMethods.loadImage(githubLabel, Images.githubWhite, new Dimension(size, size));
+		GUIMethods.loadImage(nameLabel, Images.developer, new Dimension(size, size));
+		GUIMethods.loadImage(emailLabel, Images.mail, new Dimension(size, size));
+		GUIMethods.loadImage(githubLabel, Images.github, new Dimension(size, size));
 	}
 	
 	@SuppressWarnings("unchecked")
