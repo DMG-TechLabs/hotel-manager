@@ -1,27 +1,33 @@
 
 package io.github.dmgtechlabs.gui;
 
+import io.github.dmgtechlabs.State;
+import io.github.dmgtechlabs.models.User;
+
 public class MainFrame extends javax.swing.JFrame {
+        private State state;
 	private HelpFrame helpFrame;
 	private AboutFrame aboutFrame;
 	private HotelFrame hotelFrame;
 	private RoomFrame roomFrame;
 	
-	private int activeHotelId = -1;
-	
 	/**
 	 * Creates new form MainFrame
+     * @param user
+     * @param hotelId
 	 */
-	public MainFrame(int hotelId) {
-		initComponents();
-		this.activeHotelId = hotelId;
+        
+        public MainFrame(User user, int hotelId){
+            initComponents();
+		this.state.activeHotelId = hotelId;
+                this.state.LoggedInUser = user;
 		
 		this.setTitle("Hotel Manager");
 		this.setLocationRelativeTo(null);
 		
 		this.helpFrame = new HelpFrame();
 		this.aboutFrame = new AboutFrame();
-	}
+        }
 
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -111,12 +117,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void addRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomMenuItemActionPerformed
-		this.roomFrame = new RoomFrame(this.activeHotelId);
+		this.roomFrame = new RoomFrame(this.state.activeHotelId);
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
     private void editRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoomMenuItemActionPerformed
-        this.roomFrame = new RoomFrame(this.activeHotelId, null); // TODO: get selected room
+        this.roomFrame = new RoomFrame(this.state.activeHotelId, null); // TODO: get selected room
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_editRoomMenuItemActionPerformed
 
@@ -127,7 +133,7 @@ public class MainFrame extends javax.swing.JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new MainFrame(-1).setVisible(true);
+				new MainFrame(null,-1).setVisible(true);
 			}
 		});
 	}
