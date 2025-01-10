@@ -162,3 +162,177 @@ BEGIN
     END;
 END;
 $$ LANGUAGE plpgsql;
+
+
+--Update procedures
+
+CREATE OR REPLACE FUNCTION update_system_user(
+    _user_id INT,
+    _username VARCHAR,
+    _password VARCHAR,
+    _user_type INT,
+    _hotel_id INT DEFAULT NULL
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        UPDATE SYSTEM_USER
+        SET 
+            username = _username,
+            password = _password,
+            user_type = _user_type,
+            hotel_id = _hotel_id
+        WHERE user_id = _user_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No SYSTEM_USER found with ID %', _user_id;
+        END IF;
+    EXCEPTION WHEN unique_violation THEN
+        RAISE EXCEPTION 'Username % already exists', _username;
+    WHEN foreign_key_violation THEN
+        RAISE EXCEPTION 'Hotel ID % or User Type % does not exist', _hotel_id, _user_type;
+    WHEN others THEN
+        RAISE EXCEPTION 'An unexpected error occurred while updating SYSTEM_USER.';
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION update_customer(
+    _customer_id INT,
+    _first_name VARCHAR,
+    _last_name VARCHAR,
+    _phone BIGINT,
+    _email VARCHAR
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        UPDATE CUSTOMER
+        SET 
+            first_name = _first_name,
+            last_name = _last_name,
+            phone = _phone,
+            email = _email
+        WHERE customer_id = _customer_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No CUSTOMER found with ID %', _customer_id;
+        END IF;
+    EXCEPTION WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while updating CUSTOMER.';
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION update_hotel(
+    _hotel_id INT,
+    _name VARCHAR,
+    _address VARCHAR,
+    _phone BIGINT
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        UPDATE HOTEL
+        SET 
+            name = _name,
+            address = _address,
+            phone = _phone
+        WHERE hotel_id = _hotel_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No HOTEL found with ID %', _hotel_id;
+        END IF;
+    EXCEPTION WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while updating HOTEL.';
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION update_room(
+    _room_id INT,
+    _number INT,
+    _hotel_id INT,
+    _type INT,
+    _price NUMERIC(10, 2),
+    _floor INT,
+    _occupied BOOLEAN
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        UPDATE ROOM
+        SET 
+            number = _number,
+            hotel_id = _hotel_id,
+            type = _type,
+            price = _price,
+            floor = _floor,
+            occupied = _occupied
+        WHERE room_id = _room_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No ROOM found with ID %', _room_id;
+        END IF;
+    EXCEPTION WHEN foreign_key_violation THEN
+        RAISE EXCEPTION 'Hotel ID % or Room Type % does not exist', _hotel_id, _type;
+    WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while updating ROOM.';
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION update_amenities(
+    _hotel_id INT,
+    _type VARCHAR
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        UPDATE AMENITIES
+        SET 
+            type = _type
+        WHERE hotel_id = _hotel_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No AMENITIES found with Hotel ID %', _hotel_id;
+        END IF;
+    EXCEPTION WHEN foreign_key_violation THEN
+        RAISE EXCEPTION 'Hotel ID % does not exist', _hotel_id;
+    WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while updating AMENITIES.';
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION update_reservation(
+    _reservation_id INT,
+    _customer_id INT,
+    _room_id INT,
+    _check_in_date DATE,
+    _check_out_date DATE,
+    _cost NUMERIC(10, 2),
+    _status INT
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        UPDATE RESERVATION
+        SET 
+            customer_id = _customer_id,
+            room_id = _room_id,
+            check_in_date = _check_in_date,
+            check_out_date = _check_out_date,
+            cost = _cost,
+            status = _status
+        WHERE reservation_id = _reservation_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No RESERVATION found with ID %', _reservation_id;
+        END IF;
+    EXCEPTION WHEN foreign_key_violation THEN
+        RAISE EXCEPTION 'Customer ID % or Room ID % does not exist', _customer_id, _room_id;
+    WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while updating RESERVATION.';
+    END;
+END;
+$$ LANGUAGE plpgsql;
