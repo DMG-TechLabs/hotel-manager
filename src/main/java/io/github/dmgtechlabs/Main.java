@@ -1,17 +1,26 @@
 package io.github.dmgtechlabs;
 
 import io.github.dmgtechlabs.gui.MainFrame;
+
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Reservation.Status;
+
+import io.github.dmgtechlabs.models.Hotel;
+import io.github.dmgtechlabs.models.Room;
+
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
+import io.github.kdesp73.databridge.helpers.QueryBuilder;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+
+import io.github.dmgtechlabs.models.Customer;
 
 /**
  *
@@ -31,13 +40,15 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+            
+
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
 			//connection.execute("SET search_path TO hoteldb;");
 			new Reservation(123, 2, "2025-01-10", "2025-01-13", 50.0f, Status.PENDING).insert();
 
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-
 	}
 }
