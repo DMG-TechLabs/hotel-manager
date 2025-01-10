@@ -43,10 +43,8 @@ public class Main {
             
 
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
-			//connection.execute("SET search_path TO hoteldb;");
-			new Reservation(123, 2, "2025-01-10", "2025-01-13", 50.0f, Status.PENDING).insert();
-
-
+			//new Reservation(1, 4, "2025-01-10", "2025-01-13", 50.0f, Status.PENDING).insert();
+			new Reservation(4).update(Status.ACCEPTED.getValue());
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

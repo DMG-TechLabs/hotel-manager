@@ -70,6 +70,10 @@ public class Reservation implements Dao {
 		this.cost = cost;
 		this.status = status;
 	}
+
+	public Reservation(int id) {
+		this.id = id;
+	}
 	
 	public int getId() {
 		return id;
@@ -111,8 +115,7 @@ public class Reservation implements Dao {
 	}
 
 	/**
-	 * Accepts exactly 4 values checkInDate (String), checkOutDate (String),
-	 * cost (float), status (int)
+	 * Accepts exactly 1 value status (int)
 	 *
 	 * update_reservation procedure should include the id (int) as the first
 	 * parameter
@@ -122,12 +125,12 @@ public class Reservation implements Dao {
 	 */
 	@Override
 	public boolean update(Object... values) {
-		if (values.length != 4) {
+		if (values.length != 1) {
 			throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
 		}
 
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-			conn.callProcedure("update_rerservation", Utils.appendFront(id, values));
+			conn.callProcedure("update_reservation", Utils.appendFront(id, values));
 		} catch (SQLException e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Reservation failed", e);
 			return false;
