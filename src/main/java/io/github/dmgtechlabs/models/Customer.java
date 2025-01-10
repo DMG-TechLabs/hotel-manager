@@ -18,7 +18,7 @@ public class Customer {
     private int id;
     private String fName;
     private String lName;
-    private long phone;
+    private long phone; //Must become biginteger
     private String email;
 
     // Default constructor
@@ -92,7 +92,7 @@ public class Customer {
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callProcedure("update_customer", id, values[0], values[1], values[2], values[3]);
+            conn.callProcedure("update_customer", Utils.appendFront(id, values));
             return true;
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Customer failed", e);

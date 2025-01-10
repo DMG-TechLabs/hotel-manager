@@ -6,7 +6,7 @@ import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
-import kdesp73.databridge.helpers.QueryBuilder;
+import io.github.kdesp73.databridge.helpers.QueryBuilder;
 
 import java.math.BigInteger;
 import java.sql.ResultSet;
