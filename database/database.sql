@@ -284,14 +284,14 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION update_amenities(
     _hotel_id INT,
-    _type VARCHAR
+    _amenity_id INT
 ) RETURNS VOID AS $$
 BEGIN
     BEGIN
         UPDATE AMENITIES
         SET 
             type = _type
-        WHERE hotel_id = _hotel_id;
+        WHERE hotel_id = _hotel_id AND amenity_id = _amenity_id;
 
         IF NOT FOUND THEN
             RAISE EXCEPTION 'No AMENITIES found with Hotel ID %', _hotel_id;
@@ -333,6 +333,111 @@ BEGIN
         RAISE EXCEPTION 'Customer ID % or Room ID % does not exist', _customer_id, _room_id;
     WHEN others THEN
         RAISE EXCEPTION 'An error occurred while updating RESERVATION.';
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+--Delete Procedures
+CREATE OR REPLACE FUNCTION delete_system_user(
+    _user_id INT
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        DELETE FROM SYSTEM_USER
+        WHERE user_id = _user_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No SYSTEM_USER found with ID %', _user_id;
+        END IF;
+    EXCEPTION WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while deleting SYSTEM_USER with ID %', _user_id;
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION delete_customer(
+    _customer_id INT
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        DELETE FROM CUSTOMER
+        WHERE customer_id = _customer_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No CUSTOMER found with ID %', _customer_id;
+        END IF;
+    EXCEPTION WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while deleting CUSTOMER with ID %', _customer_id;
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_hotel(
+    _hotel_id INT
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        DELETE FROM HOTEL
+        WHERE hotel_id = _hotel_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No HOTEL found with ID %', _hotel_id;
+        END IF;
+    EXCEPTION WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while deleting HOTEL with ID %', _hotel_id;
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_room(
+    _room_id INT
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        DELETE FROM ROOM
+        WHERE room_id = _room_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No ROOM found with ID %', _room_id;
+        END IF;
+    EXCEPTION WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while deleting ROOM with ID %', _room_id;
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_amenities(
+    _hotel_id INT,
+    _amenity_id INT
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        DELETE FROM AMENITIES
+        WHERE hotel_id = _hotel_id AND amenity_id = _amenity_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No AMENITY found with Hotel ID % and Amenity ID %', _hotel_id, _amenity_id;
+        END IF;
+    EXCEPTION WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while deleting AMENITY for Hotel ID % and Amenity ID %', _hotel_id, _amenity_id;
+    END;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION delete_reservation(
+    _reservation_id INT
+) RETURNS VOID AS $$
+BEGIN
+    BEGIN
+        DELETE FROM RESERVATION
+        WHERE reservation_id = _reservation_id;
+
+        IF NOT FOUND THEN
+            RAISE EXCEPTION 'No RESERVATION found with ID %', _reservation_id;
+        END IF;
+    EXCEPTION WHEN others THEN
+        RAISE EXCEPTION 'An error occurred while deleting RESERVATION with ID %', _reservation_id;
     END;
 END;
 $$ LANGUAGE plpgsql;
