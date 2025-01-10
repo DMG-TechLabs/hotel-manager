@@ -42,10 +42,11 @@ public class CreateUserFrame extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(405, 259));
-        setMinimumSize(new java.awt.Dimension(405, 259));
+        setMaximumSize(new java.awt.Dimension(410, 300));
+        setMinimumSize(new java.awt.Dimension(410, 300));
+        setPreferredSize(new java.awt.Dimension(410, 300));
         setResizable(false);
-        setSize(new java.awt.Dimension(405, 259));
+        setSize(new java.awt.Dimension(410, 300));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
