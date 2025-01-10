@@ -32,8 +32,7 @@ public class Main {
 
 	public static void main(String[] args) {
             
-            Customer c =  new Customer(1, "First name", "Last name", 123, "email");
-            c.insert();
+
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
 			new Hotel("Name", "Address", BigInteger.valueOf(6969696969L)).insert();
 
