@@ -8,6 +8,7 @@ import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -40,45 +41,54 @@ public class Reservation implements Dao {
 		}
 	}
 
-	private int reservationId;
-	private int roomId;
-	private int customerId;
-	private String checkInDate;
-	private String checkOutDate;
+	private int id;
+	private int reservationRoomFk;
+	private int reservationCustomerFk;
+	private String checkIn;
+	private String checkOut;
 	private float cost;
 	private Status status;
 
 	public Reservation() {
 	}
 
-	public Reservation(int reservationId, int roomId, int customerId, String checkInDate, String checkOutDate, float cost, Status status) {
-		this.reservationId = reservationId;
-		this.roomId = roomId;
-		this.customerId = customerId;
-		this.checkInDate = checkInDate;
-		this.checkOutDate = checkOutDate;
+	public Reservation(int id, int reservationRoomFk, int reservationCustomerFk, String checkIn, String checkOut, float cost, Status status) {
+		this.id = id;
+		this.reservationRoomFk = reservationRoomFk;
+		this.reservationCustomerFk = reservationCustomerFk;
+		this.checkIn = checkIn;
+		this.checkOut = checkOut;
 		this.cost = cost;
 		this.status = status;
 	}
 
-	public int getReservationId() {
-		return reservationId;
+	public Reservation(int reservationCustomerFk, int reservationRoomFk, String checkIn, String checkOut, float cost, Status status) {
+		this.reservationRoomFk = reservationRoomFk;
+		this.reservationCustomerFk = reservationCustomerFk;
+		this.checkIn = checkIn;
+		this.checkOut = checkOut;
+		this.cost = cost;
+		this.status = status;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
-	public int getRoomId() {
-		return roomId;
+	public int getReservationRoomFk() {
+		return reservationRoomFk;
 	}
 
-	public int getCustomerId() {
-		return customerId;
+	public int getReservationCustomerFk() {
+		return reservationCustomerFk;
 	}
 
-	public String getCheckInDate() {
-		return checkInDate;
+	public String getCheckIn() {
+		return checkIn;
 	}
 
-	public String getCheckOutDate() {
-		return checkOutDate;
+	public String getCheckOut() {
+		return checkOut;
 	}
 
 	public float getCost() {
@@ -92,7 +102,7 @@ public class Reservation implements Dao {
 	@Override
 	public boolean insert() {
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-			conn.callProcedure("insert_reservation", customerId, roomId, checkInDate, checkOutDate, cost, status.value);
+			conn.callProcedure("insert_reservation", reservationCustomerFk, reservationRoomFk, checkIn, checkOut, cost, status.value);
 		} catch (SQLException e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Reservation failed", e);
 			return false;
@@ -117,7 +127,7 @@ public class Reservation implements Dao {
 		}
 
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-			conn.callProcedure("update_rerservation", Utils.appendFront(reservationId, values));
+			conn.callProcedure("update_rerservation", Utils.appendFront(id, values));
 		} catch (SQLException e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Reservation failed", e);
 			return false;
@@ -128,7 +138,7 @@ public class Reservation implements Dao {
 	@Override
 	public boolean delete() {
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-			conn.callProcedure("delete_reservation", reservationId);
+			conn.callProcedure("delete_reservation", id);
 		} catch (SQLException e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Reservation failed", e);
 			return false;
