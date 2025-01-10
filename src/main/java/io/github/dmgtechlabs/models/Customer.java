@@ -16,8 +16,8 @@ public class Customer {
 
     // Fields corresponding to the customer table
     private int id;
-    private String firstName;
-    private String lastName;
+    private String fName;
+    private String lName;
     private long phone;
     private String email;
 
@@ -27,8 +27,8 @@ public class Customer {
     // Parameterized constructor
     public Customer(int id, String firstName, String lastName, long phone, String email) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.fName = firstName;
+        this.lName = lastName;
         this.phone = phone;
         this.email = email;
     }
@@ -43,19 +43,19 @@ public class Customer {
     }
 
     public String getFirstName() {
-        return firstName;
+        return fName;
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.fName = firstName;
     }
 
     public String getLastName() {
-        return lastName;
+        return lName;
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.lName = lastName;
     }
 
     public long getPhone() {
@@ -77,7 +77,7 @@ public class Customer {
     // Insert a new customer
     public boolean insert() {
         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callFunction("insert_customer", firstName, lastName, phone, email);
+            conn.callFunction("insert_customer", fName, lName, phone, email);
             return true;
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Customer failed", e);
@@ -168,8 +168,8 @@ public class Customer {
     public String toString() {
         return "Customer{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", firstName='" + fName + '\'' +
+                ", lastName='" + lName + '\'' +
                 ", phone=" + phone +
                 ", email='" + email + '\'' +
                 '}';

@@ -146,11 +146,11 @@ public class CustomerFrame extends javax.swing.JFrame {
 		
 		if(!validate(name, address, phone)) return;
 		
-		if(new Hotel(name, address, phone).insert()){
-			JOptionPane.showMessageDialog(this, "Hotel " + name + " added successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			GUIUtils.logUserError(this, "Could not add Hotel");
-		}
+		//if(new Hotel(name, address, phone).insert()){
+			//JOptionPane.showMessageDialog(this, "Hotel " + name + " added successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
+		//} else {
+			//GUIUtils.logUserError(this, "Could not add Hotel");
+		//}
 	}
 	
 	private void editHotel(){

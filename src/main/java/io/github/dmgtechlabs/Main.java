@@ -5,12 +5,14 @@ import io.github.dmgtechlabs.models.Hotel;
 import io.github.dmgtechlabs.models.Room;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
-import kdesp73.databridge.helpers.QueryBuilder;
+import io.github.kdesp73.databridge.helpers.QueryBuilder;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.math.BigInteger;
 import java.sql.SQLException;
+
+import io.github.dmgtechlabs.models.Customer;
 
 /**
  *
@@ -30,6 +32,9 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+            
+            Customer c =  new Customer(1, "First name", "Last name", 123, "email");
+            c.insert();
 		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
 			new Room(1, 1, Room.Type.DOUBLE, 40.2f, 1).insert();
 
