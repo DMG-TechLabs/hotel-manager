@@ -7,6 +7,7 @@ import io.github.dmgtechlabs.models.Room;
 import io.github.kdesp73.databridge.helpers.Config;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.sql.SQLException;
 
 /**
  *

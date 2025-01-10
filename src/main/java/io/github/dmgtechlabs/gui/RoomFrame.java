@@ -205,7 +205,7 @@ public class RoomFrame extends javax.swing.JFrame {
 	}
 	
     private void actionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionButtonActionPerformed
-		if(room != null) addRoom();
+		if(room == null) addRoom();
 		else editRoom();
     }//GEN-LAST:event_actionButtonActionPerformed
 

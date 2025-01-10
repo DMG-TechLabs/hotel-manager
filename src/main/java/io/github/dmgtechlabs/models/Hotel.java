@@ -4,36 +4,67 @@ import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.OracleConnection;
-import io.github.kdesp73.databridge.connections.OracleConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Hotel implements Dao {
+
+    public enum Amenity {
+        POOL(1),
+        GYM(2),
+        BAR(3),
+        SPA(4),
+        SAUNA(5),
+        WIFI(6),
+        PARKING(7);
+
+        private final int value;
+
+        Amenity(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static Hotel.Amenity fromValue(int value) {
+            for (Hotel.Amenity type : Hotel.Amenity.values()) {
+                if (type.value == value) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Invalid value for Hotel Amenity: " + value);
+        }
+    }
+
+
     private String name;
     private String address;
-    private long phoneNumber;
-    private int id;
-    //We should add
-    //private String amenities;
+    private long phone;
+    private int hotelId;
+    private List<Amenity> amenities;
 
     public Hotel(){}
     // For writing
     public Hotel(String name, String address, long phoneNumber){
         this.name = name;
         this.address = address;
-        this.phoneNumber = phoneNumber;
+        this.phone = phoneNumber;
     }
     // For loading
     public Hotel(int id, String name, String address, long phoneNumber){
-        this.id = id;
+        this.hotelId = id;
         this.name = name;
         
         this.address = address;
-		this.phoneNumber = phoneNumber;
+		this.phone = phoneNumber;
+        this.amenities = selectAmenities();
     }
 
 	public String getName() {
@@ -44,20 +75,22 @@ public class Hotel implements Dao {
 		return address;
 	}
 
-	public long getPhoneNumber() {
-		return phoneNumber;
+	public long getPhone() {
+		return phone;
 	}
 
-	public int getId() {
-		return id;
+	public int getHotelId() {
+		return hotelId;
 	}
-	
-	
+
+    public List<Amenity> getAmenities() {
+        return amenities;
+    }
 
     @Override
     public boolean insert() {
         try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-            conn.callProcedure("INSERTHOTEL", name, address, phoneNumber);
+            conn.callProcedure("INSERTHOTEL", name, address, phone);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Hotel failed", e);
             return false;
@@ -81,7 +114,7 @@ public class Hotel implements Dao {
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
         try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-            conn.callProcedure("update_hotel", Utils.appendFront(id, values));
+            conn.callProcedure("update_hotel", Utils.appendFront(hotelId, values));
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
             return false;
@@ -92,7 +125,7 @@ public class Hotel implements Dao {
     @Override
     public boolean delete() {
         try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()){
-            conn.callProcedure("delete_hotel", id);
+            conn.callProcedure("delete_hotel", hotelId);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Hotel failed", e);
             return false;
@@ -118,5 +151,20 @@ public class Hotel implements Dao {
 
     public static List<Hotel> selectByName(String name) {
         return select("select_hotel_by_name", name);
+    }
+
+    public List<Amenity> selectAmenities() {
+        List<Amenity> result = new ArrayList<>();
+        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
+            ResultSet rs = conn.callFunction("select_amenities", hotelId);
+            while(rs.next()){
+                result.add(Amenity.fromValue(rs.getInt("AMENITY")));
+            }
+        } catch (SQLException e) {
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select amenities failed", e);
+            return null;
+        }
+        this.amenities = result;
+        return result;
     }
 }

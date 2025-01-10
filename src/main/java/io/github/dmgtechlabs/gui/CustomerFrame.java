@@ -11,13 +11,13 @@ import javax.swing.JOptionPane;
  *
  * @author kdesp73
  */
-public class HotelFrame extends javax.swing.JFrame {
+public class CustomerFrame extends javax.swing.JFrame {
 	private Hotel hotel = null;
 	
 	/**
 	 * Creates new form HotelFrame
 	 */
-	public HotelFrame() {
+	public CustomerFrame() {
 		initComponents();
 		GUIUtils.commonSetup(null, this);
 	
@@ -29,7 +29,7 @@ public class HotelFrame extends javax.swing.JFrame {
 		this.setTitle("Add a Hotel");
 	}
 	
-	public HotelFrame(Hotel hotel){
+	public CustomerFrame(Hotel hotel){
 		this();
 		this.actionButton.setText("Apply");
 		this.setTitle("Edit " + hotel.getName());
@@ -195,20 +195,21 @@ public class HotelFrame extends javax.swing.JFrame {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(HotelFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(CustomerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(HotelFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(CustomerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(HotelFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(CustomerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(HotelFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(CustomerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		//</editor-fold>
 		//</editor-fold>
 
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new HotelFrame().setVisible(true);
+				new CustomerFrame().setVisible(true);
 			}
 		});
 	}
