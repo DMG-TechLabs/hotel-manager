@@ -3,10 +3,12 @@ package io.github.dmgtechlabs.models;
 import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
-import io.github.kdesp73.databridge.connections.OracleConnection;
+import io.github.kdesp73.databridge.connections.PostgresConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
+import kdesp73.databridge.helpers.QueryBuilder;
 
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,20 +48,20 @@ public class Hotel implements Dao {
 
     private String name;
     private String address;
-    private long phone;
-    private int hotelId;
+    private BigInteger phone;
+    private int id;
     private List<Amenity> amenities;
 
     public Hotel(){}
     // For writing
-    public Hotel(String name, String address, long phoneNumber){
+    public Hotel(String name, String address, BigInteger phoneNumber){
         this.name = name;
         this.address = address;
         this.phone = phoneNumber;
     }
     // For loading
-    public Hotel(int id, String name, String address, long phoneNumber){
-        this.hotelId = id;
+    public Hotel(int id, String name, String address, BigInteger phoneNumber){
+        this.id = id;
         this.name = name;
         
         this.address = address;
@@ -75,12 +77,12 @@ public class Hotel implements Dao {
 		return address;
 	}
 
-	public long getPhone() {
+	public BigInteger getPhone() {
 		return phone;
 	}
 
-	public int getHotelId() {
-		return hotelId;
+	public int getId() {
+		return id;
 	}
 
     public List<Amenity> getAmenities() {
@@ -89,8 +91,8 @@ public class Hotel implements Dao {
 
     @Override
     public boolean insert() {
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-            conn.callProcedure("INSERTHOTEL", name, address, phone);
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            conn.callProcedure("insert_hotel", name, address, phone);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Hotel failed", e);
             return false;
@@ -100,7 +102,7 @@ public class Hotel implements Dao {
 
 	/**
 	 * Accepts exactly 3 values
-	 * name (string), address (string), phone (long)
+	 * name (string), address (string), phone (BigInteger)
 	 * 
 	 * update_hotel procedure should include the id (int) as the first parameter
 	 * 
@@ -113,8 +115,8 @@ public class Hotel implements Dao {
 		if(values.length != expectedParams)
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-            conn.callProcedure("update_hotel", Utils.appendFront(hotelId, values));
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            conn.callProcedure("update_hotel", Utils.appendFront(id, values));
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
             return false;
@@ -124,8 +126,8 @@ public class Hotel implements Dao {
 
     @Override
     public boolean delete() {
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()){
-            conn.callProcedure("delete_hotel", hotelId);
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
+            conn.callProcedure("delete_hotel", id);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Hotel failed", e);
             return false;
@@ -136,7 +138,7 @@ public class Hotel implements Dao {
     private static List<Hotel> select(String function, Object... values){
         assert(function != null);
         assert(!function.isBlank());
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             ResultSet rs = conn.callFunction(function, values);
             return Adapter.load(rs, Hotel.class);
         } catch (Exception e) {
@@ -155,8 +157,8 @@ public class Hotel implements Dao {
 
     public List<Amenity> selectAmenities() {
         List<Amenity> result = new ArrayList<>();
-        try(OracleConnection conn = (OracleConnection) AvailableConnections.ORACLE.getConnection()) {
-            ResultSet rs = conn.callFunction("select_amenities", hotelId);
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            ResultSet rs = conn.callFunction("select_amenities", id);
             while(rs.next()){
                 result.add(Amenity.fromValue(rs.getInt("AMENITY")));
             }
@@ -166,5 +168,28 @@ public class Hotel implements Dao {
         }
         this.amenities = result;
         return result;
+    }
+
+    public boolean insertAmenities(Amenity... amenities) {
+        if(amenities.length == 0) return false;
+        for(Amenity a : amenities) {
+            try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+                String query = new QueryBuilder().insertInto("amenities").columns("amenity", "hotel_id").values(a.value, this.id).build();
+                conn.executeUpdate(query);
+            } catch (Exception e) {
+                SQLogger.getLogger().log(SQLogger.LogLevel.INFO, "Insert Amenities failed", e);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean updateAmenities(Amenity... amenities) {
+        List<Amenity> current = selectAmenities();
+
+        for(Amenity a : amenities) {
+
+        }
+        return true;
     }
 }
