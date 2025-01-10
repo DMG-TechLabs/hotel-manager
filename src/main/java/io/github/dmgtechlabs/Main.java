@@ -1,9 +1,12 @@
 package io.github.dmgtechlabs;
 
 import io.github.dmgtechlabs.gui.MainFrame;
+import io.github.kdesp73.databridge.connections.AvailableConnections;
+import io.github.kdesp73.databridge.connections.PostgresConnection;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.sql.SQLException;
 
 /**
  *
@@ -23,6 +26,11 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		runGUI();
+		try(PostgresConnection connection = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
+			connection.execute("SET search_path TO hoteldb;");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 }
