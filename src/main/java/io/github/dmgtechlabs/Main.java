@@ -26,8 +26,8 @@ public class Main {
 			System.err.println("Failed to initialize LaF");
 		}
 		java.awt.EventQueue.invokeLater(() -> {
-			new MainFrame(new User(26, "test", "test", User.UserType.MANAGER.getValue(), 1), 1).setVisible(true);
-//                        new LoginFrame(1).setVisible(true);
+//			new MainFrame(new User(26, "test", "test", User.UserType.MANAGER.getValue(), 1), 1).setVisible(true);
+                        new LoginFrame(1).setVisible(true);
 		});
 	}
 

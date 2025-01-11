@@ -179,6 +179,8 @@ public class User implements Dao {
    }
    
    public static User login(String username, String password) throws IllegalArgumentException, Exception{
+       System.out.println(username);
+       System.out.println(password);
        List<User> users_list = User.selectWithUsernamePassword(username, password);
        System.out.println(users_list);
        if(users_list.size() == 1){

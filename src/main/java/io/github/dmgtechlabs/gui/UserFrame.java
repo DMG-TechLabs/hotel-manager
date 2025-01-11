@@ -40,6 +40,12 @@ public class UserFrame extends javax.swing.JFrame {
                 jButton3ActionPerformedUpdate(evt);
             }
         });
+        
+        if(user.getType() == User.UserType.GUEST.getValue()){
+            usernameField.setEnabled(false);
+            passwordField.setEnabled(false);
+            jButton3.setEnabled(false);
+        }
     }
 
     /**
@@ -129,9 +135,9 @@ public class UserFrame extends javax.swing.JFrame {
     private void jButton3ActionPerformedUpdate(java.awt.event.ActionEvent evt) {  
         System.out.println("Update account");
         try{
-            if(this.user == null || usernameField.getText() == "" || passwordField.getPassword().toString() == "") throw new IllegalArgumentException("Empty username or password");
+            if(this.user == null || usernameField.getText() == "" || passwordField.getText() == "") throw new IllegalArgumentException("Empty username or password");
 //            User newUser = new User(0, usernameField.getText(), passwordField.getPassword().toString(), this.user.getType(), this.hotelid);
-            this.user.update(usernameField.getText(), passwordField.getPassword().toString(), this.user.getType());
+            this.user.update(usernameField.getText(), passwordField.getText(), this.user.getType());
         } catch (Exception e){
             JDialog j = new JDialog(this, "Error");
             JLabel l = new JLabel(e.getMessage());
@@ -144,8 +150,8 @@ public class UserFrame extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try{
-            if(usernameField.getText() == "" || passwordField.getPassword().toString() == "") throw new IllegalArgumentException("Empty username or password");
-            User newUser = new User(0, usernameField.getText(), passwordField.getPassword().toString(), userType.getSelectedIndex()+2, this.hotelid);
+            if(usernameField.getText() == "" || passwordField.getText() == "") throw new IllegalArgumentException("Empty username or password");
+            User newUser = new User(0, usernameField.getText(), passwordField.getText(), userType.getSelectedIndex()+2, this.hotelid);
             newUser.insert();
         } catch (Exception e){
             JDialog j = new JDialog(this, "Error");
