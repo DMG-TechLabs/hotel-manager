@@ -20,15 +20,23 @@ public class MainFrame extends javax.swing.JFrame {
         
         public MainFrame(User user, int hotelId){
             this.state.activeHotelId = hotelId;
-                this.state.LoggedInUser = user;
+            this.state.LoggedInUser = user;
             initComponents();
-		
-		
-		this.setTitle("Hotel Manager");
-		this.setLocationRelativeTo(null);
-		
-		this.helpFrame = new HelpFrame();
-		this.aboutFrame = new AboutFrame();
+            this.setTitle("Hotel Manager");
+            this.setLocationRelativeTo(null);	
+            this.helpFrame = new HelpFrame();
+            this.aboutFrame = new AboutFrame();
+            if (user.getType() == User.UserType.MANAGER.getValue()){
+                addUserMenuItem = new javax.swing.JMenuItem();
+                addUserMenuItem.setText("User");
+                addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        addUserMenuItemActionPerformed(evt);
+                    }
+                });
+                addMenu.add(addUserMenuItem);
+                
+            }
         }
 
 	@SuppressWarnings("unchecked")
@@ -160,6 +168,8 @@ public class MainFrame extends javax.swing.JFrame {
 		});
 	}
 
+    private javax.swing.JMenuItem addUserMenuItem;
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenu addMenu;
