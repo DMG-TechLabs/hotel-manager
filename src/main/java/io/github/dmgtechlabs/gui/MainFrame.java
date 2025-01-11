@@ -49,6 +49,7 @@ public class MainFrame extends javax.swing.JFrame {
         editMenu = new javax.swing.JMenu();
         editRoomMenuItem = new javax.swing.JMenuItem();
         editUserMenuItem = new javax.swing.JMenuItem();
+        deleteMenu = new javax.swing.JMenu();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -87,6 +88,9 @@ public class MainFrame extends javax.swing.JFrame {
         editMenu.add(editUserMenuItem);
 
         jMenuBar1.add(editMenu);
+
+        deleteMenu.setText("Delete");
+        jMenuBar1.add(deleteMenu);
 
         helpMenu.setText("Help");
 
@@ -174,6 +178,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addRoomMenuItem;
+    private javax.swing.JMenu deleteMenu;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem editRoomMenuItem;
     private javax.swing.JMenuItem editUserMenuItem;

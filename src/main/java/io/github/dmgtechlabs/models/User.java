@@ -178,6 +178,28 @@ public class User implements Dao {
         }
    }
    
+   public static User selectUserByName(String username){
+       assert (username != null);
+        assert (!username.isBlank());
+        assert (!"".equals(username));
+        
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            ResultSet rs = conn.callFunction("select_user_with_username", username);
+
+            List<User> users = new ArrayList<User>();
+            while(rs.next()){
+
+                users.add(new User(rs.getInt("id"),rs.getString("username"),"",rs.getInt("type"),rs.getInt("account_hotel_fk")));
+            }
+
+            return users.get(0);
+        } catch (Exception e) {
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
+
+            return null;
+        }
+   }
+   
    public static User login(String username, String password) throws IllegalArgumentException, Exception{
        System.out.println(username);
        System.out.println(password);
@@ -190,10 +212,10 @@ public class User implements Dao {
        }
    }
    
-   public List<User> Admin_SelectAllUsers() throws PermissionDenied{
-       if( this.type == User.UserType.ADMIN.value){
-           try(PostgresConnection conn = (PostgresConnection) AvailableConnections.ORACLE.getConnection()) {
-                ResultSet rs = conn.callFunction("select_user_with_username_password", username, password);
+   public List<User> Manager_SelectAllUsers() throws PermissionDenied{
+       if( this.type == User.UserType.MANAGER.value){
+           try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+                ResultSet rs = conn.callFunction("select_all_users_except_this", this.id);
                 return Adapter.load(rs, User.class);
             } catch (Exception e) {
                 SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);

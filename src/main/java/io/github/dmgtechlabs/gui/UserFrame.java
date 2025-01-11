@@ -4,7 +4,10 @@
  */
 package io.github.dmgtechlabs.gui;
 
+import io.github.dmgtechlabs.exceptions.PermissionDenied;
 import io.github.dmgtechlabs.models.User;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
@@ -14,7 +17,8 @@ import javax.swing.JLabel;
  */
 public class UserFrame extends javax.swing.JFrame {
     private int hotelid;
-    private User user = null;
+    private List<User> users = new ArrayList<User>();
+    private int selectedUser = -1;
     /**
      * Creates new form CreateUserFrame
      */
@@ -22,10 +26,12 @@ public class UserFrame extends javax.swing.JFrame {
         initComponents();
         this.hotelid = hotelId;
         this.setLocationRelativeTo(null);
+        userSelect.setEnabled(false);
+        deleteUserButton.setEnabled(false);
     }
     
     public UserFrame(User user) {
-        this.user = user;
+        this.users.add(user);
         initComponents();
         this.hotelid = user.getAccountHotelFk();
         this.setLocationRelativeTo(null);
@@ -33,9 +39,9 @@ public class UserFrame extends javax.swing.JFrame {
         passwordField.setText("");
         userType.setSelectedIndex(user.getType()-2);
         userType.setEnabled(false);
-        jButton3.setText("Edit Account");
-        jButton3.removeActionListener(jButton3.getActionListeners()[0]);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        accountButton.setText("Edit Account");
+        accountButton.removeActionListener(accountButton.getActionListeners()[0]);
+        accountButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformedUpdate(evt);
             }
@@ -44,7 +50,26 @@ public class UserFrame extends javax.swing.JFrame {
         if(user.getType() == User.UserType.GUEST.getValue()){
             usernameField.setEnabled(false);
             passwordField.setEnabled(false);
-            jButton3.setEnabled(false);
+            accountButton.setEnabled(false);
+            userSelect.setEnabled(false);
+            deleteUserButton.setEnabled(false);
+        }else if(user.getType() == User.UserType.MANAGER.getValue()){
+            try{
+                
+                for (User u : this.users.get(0).Manager_SelectAllUsers()) {
+                    users.add(u);
+                    userSelect.addItem(u.getUsername());
+                }
+                
+            } catch (PermissionDenied e){
+                JDialog j = new JDialog(this, "Error");
+                JLabel l = new JLabel(e.getMessage());
+                j.add(l);
+                j.setSize(100, 100);
+                j.setLocationRelativeTo(null);
+                j.setVisible(true);
+            }
+            
         }
     }
 
@@ -61,10 +86,12 @@ public class UserFrame extends javax.swing.JFrame {
         usernameField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         passwordField = new javax.swing.JPasswordField();
-        jButton2 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         userType = new javax.swing.JComboBox<>();
-        jButton3 = new javax.swing.JButton();
+        accountButton = new javax.swing.JButton();
+        userSelect = new javax.swing.JComboBox<>();
+        deleteUserButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(410, 300));
@@ -76,7 +103,7 @@ public class UserFrame extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         jLabel3.setText("Username:");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 100, 30));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 100, 30));
 
         usernameField.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         usernameField.setText("guest");
@@ -86,40 +113,56 @@ public class UserFrame extends javax.swing.JFrame {
                 usernameFieldActionPerformed(evt);
             }
         });
-        getContentPane().add(usernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 210, 30));
+        getContentPane().add(usernameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 210, 30));
 
         jLabel4.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         jLabel4.setText("Type:");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 120, 100, 30));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 150, 100, 30));
 
         passwordField.setText("guest");
         passwordField.setName("password_textfield"); // NOI18N
-        getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 210, 30));
-
-        jButton2.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        jButton2.setText("Cancel");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 170, 40));
+        getContentPane().add(passwordField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, 210, 30));
 
         jLabel5.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         jLabel5.setText("Password:");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 100, 30));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, 100, 30));
 
         userType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Guest", "Employee", "Manager" }));
-        getContentPane().add(userType, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, 210, 30));
+        getContentPane().add(userType, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 150, 210, 30));
 
-        jButton3.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        jButton3.setText("Create Account");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        accountButton.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+        accountButton.setText("Create Account");
+        accountButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                accountButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 190, 170, 40));
+        getContentPane().add(accountButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 330, 40));
+
+        userSelect.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                userSelectItemStateChanged(evt);
+            }
+        });
+        getContentPane().add(userSelect, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 310, -1));
+
+        deleteUserButton.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+        deleteUserButton.setText("Delete");
+        deleteUserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUserButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(deleteUserButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 260, 160, 40));
+
+        cancelButton.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cancelButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 160, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -128,16 +171,12 @@ public class UserFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_usernameFieldActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton3ActionPerformedUpdate(java.awt.event.ActionEvent evt) {  
         System.out.println("Update account");
         try{
-            if(this.user == null || usernameField.getText() == "" || passwordField.getText() == "") throw new IllegalArgumentException("Empty username or password");
+            if(this.users == null || usernameField.getText() == "" || passwordField.getText() == "") throw new IllegalArgumentException("Empty username or password");
 //            User newUser = new User(0, usernameField.getText(), passwordField.getPassword().toString(), this.user.getType(), this.hotelid);
-            this.user.update(usernameField.getText(), passwordField.getText(), this.user.getType());
+            this.users.get(this.selectedUser).update(usernameField.getText(), passwordField.getText(), this.users.get(this.selectedUser).getType());
         } catch (Exception e){
             JDialog j = new JDialog(this, "Error");
             JLabel l = new JLabel(e.getMessage());
@@ -148,7 +187,7 @@ public class UserFrame extends javax.swing.JFrame {
         }
     }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void accountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountButtonActionPerformed
         try{
             if(usernameField.getText() == "" || passwordField.getText() == "") throw new IllegalArgumentException("Empty username or password");
             User newUser = new User(0, usernameField.getText(), passwordField.getText(), userType.getSelectedIndex()+2, this.hotelid);
@@ -161,7 +200,22 @@ public class UserFrame extends javax.swing.JFrame {
             j.setLocationRelativeTo(null);
             j.setVisible(true);
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_accountButtonActionPerformed
+
+    private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteUserButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void userSelectItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_userSelectItemStateChanged
+        this.selectedUser = userSelect.getSelectedIndex();
+        usernameField.setText(this.users.get(this.selectedUser).getUsername());
+        passwordField.setText("");
+        userType.setSelectedIndex(this.users.get(this.selectedUser).getType()-2);
+    }//GEN-LAST:event_userSelectItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -200,12 +254,14 @@ public class UserFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton accountButton;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton deleteUserButton;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPasswordField passwordField;
+    private javax.swing.JComboBox<String> userSelect;
     private javax.swing.JComboBox<String> userType;
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
