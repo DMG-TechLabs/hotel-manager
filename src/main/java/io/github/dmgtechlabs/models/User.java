@@ -129,8 +129,8 @@ public class User implements Dao {
 		if(values.length != expectedParams)
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.ORACLE.getConnection()) {
-            conn.callProcedure("update_account", Utils.appendFront(this.id, values));
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            conn.callProcedure("update_account", this.id, values[0], values[1], values[2]);
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
             return false;

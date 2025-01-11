@@ -126,9 +126,10 @@ public class UserFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton3ActionPerformedUpdate(java.awt.event.ActionEvent evt) {                                         
+    private void jButton3ActionPerformedUpdate(java.awt.event.ActionEvent evt) {  
+        System.out.println("Update account");
         try{
-            if(usernameField.getText() == "" || passwordField.getPassword().toString() == "") throw new IllegalArgumentException("Empty username or password");
+            if(this.user == null || usernameField.getText() == "" || passwordField.getPassword().toString() == "") throw new IllegalArgumentException("Empty username or password");
 //            User newUser = new User(0, usernameField.getText(), passwordField.getPassword().toString(), this.user.getType(), this.hotelid);
             this.user.update(usernameField.getText(), passwordField.getPassword().toString(), this.user.getType());
         } catch (Exception e){
