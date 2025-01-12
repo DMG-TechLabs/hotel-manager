@@ -1,5 +1,6 @@
 package io.github.dmgtechlabs;
 
+import io.github.dmgtechlabs.gui.LoginFrame;
 import io.github.dmgtechlabs.gui.MainFrame;
 import io.github.dmgtechlabs.models.Hotel;
 import io.github.dmgtechlabs.models.Room;

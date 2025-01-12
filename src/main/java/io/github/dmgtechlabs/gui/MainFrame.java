@@ -1,4 +1,3 @@
-
 package io.github.dmgtechlabs.gui;
 
 import io.github.dmgtechlabs.State;
@@ -12,41 +11,43 @@ import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 
 public class MainFrame extends javax.swing.JFrame {
-        private State state = new State();
+
+	private State state = new State();
 
 	private HelpFrame helpFrame;
 	private AboutFrame aboutFrame;
 	private HotelFrame hotelFrame;
 	private RoomFrame roomFrame;
-        private UserFrame userFrame;
+	private UserFrame userFrame;
+	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
+	private int activeHotelId;
 	
 	/**
 	 * Creates new form MainFrame
 	 */
+	public MainFrame(User user, int hotelId) {
+		this.state.activeHotelId = hotelId;
+		this.state.LoggedInUser = user;
+		initComponents();
+		this.setTitle("Hotel Manager");
+		this.setLocationRelativeTo(null);
+		this.helpFrame = new HelpFrame();
+		this.aboutFrame = new AboutFrame();
+		if (user.getType() == User.UserType.MANAGER.getValue()) {
+			addUserMenuItem = new javax.swing.JMenuItem();
+			addUserMenuItem.setText("User");
+			addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent evt) {
+					addUserMenuItemActionPerformed(evt);
+				}
+			});
+			addMenu.add(addUserMenuItem);
 
-        public MainFrame(User user, int hotelId){
-            this.state.activeHotelId = hotelId;
-            this.state.LoggedInUser = user;
-            initComponents();
-            this.setTitle("Hotel Manager");
-            this.setLocationRelativeTo(null);
-            this.helpFrame = new HelpFrame();
-            this.aboutFrame = new AboutFrame();
-            if (user.getType() == User.UserType.MANAGER.getValue()){
-                addUserMenuItem = new javax.swing.JMenuItem();
-                addUserMenuItem.setText("User");
-                addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        addUserMenuItemActionPerformed(evt);
-                    }
-                });
-                addMenu.add(addUserMenuItem);
+		}
+	}
 
-            }
-        }
 	public MainFrame(int hotelId) {
 		initComponents();
-		this.activeHotelId = hotelId;
 
 		this.setTitle("Hotel Manager");
 		this.setLocationRelativeTo(null);
@@ -148,14 +149,18 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
-        if(helpFrame.isShowing()) return;
-		
+		if (helpFrame.isShowing()) {
+			return;
+		}
+
 		helpFrame.setVisible(true);
     }//GEN-LAST:event_helpMenuItemActionPerformed
 
     private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
-        if(aboutFrame.isShowing()) return;
-		
+		if (aboutFrame.isShowing()) {
+			return;
+		}
+
 		aboutFrame.setVisible(true);
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
@@ -165,12 +170,17 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
     private void editRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoomMenuItemActionPerformed
-        this.roomFrame = new RoomFrame(this.state.activeHotelId, null); // TODO: get selected room
+		this.roomFrame = new RoomFrame(this.state.activeHotelId, null); // TODO: get selected room
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_editRoomMenuItemActionPerformed
 
+	 private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                
+		this.userFrame = new UserFrame(this.state.LoggedInUser.getAccountHotelFk());
+		GUIUtils.showFrame(this.userFrame);
+    }
+	
     private void editUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserMenuItemActionPerformed
-        this.userFrame = new UserFrame(this.state.LoggedInUser); // TODO: get selected room
+		this.userFrame = new UserFrame(this.state.LoggedInUser); // TODO: get selected room
 		GUIUtils.showFrame(this.userFrame);
     }//GEN-LAST:event_editUserMenuItemActionPerformed
 
@@ -211,8 +221,8 @@ public class MainFrame extends javax.swing.JFrame {
 		filters.setRange(min, max);
 
 		boolean noneSelected = true;
-		for(JCheckBox c : this.filterTypeCheckboxes){
-			if(c.isSelected()) {
+		for (JCheckBox c : this.filterTypeCheckboxes) {
+			if (c.isSelected()) {
 				noneSelected = false;
 				break;
 			}
@@ -220,13 +230,13 @@ public class MainFrame extends javax.swing.JFrame {
 
 		filters.addType(this.singleRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.SINGLE : null);
 		filters.addType(this.doubleRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.DOUBLE : null);
-		filters.addType(this.twinRoomFilterCheckbox.isSelected()   || noneSelected ? Room.Type.TWIN   : null);
-		filters.addType(this.suiteRoomFilterCheckbox.isSelected()  || noneSelected ? Room.Type.SUITE  : null);
+		filters.addType(this.twinRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.TWIN : null);
+		filters.addType(this.suiteRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.SUITE : null);
 		filters.addType(this.deluxeRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.DELUXE : null);
 		filters.addType(this.familyRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.FAMILY : null);
 		filters.addType(this.studioRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.STUDIO : null);
-		filters.addType(this.kingRoomFilterCheckbox.isSelected()   || noneSelected ? Room.Type.KING   : null);
-		filters.addType(this.queenRoomFilterCheckbox.isSelected()  || noneSelected ? Room.Type.QUEEN  : null);
+		filters.addType(this.kingRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.KING : null);
+		filters.addType(this.queenRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.QUEEN : null);
 
 		return filters;
 	}
@@ -269,21 +279,38 @@ public class MainFrame extends javax.swing.JFrame {
 		});
 	}
 
+	private javax.swing.JMenuItem addUserMenuItem;
+	
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenu addMenu;
-    private javax.swing.JMenuItem addRoomMenuItem;
-    private javax.swing.JMenu deleteMenu;
     private javax.swing.JButton applyFiltersButton;
+    private javax.swing.JButton resetFiltersButton;
     private javax.swing.JCheckBox deluxeRoomFilterCheckbox;
     private javax.swing.JCheckBox doubleRoomFilterCheckbox;
+    private javax.swing.JCheckBox familyRoomFilterCheckbox;
+    private javax.swing.JCheckBox kingRoomFilterCheckbox;
+    private javax.swing.JCheckBox queenRoomFilterCheckbox;
+    private javax.swing.JCheckBox singleRoomFilterCheckbox;
+    private javax.swing.JCheckBox studioRoomFilterCheckbox;
+    private javax.swing.JCheckBox suiteRoomFilterCheckbox;
+    private javax.swing.JCheckBox twinRoomFilterCheckbox;
+    private javax.swing.JFormattedTextField maxPriceFormattedTextField;
+    private javax.swing.JFormattedTextField minPriceFormattedTextField;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JList<String> resultFilterList;
+    private javax.swing.JMenu addMenu;
+    private javax.swing.JMenu deleteMenu;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenuItem addRoomMenuItem;
     private javax.swing.JMenuItem editRoomMenuItem;
     private javax.swing.JMenuItem editUserMenuItem;
-    private javax.swing.JCheckBox familyRoomFilterCheckbox;
-    private javax.swing.JPanel filtersPanel;
-    private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem helpMenuItem;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel filtersPanel;
+    private javax.swing.JPanel searchPanel;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 }
