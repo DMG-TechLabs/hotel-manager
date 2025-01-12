@@ -11,6 +11,7 @@ import io.github.kdesp73.databridge.helpers.QueryBuilder;
 import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.*;
 
 public class Hotel implements Dao {
@@ -51,6 +52,11 @@ public class Hotel implements Dao {
     private String name;
     private String address;
     private BigInteger phone;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private int id;
     private List<Amenity> amenities;
 
@@ -102,6 +108,17 @@ public class Hotel implements Dao {
             return false;
         }
         return true;
+    }
+
+    public BigInteger insertWithReturn() {
+        BigInteger id;
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+            id = (BigInteger) conn.callFunctionValue("fun_insert_hotel", Types.BIGINT, name, address, phone);
+        } catch (SQLException e) {
+            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Hotel failed", e);
+            return BigInteger.valueOf(-1);
+        }
+        return id;
     }
 
 	/**
@@ -194,6 +211,7 @@ public class Hotel implements Dao {
     public boolean insertAmenities(Amenity... amenities) {
         if(amenities.length == 0) return false;
         for(Amenity a : amenities) {
+            if(a == null) continue;
             try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
                 String query = new QueryBuilder().insertInto("amenities").columns("amenity", "hotel_id").values(a.value, this.id).build();
                 conn.executeUpdate(query);
@@ -215,14 +233,14 @@ public class Hotel implements Dao {
     }
 
     public boolean updateAmenities(Amenity... amenities) {
-        List<Amenity> current = selectAmenities(); // Fetch current amenities
+        List<Amenity> current = selectAmenities();
         if(current == null || current.isEmpty()) {
             insertAmenities(amenities);
             return true;
         }
 
-        Set<Amenity> newAmenities = new HashSet<>(Arrays.asList(amenities)); // Convert new amenities to a set for easy lookup
-        Set<Amenity> currentAmenities = new HashSet<>(current); // Convert current amenities to a set
+        Set<Amenity> newAmenities = new HashSet<>(Arrays.asList(amenities));
+        Set<Amenity> currentAmenities = new HashSet<>(current);
 
         PostgresConnection conn = null;
         try {
@@ -232,6 +250,7 @@ public class Hotel implements Dao {
         }
 
         for (Amenity amenity : current) {
+            if(amenity == null) continue;
             if (!newAmenities.contains(amenity)) {
                 System.out.println("Deleting " + amenity);
                 if(!deleteAmenity(amenity)) {
@@ -241,6 +260,7 @@ public class Hotel implements Dao {
         }
 
         for (Amenity amenity : amenities) {
+            if(amenity == null) continue;
             if (!currentAmenities.contains(amenity)) {
                 System.out.println("Adding " + amenity);
                 if(!insertAmenities(amenity)) {

@@ -40,17 +40,41 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="actionButton" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="saunaCheckbox" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="nameTextField" alignment="0" max="32767" attributes="0"/>
+                          <Component id="addressTextField" alignment="0" max="32767" attributes="0"/>
+                          <Component id="phoneNumberFormattedTextField" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="spaCheckbox" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace pref="40" max="32767" attributes="0"/>
+                                      <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="gymCheckbox" min="-2" max="-2" attributes="0"/>
+                                          <Component id="barCheckbox" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="actionButton" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                      <Component id="wifiCheckbox" min="-2" max="-2" attributes="0"/>
+                                      <Component id="parkingCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="poolCheckbox" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
                       </Group>
-                      <Component id="nameTextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="addressTextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="phoneNumberFormattedTextField" alignment="0" pref="297" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="33" max="32767" attributes="0"/>
+                  <EmptySpace pref="36" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -63,7 +87,26 @@
                   <Component id="addressTextField" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="phoneNumberFormattedTextField" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="155" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="spaCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="wifiCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="gymCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="parkingCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="barCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="poolCheckbox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="saunaCheckbox" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="93" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="actionButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -99,6 +142,49 @@
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#0" subtype="-1" type="0"/>
             </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Amenities"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="spaCheckbox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Spa"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spaCheckboxActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="gymCheckbox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Gym"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="barCheckbox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Bar"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="saunaCheckbox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sauna"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="wifiCheckbox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="WiFi"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="parkingCheckbox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Parking"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="poolCheckbox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Pool"/>
           </Properties>
         </Component>
       </SubComponents>

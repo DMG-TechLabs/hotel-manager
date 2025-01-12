@@ -33,8 +33,6 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		new Room(4).markOccupiedAs(true);
-		List<Room> rooms = Room.selectByPriceRange(40, 100);
-		rooms.forEach(System.out::println);
+		runGUI();
 	}
 }
