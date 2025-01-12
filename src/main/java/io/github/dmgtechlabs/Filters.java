@@ -52,6 +52,8 @@ public class Filters {
 		query += " AND price >= " + this.priceRange.min;
 		query += " AND price <= " + this.priceRange.max;
 		
+		query += "AND occupied = false;";
+		
 		return query;
 	}
 
