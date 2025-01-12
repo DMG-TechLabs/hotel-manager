@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
+import kdesp73.databridge.helpers.SQLogger;
 
 public class Filters {
 
@@ -52,7 +53,7 @@ public class Filters {
 		query += " AND price >= " + this.priceRange.min;
 		query += " AND price <= " + this.priceRange.max;
 		
-		query += "AND occupied = false;";
+		query += " AND occupied = false;";
 		
 		return query;
 	}
@@ -67,8 +68,8 @@ public class Filters {
 				result.add(Room.parseRs(rs));
 			}
 			rs.close();
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
+		} catch (Exception e) {
+			SQLogger.getLogger().log("Failed running filter query", e);
 		}
 		return result;
 	}
