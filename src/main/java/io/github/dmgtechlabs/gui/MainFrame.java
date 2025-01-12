@@ -5,6 +5,7 @@ import io.github.dmgtechlabs.models.User;
 
 import io.github.dmgtechlabs.Filters;
 import io.github.dmgtechlabs.models.Room;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -19,11 +20,14 @@ public class MainFrame extends javax.swing.JFrame {
 	private HotelFrame hotelFrame;
 	private RoomFrame roomFrame;
 	private UserFrame userFrame;
+	private RoomActionsFrame roomActionsFrame;
+
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
 	private int activeHotelId;
-	
+
 	/**
 	 * Creates new form MainFrame
+	 *
 	 * @param user
 	 * @param hotelId
 	 */
@@ -33,8 +37,10 @@ public class MainFrame extends javax.swing.JFrame {
 		initComponents();
 		this.setTitle("Hotel Manager");
 		this.setLocationRelativeTo(null);
+
 		this.helpFrame = new HelpFrame();
 		this.aboutFrame = new AboutFrame();
+
 		if (user.getType() == User.UserType.MANAGER.getValue()) {
 			addUserMenuItem = new javax.swing.JMenuItem();
 			addUserMenuItem.setText("User");
@@ -46,8 +52,9 @@ public class MainFrame extends javax.swing.JFrame {
 			addMenu.add(addUserMenuItem);
 
 		}
-		
+
 		setupFilters();
+		applyFilters();
 	}
 
 	private void setupFilters() {
@@ -69,38 +76,39 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        aboutMenuItem = new javax.swing.JMenuItem();
-        addMenu = new javax.swing.JMenu();
-        addRoomMenuItem = new javax.swing.JMenuItem();
+        tabbedPane = new javax.swing.JTabbedPane();
+        searchPanel = new javax.swing.JPanel();
+        filtersPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        minPriceFormattedTextField = new javax.swing.JFormattedTextField();
+        jLabel2 = new javax.swing.JLabel();
+        maxPriceFormattedTextField = new javax.swing.JFormattedTextField();
         applyFiltersButton = new javax.swing.JButton();
+        resetFiltersButton = new javax.swing.JButton();
+        singleRoomFilterCheckbox = new javax.swing.JCheckBox();
         deluxeRoomFilterCheckbox = new javax.swing.JCheckBox();
         doubleRoomFilterCheckbox = new javax.swing.JCheckBox();
-        editMenu = new javax.swing.JMenu();
-        editRoomMenuItem = new javax.swing.JMenuItem();
         familyRoomFilterCheckbox = new javax.swing.JCheckBox();
-        filtersPanel = new javax.swing.JPanel();
-        helpMenu = new javax.swing.JMenu();
-        helpMenuItem = new javax.swing.JMenuItem();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        kingRoomFilterCheckbox = new javax.swing.JCheckBox();
-        maxPriceFormattedTextField = new javax.swing.JFormattedTextField();
-        minPriceFormattedTextField = new javax.swing.JFormattedTextField();
-        queenRoomFilterCheckbox = new javax.swing.JCheckBox();
-        resetFiltersButton = new javax.swing.JButton();
-        resultFilterList = new javax.swing.JList<>();
-        searchPanel = new javax.swing.JPanel();
-        singleRoomFilterCheckbox = new javax.swing.JCheckBox();
+        twinRoomFilterCheckbox = new javax.swing.JCheckBox();
         studioRoomFilterCheckbox = new javax.swing.JCheckBox();
         suiteRoomFilterCheckbox = new javax.swing.JCheckBox();
-        tabbedPane = new javax.swing.JTabbedPane();
-        twinRoomFilterCheckbox = new javax.swing.JCheckBox();
+        queenRoomFilterCheckbox = new javax.swing.JCheckBox();
+        kingRoomFilterCheckbox = new javax.swing.JCheckBox();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        resultFilterList = new javax.swing.JList<>();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        addMenu = new javax.swing.JMenu();
+        addRoomMenuItem = new javax.swing.JMenuItem();
+        editMenu = new javax.swing.JMenu();
+        editRoomMenuItem = new javax.swing.JMenuItem();
+        editUserMenuItem = new javax.swing.JMenuItem();
+        deleteMenu = new javax.swing.JMenu();
+        helpMenu = new javax.swing.JMenu();
+        helpMenuItem = new javax.swing.JMenuItem();
+        aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    
+
         tabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
         jLabel1.setText("Filters");
@@ -110,11 +118,6 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel2.setText("Price");
 
         maxPriceFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        maxPriceFormattedTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maxPriceFormattedTextFieldActionPerformed(evt);
-            }
-        });
 
         applyFiltersButton.setText("Apply");
         applyFiltersButton.addActionListener(new java.awt.event.ActionListener() {
@@ -131,22 +134,12 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         singleRoomFilterCheckbox.setText("Single");
-        singleRoomFilterCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                singleRoomFilterCheckboxActionPerformed(evt);
-            }
-        });
 
         deluxeRoomFilterCheckbox.setText("Deluxe");
 
         doubleRoomFilterCheckbox.setText("Double");
 
         familyRoomFilterCheckbox.setText("Family");
-        familyRoomFilterCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                familyRoomFilterCheckboxActionPerformed(evt);
-            }
-        });
 
         twinRoomFilterCheckbox.setText("Twin");
 
@@ -228,10 +221,13 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        resultFilterList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        resultFilterList.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        resultFilterList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        resultFilterList.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        resultFilterList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                resultFilterListMouseClicked(evt);
+            }
         });
         jScrollPane1.setViewportView(resultFilterList);
 
@@ -275,7 +271,19 @@ public class MainFrame extends javax.swing.JFrame {
         });
         editMenu.add(editRoomMenuItem);
 
+        editUserMenuItem.setText("User");
+        editUserMenuItem.setToolTipText("");
+        editUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editUserMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(editUserMenuItem);
+
         jMenuBar1.add(editMenu);
+
+        deleteMenu.setText("Delete");
+        jMenuBar1.add(deleteMenu);
 
         helpMenu.setText("Help");
 
@@ -302,13 +310,13 @@ public class MainFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(tabbedPane)
-                );
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tabbedPane)
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(tabbedPane)
-                );
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tabbedPane)
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -335,27 +343,25 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
     private void editRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoomMenuItemActionPerformed
-		this.roomFrame = new RoomFrame(this.state.activeHotelId, null); // TODO: get selected room
+		this.roomFrame = new RoomFrame(this.state.activeHotelId, getSelectedRoom());
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_editRoomMenuItemActionPerformed
 
-	 private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                                
+	private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
 		this.userFrame = new UserFrame(this.state.LoggedInUser.getAccountHotelFk());
 		GUIUtils.showFrame(this.userFrame);
-    }
-	
+	}
+
     private void editUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserMenuItemActionPerformed
-		this.userFrame = new UserFrame(this.state.LoggedInUser); // TODO: get selected room
+		this.userFrame = new UserFrame(this.state.LoggedInUser);
 		GUIUtils.showFrame(this.userFrame);
     }//GEN-LAST:event_editUserMenuItemActionPerformed
-
-    private void maxPriceFormattedTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxPriceFormattedTextFieldActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_maxPriceFormattedTextFieldActionPerformed
 
 	private void resetFilters() {
 		this.minPriceFormattedTextField.setText("");
 		this.maxPriceFormattedTextField.setText("");
+		GUIUtils.setPlaceholder(this.minPriceFormattedTextField, "Min");
+		GUIUtils.setPlaceholder(this.maxPriceFormattedTextField, "Max");
 
 		this.singleRoomFilterCheckbox.setSelected(false);
 		this.doubleRoomFilterCheckbox.setSelected(false);
@@ -405,17 +411,17 @@ public class MainFrame extends javax.swing.JFrame {
 
 		return filters;
 	}
+	
+	public Room getSelectedRoom(){
+		Filters filters = getFilters();
+		List<Room> rooms = filters.search();
+		Room room = rooms.get(this.resultFilterList.getSelectedIndex());
+		return room;
+	}
+	
     private void resetFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersButtonActionPerformed
 		resetFilters();
     }//GEN-LAST:event_resetFiltersButtonActionPerformed
-
-    private void singleRoomFilterCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_singleRoomFilterCheckboxActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_singleRoomFilterCheckboxActionPerformed
-
-    private void familyRoomFilterCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_familyRoomFilterCheckboxActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_familyRoomFilterCheckboxActionPerformed
 
 	private void setRoomsToResultList(List<Room> rooms) {
 		var model = new DefaultListModel<String>();
@@ -425,56 +431,54 @@ public class MainFrame extends javax.swing.JFrame {
 		this.resultFilterList.setModel(model);
 	}
 
-    private void applyFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyFiltersButtonActionPerformed
+	private void applyFilters(){
 		Filters filters = getFilters();
 		List<Room> rooms = filters.search();
 		setRoomsToResultList(rooms);
+	}
+    private void applyFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyFiltersButtonActionPerformed
+		applyFilters();
     }//GEN-LAST:event_applyFiltersButtonActionPerformed
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String args[]) {
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new MainFrame(null, -1).setVisible(true);
-			}
-		});
-	}
+    private void resultFilterListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultFilterListMouseClicked
+		if(evt.getButton() != MouseEvent.BUTTON3) return;
+		
+		Room room = getSelectedRoom();
+		GUIUtils.showFrame(new RoomActionsFrame(room));
+    }//GEN-LAST:event_resultFilterListMouseClicked
 
 	private javax.swing.JMenuItem addUserMenuItem;
-	
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JMenu addMenu;
+    private javax.swing.JMenuItem addRoomMenuItem;
     private javax.swing.JButton applyFiltersButton;
-    private javax.swing.JButton resetFiltersButton;
+    private javax.swing.JMenu deleteMenu;
     private javax.swing.JCheckBox deluxeRoomFilterCheckbox;
     private javax.swing.JCheckBox doubleRoomFilterCheckbox;
+    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem editRoomMenuItem;
+    private javax.swing.JMenuItem editUserMenuItem;
     private javax.swing.JCheckBox familyRoomFilterCheckbox;
+    private javax.swing.JPanel filtersPanel;
+    private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem helpMenuItem;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JCheckBox kingRoomFilterCheckbox;
+    private javax.swing.JFormattedTextField maxPriceFormattedTextField;
+    private javax.swing.JFormattedTextField minPriceFormattedTextField;
     private javax.swing.JCheckBox queenRoomFilterCheckbox;
+    private javax.swing.JButton resetFiltersButton;
+    private javax.swing.JList<String> resultFilterList;
+    private javax.swing.JPanel searchPanel;
     private javax.swing.JCheckBox singleRoomFilterCheckbox;
     private javax.swing.JCheckBox studioRoomFilterCheckbox;
     private javax.swing.JCheckBox suiteRoomFilterCheckbox;
-    private javax.swing.JCheckBox twinRoomFilterCheckbox;
-    private javax.swing.JFormattedTextField maxPriceFormattedTextField;
-    private javax.swing.JFormattedTextField minPriceFormattedTextField;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JList<String> resultFilterList;
-    private javax.swing.JMenu addMenu;
-    private javax.swing.JMenu deleteMenu;
-    private javax.swing.JMenu editMenu;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem addRoomMenuItem;
-    private javax.swing.JMenuItem editRoomMenuItem;
-    private javax.swing.JMenuItem editUserMenuItem;
-    private javax.swing.JMenuItem helpMenuItem;
-    private javax.swing.JPanel filtersPanel;
-    private javax.swing.JPanel searchPanel;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JCheckBox twinRoomFilterCheckbox;
     // End of variables declaration//GEN-END:variables
 }

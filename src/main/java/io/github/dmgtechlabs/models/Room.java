@@ -198,16 +198,16 @@ public class Room implements Dao {
 		return select("select_all_rooms");
 	}
 
-	public static List<Room> selectByHotel(int hotelFk) {
-		return select("select_rooms_by_hotel", hotelFk);
+	public static List<Room> selectById(int id, int hotelFk) {
+		return select("select_rooms_by_id", id, hotelFk);
 	}
 
-	public static List<Room> selectByFloor(int floor) {
-		return select("select_rooms_by_floor", floor);
+	public static List<Room> selectByFloor(int floor, int hotelFk) {
+		return select("select_rooms_by_floor", floor, hotelFk);
 	}
 
-	public static List<Room> selectByType(Type type) {
-		return select("select_rooms_by_type", type.value);
+	public static List<Room> selectByType(Type type, int hotelFk) {
+		return select("select_rooms_by_type", type.value, hotelFk);
 	}
 
 	public static List<Room> selectByPriceRange(float floor, float ceil) {
@@ -232,4 +232,18 @@ public class Room implements Dao {
 	public String toString() {
 		return this.floor + "-" + this.number + " $" + this.price + " (" + this.type + ")";
 	}
+	
+	public String toHtml(){
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(Utils.HTML.header(1, "Room " + this.floor + "-" + this.number));
+		sb.append(Utils.HTML.br());
+		sb.append(Utils.HTML.header(2, "Info"));
+		sb.append(Utils.HTML.ul(
+			"Price: $" + this.price,
+			"Type: " + this.type
+		));
+		
+		return sb.toString();
+	} 
 }
