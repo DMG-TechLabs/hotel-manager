@@ -101,6 +101,14 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+
+		<!--Calendar-->
+		<dependency>             
+			<groupId>org.swinglabs</groupId>             
+			<artifactId>swingx</artifactId>             
+			<version>1.6.1</version> 
+		</dependency>
+
         <dependency>
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
