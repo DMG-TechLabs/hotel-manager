@@ -5,6 +5,7 @@ import io.github.dmgtechlabs.models.User;
 
 import io.github.dmgtechlabs.Filters;
 import io.github.dmgtechlabs.models.Room;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -117,11 +118,6 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel2.setText("Price");
 
         maxPriceFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        maxPriceFormattedTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maxPriceFormattedTextFieldActionPerformed(evt);
-            }
-        });
 
         applyFiltersButton.setText("Apply");
         applyFiltersButton.addActionListener(new java.awt.event.ActionListener() {
@@ -138,22 +134,12 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         singleRoomFilterCheckbox.setText("Single");
-        singleRoomFilterCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                singleRoomFilterCheckboxActionPerformed(evt);
-            }
-        });
 
         deluxeRoomFilterCheckbox.setText("Deluxe");
 
         doubleRoomFilterCheckbox.setText("Double");
 
         familyRoomFilterCheckbox.setText("Family");
-        familyRoomFilterCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                familyRoomFilterCheckboxActionPerformed(evt);
-            }
-        });
 
         twinRoomFilterCheckbox.setText("Twin");
 
@@ -235,6 +221,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        resultFilterList.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        resultFilterList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        resultFilterList.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         resultFilterList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 resultFilterListMouseClicked(evt);
@@ -354,7 +343,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
     private void editRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoomMenuItemActionPerformed
-		this.roomFrame = new RoomFrame(this.state.activeHotelId, null); // TODO: get selected room
+		this.roomFrame = new RoomFrame(this.state.activeHotelId, getSelectedRoom());
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_editRoomMenuItemActionPerformed
 
@@ -364,17 +353,15 @@ public class MainFrame extends javax.swing.JFrame {
 	}
 
     private void editUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserMenuItemActionPerformed
-		this.userFrame = new UserFrame(this.state.LoggedInUser); // TODO: get selected room
+		this.userFrame = new UserFrame(this.state.LoggedInUser);
 		GUIUtils.showFrame(this.userFrame);
     }//GEN-LAST:event_editUserMenuItemActionPerformed
-
-    private void maxPriceFormattedTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxPriceFormattedTextFieldActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_maxPriceFormattedTextFieldActionPerformed
 
 	private void resetFilters() {
 		this.minPriceFormattedTextField.setText("");
 		this.maxPriceFormattedTextField.setText("");
+		GUIUtils.setPlaceholder(this.minPriceFormattedTextField, "Min");
+		GUIUtils.setPlaceholder(this.maxPriceFormattedTextField, "Max");
 
 		this.singleRoomFilterCheckbox.setSelected(false);
 		this.doubleRoomFilterCheckbox.setSelected(false);
@@ -424,17 +411,17 @@ public class MainFrame extends javax.swing.JFrame {
 
 		return filters;
 	}
+	
+	public Room getSelectedRoom(){
+		Filters filters = getFilters();
+		List<Room> rooms = filters.search();
+		Room room = rooms.get(this.resultFilterList.getSelectedIndex());
+		return room;
+	}
+	
     private void resetFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersButtonActionPerformed
 		resetFilters();
     }//GEN-LAST:event_resetFiltersButtonActionPerformed
-
-    private void singleRoomFilterCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_singleRoomFilterCheckboxActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_singleRoomFilterCheckboxActionPerformed
-
-    private void familyRoomFilterCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_familyRoomFilterCheckboxActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_familyRoomFilterCheckboxActionPerformed
 
 	private void setRoomsToResultList(List<Room> rooms) {
 		var model = new DefaultListModel<String>();
@@ -454,23 +441,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_applyFiltersButtonActionPerformed
 
     private void resultFilterListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultFilterListMouseClicked
-		Filters filters = getFilters();
-		List<Room> rooms = filters.search();
-		Room room = rooms.get(this.resultFilterList.getSelectedIndex());
+		if(evt.getButton() != MouseEvent.BUTTON3) return;
+		
+		Room room = getSelectedRoom();
 		GUIUtils.showFrame(new RoomActionsFrame(room));
     }//GEN-LAST:event_resultFilterListMouseClicked
-
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String args[]) {
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new MainFrame(null, -1).setVisible(true);
-			}
-		});
-	}
 
 	private javax.swing.JMenuItem addUserMenuItem;
 

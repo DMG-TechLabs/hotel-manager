@@ -59,6 +59,7 @@ public class RoomActionsFrame extends javax.swing.JFrame {
             }
         });
 
+        infoEditorPane.setEditable(false);
         infoEditorPane.setContentType("text/html"); // NOI18N
         jScrollPane1.setViewportView(infoEditorPane);
 
