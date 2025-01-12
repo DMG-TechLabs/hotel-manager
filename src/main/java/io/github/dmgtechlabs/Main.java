@@ -1,5 +1,6 @@
 package io.github.dmgtechlabs;
 
+import io.github.dmgtechlabs.gui.LoginFrame;
 import io.github.dmgtechlabs.gui.MainFrame;
 import io.github.dmgtechlabs.models.Hotel;
 import io.github.dmgtechlabs.models.Room;
@@ -11,7 +12,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.math.BigInteger;
 import java.sql.SQLException;
-import java.util.List;
 
 import io.github.dmgtechlabs.models.Customer;
 
@@ -20,6 +20,7 @@ import io.github.dmgtechlabs.models.Customer;
  * @author kdesp73
  */
 public class Main {
+
 	private static void runGUI() {
 		System.setProperty("sun.java2d.uiScale", "1");
 		try {
@@ -28,13 +29,11 @@ public class Main {
 			System.err.println("Failed to initialize LaF");
 		}
 		java.awt.EventQueue.invokeLater(() -> {
-			new MainFrame(-1).setVisible(true);
+			new LoginFrame(1).setVisible(true);
 		});
 	}
 
 	public static void main(String[] args) {
-		new Room(4).markOccupiedAs(true);
-		List<Room> rooms = Room.selectByPriceRange(40, 100);
-		rooms.forEach(System.out::println);
+		runGUI();
 	}
 }

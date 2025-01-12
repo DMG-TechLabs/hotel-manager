@@ -1,5 +1,5 @@
 
-package io.github.dmgtechlabs.files;
+package io.github.dmgtechlabs.db.files;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

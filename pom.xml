@@ -37,8 +37,9 @@
 			<artifactId>flatlaf</artifactId>
 			<version>3.2.5</version>
 		</dependency>
-		
-		<!--Database-->
+
+
+        <!--Database-->
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -100,12 +101,19 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
-		
+
+		<!--Calendar-->
 		<dependency>             
 			<groupId>org.swinglabs</groupId>             
 			<artifactId>swingx</artifactId>             
 			<version>1.6.1</version> 
 		</dependency>
+
+        <dependency>
+            <groupId>org.netbeans.external</groupId>
+            <artifactId>AbsoluteLayout</artifactId>
+            <version>RELEASE230</version>
+        </dependency>
     </dependencies>
 
     <build>
