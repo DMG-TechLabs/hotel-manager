@@ -24,6 +24,8 @@ public class MainFrame extends javax.swing.JFrame {
 	
 	/**
 	 * Creates new form MainFrame
+	 * @param user
+	 * @param hotelId
 	 */
 	public MainFrame(User user, int hotelId) {
 		this.state.activeHotelId = hotelId;
@@ -44,17 +46,7 @@ public class MainFrame extends javax.swing.JFrame {
 			addMenu.add(addUserMenuItem);
 
 		}
-	}
-
-	public MainFrame(int hotelId) {
-		initComponents();
-
-		this.setTitle("Hotel Manager");
-		this.setLocationRelativeTo(null);
-
-		this.helpFrame = new HelpFrame();
-		this.aboutFrame = new AboutFrame();
-
+		
 		setupFilters();
 	}
 
@@ -77,16 +69,189 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenuBar1 = new javax.swing.JMenuBar();
+        aboutMenuItem = new javax.swing.JMenuItem();
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
+        applyFiltersButton = new javax.swing.JButton();
+        deluxeRoomFilterCheckbox = new javax.swing.JCheckBox();
+        doubleRoomFilterCheckbox = new javax.swing.JCheckBox();
         editMenu = new javax.swing.JMenu();
         editRoomMenuItem = new javax.swing.JMenuItem();
+        familyRoomFilterCheckbox = new javax.swing.JCheckBox();
+        filtersPanel = new javax.swing.JPanel();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
-        aboutMenuItem = new javax.swing.JMenuItem();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        kingRoomFilterCheckbox = new javax.swing.JCheckBox();
+        maxPriceFormattedTextField = new javax.swing.JFormattedTextField();
+        minPriceFormattedTextField = new javax.swing.JFormattedTextField();
+        queenRoomFilterCheckbox = new javax.swing.JCheckBox();
+        resetFiltersButton = new javax.swing.JButton();
+        resultFilterList = new javax.swing.JList<>();
+        searchPanel = new javax.swing.JPanel();
+        singleRoomFilterCheckbox = new javax.swing.JCheckBox();
+        studioRoomFilterCheckbox = new javax.swing.JCheckBox();
+        suiteRoomFilterCheckbox = new javax.swing.JCheckBox();
+        tabbedPane = new javax.swing.JTabbedPane();
+        twinRoomFilterCheckbox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+    
+        tabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+
+        jLabel1.setText("Filters");
+
+        minPriceFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+
+        jLabel2.setText("Price");
+
+        maxPriceFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        maxPriceFormattedTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxPriceFormattedTextFieldActionPerformed(evt);
+            }
+        });
+
+        applyFiltersButton.setText("Apply");
+        applyFiltersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyFiltersButtonActionPerformed(evt);
+            }
+        });
+
+        resetFiltersButton.setText("Reset");
+        resetFiltersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetFiltersButtonActionPerformed(evt);
+            }
+        });
+
+        singleRoomFilterCheckbox.setText("Single");
+        singleRoomFilterCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                singleRoomFilterCheckboxActionPerformed(evt);
+            }
+        });
+
+        deluxeRoomFilterCheckbox.setText("Deluxe");
+
+        doubleRoomFilterCheckbox.setText("Double");
+
+        familyRoomFilterCheckbox.setText("Family");
+        familyRoomFilterCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                familyRoomFilterCheckboxActionPerformed(evt);
+            }
+        });
+
+        twinRoomFilterCheckbox.setText("Twin");
+
+        studioRoomFilterCheckbox.setText("Studio");
+
+        suiteRoomFilterCheckbox.setText("Suite");
+
+        queenRoomFilterCheckbox.setText("Queen");
+
+        kingRoomFilterCheckbox.setText("King");
+
+        javax.swing.GroupLayout filtersPanelLayout = new javax.swing.GroupLayout(filtersPanel);
+        filtersPanel.setLayout(filtersPanelLayout);
+        filtersPanelLayout.setHorizontalGroup(
+            filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filtersPanelLayout.createSequentialGroup()
+                .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(filtersPanelLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(minPriceFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1)
+                            .addComponent(singleRoomFilterCheckbox)
+                            .addComponent(doubleRoomFilterCheckbox)
+                            .addComponent(twinRoomFilterCheckbox)
+                            .addComponent(suiteRoomFilterCheckbox)
+                            .addComponent(deluxeRoomFilterCheckbox))
+                        .addGap(18, 18, 18)
+                        .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maxPriceFormattedTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                            .addGroup(filtersPanelLayout.createSequentialGroup()
+                                .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(studioRoomFilterCheckbox)
+                                    .addComponent(familyRoomFilterCheckbox)
+                                    .addComponent(queenRoomFilterCheckbox)
+                                    .addComponent(kingRoomFilterCheckbox))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, filtersPanelLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(resetFiltersButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(applyFiltersButton)))
+                .addContainerGap())
+        );
+        filtersPanelLayout.setVerticalGroup(
+            filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filtersPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(19, 19, 19)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(minPriceFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxPriceFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(singleRoomFilterCheckbox)
+                    .addComponent(familyRoomFilterCheckbox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(doubleRoomFilterCheckbox)
+                    .addComponent(studioRoomFilterCheckbox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(twinRoomFilterCheckbox)
+                    .addComponent(queenRoomFilterCheckbox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(suiteRoomFilterCheckbox)
+                    .addComponent(kingRoomFilterCheckbox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(deluxeRoomFilterCheckbox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(applyFiltersButton)
+                    .addComponent(resetFiltersButton))
+                .addContainerGap())
+        );
+
+        resultFilterList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(resultFilterList);
+
+        javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
+        searchPanel.setLayout(searchPanelLayout);
+        searchPanelLayout.setHorizontalGroup(
+            searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(searchPanelLayout.createSequentialGroup()
+                .addComponent(filtersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        searchPanelLayout.setVerticalGroup(
+            searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(filtersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
+        );
+
+        tabbedPane.addTab("Search", searchPanel);
 
         addMenu.setText("Add");
 
@@ -137,13 +302,13 @@ public class MainFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1132, Short.MAX_VALUE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(tabbedPane)
+                );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 689, Short.MAX_VALUE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(tabbedPane)
+                );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -262,7 +427,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void applyFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyFiltersButtonActionPerformed
 		Filters filters = getFilters();
-
 		List<Room> rooms = filters.search();
 		setRoomsToResultList(rooms);
     }//GEN-LAST:event_applyFiltersButtonActionPerformed
@@ -274,7 +438,7 @@ public class MainFrame extends javax.swing.JFrame {
 		/* Create and display the form */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new MainFrame(-1).setVisible(true);
+				new MainFrame(null, -1).setVisible(true);
 			}
 		});
 	}

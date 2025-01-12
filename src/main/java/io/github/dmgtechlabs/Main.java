@@ -20,6 +20,7 @@ import io.github.dmgtechlabs.models.Customer;
  * @author kdesp73
  */
 public class Main {
+
 	private static void runGUI() {
 		System.setProperty("sun.java2d.uiScale", "1");
 		try {
@@ -28,14 +29,11 @@ public class Main {
 			System.err.println("Failed to initialize LaF");
 		}
 		java.awt.EventQueue.invokeLater(() -> {
-//			new MainFrame(new User(26, "test", "test", User.UserType.MANAGER.getValue(), 1), 1).setVisible(true);
-                        new LoginFrame(1).setVisible(true);
+			new LoginFrame(1).setVisible(true);
 		});
 	}
 
 	public static void main(String[] args) {
 		runGUI();
-//		boolean done = new Hotel("TestName", "TestAddress", 6969696969L).insert();
-//		System.out.println(done);
 	}
 }

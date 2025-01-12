@@ -59,6 +59,7 @@ public class Filters {
 
 	public List<Room> search() {
 		String query = toQuery();
+		System.out.println(query);
 		List<Room> result = new ArrayList<>();
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 			ResultSet rs = conn.executeQuery(query);
