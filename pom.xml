@@ -37,8 +37,9 @@
 			<artifactId>flatlaf</artifactId>
 			<version>3.2.5</version>
 		</dependency>
-		
-		<!--Database-->
+
+
+        <!--Database-->
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>

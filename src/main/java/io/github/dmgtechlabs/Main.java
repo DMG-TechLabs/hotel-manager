@@ -28,7 +28,7 @@ public class Main {
 			System.err.println("Failed to initialize LaF");
 		}
 		java.awt.EventQueue.invokeLater(() -> {
-			new MainFrame(-1).setVisible(true);
+			new MainFrame(1).setVisible(true);
 		});
 	}
 
