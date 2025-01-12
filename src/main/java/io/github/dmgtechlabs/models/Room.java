@@ -224,6 +224,10 @@ public class Room implements Dao {
 		return true;
 	}
 
+	public String UIString() {
+		return "Room " + this.number;
+	}
+	
 	@Override
 	public String toString() {
 		return this.floor + "-" + this.number + " $" + this.price + " (" + this.type + ")";

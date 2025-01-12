@@ -165,7 +165,7 @@ public class Hotel implements Dao {
             ResultSet rs = conn.callFunction(function, values);
             while (rs.next()){
                 Hotel h = new Hotel(
-                        rs.getInt("hotelid"),
+                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("address"),
                         BigInteger.valueOf(rs.getBigDecimal("phone").longValue())
@@ -278,6 +278,10 @@ public class Hotel implements Dao {
         return true;
     }
 
+	public String UIString() {
+		return this.name;
+	}
+	
     @Override
     public String toString() {
         return "Hotel{" +
