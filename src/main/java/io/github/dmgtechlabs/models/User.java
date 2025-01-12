@@ -47,6 +47,13 @@ public class User implements Dao {
     private int type;
     private int accountHotelFk;
 
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", type=" + type + ", accountHotelFk=" + accountHotelFk + '}';
+    }
+    
+    
+
     public int getId() {
         return id;
     }
@@ -141,7 +148,7 @@ public class User implements Dao {
   @Override
    public boolean delete(){
        try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-        conn.callProcedure("delete_user_with_id", this.id);
+        conn.callProcedure("delete_account", this.id);
       } catch (SQLException e) {
         SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete User failed", e);
         return false;
@@ -216,7 +223,14 @@ public class User implements Dao {
        if( this.type == User.UserType.MANAGER.value){
            try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
                 ResultSet rs = conn.callFunction("select_all_users_except_this", this.id);
-                return Adapter.load(rs, User.class);
+//                return Adapter.load(rs, User.class);
+                List<User> users = new ArrayList<User>();
+                while(rs.next()){
+
+                    users.add(new User(rs.getInt("id"),rs.getString("username"),"",rs.getInt("type"),rs.getInt("account_hotel_fk")));
+                }
+
+                return users;
             } catch (Exception e) {
                 SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
                 return null;

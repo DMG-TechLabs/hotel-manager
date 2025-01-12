@@ -19,6 +19,15 @@ public class UserFrame extends javax.swing.JFrame {
     private int hotelid;
     private List<User> users = new ArrayList<User>();
     private int selectedUser = -1;
+    
+    private void setFields(){
+        this.selectedUser = userSelect.getSelectedIndex();
+        usernameField.setText(this.users.get(this.selectedUser).getUsername());
+        passwordField.setText("");
+        userType.setSelectedIndex(this.users.get(this.selectedUser).getType()-2);
+        if(this.selectedUser == 0) userType.setEnabled(false);
+        else userType.setEnabled(true);
+    }
     /**
      * Creates new form CreateUserFrame
      */
@@ -33,12 +42,11 @@ public class UserFrame extends javax.swing.JFrame {
     public UserFrame(User user) {
         this.users.add(user);
         initComponents();
+        userSelect.addItem(user.getUsername());
+        userSelect.setSelectedIndex(0);
         this.hotelid = user.getAccountHotelFk();
         this.setLocationRelativeTo(null);
-        usernameField.setText(user.getUsername());
-        passwordField.setText("");
-        userType.setSelectedIndex(user.getType()-2);
-        userType.setEnabled(false);
+        setFields();
         accountButton.setText("Edit Account");
         accountButton.removeActionListener(accountButton.getActionListeners()[0]);
         accountButton.addActionListener(new java.awt.event.ActionListener() {
@@ -56,7 +64,8 @@ public class UserFrame extends javax.swing.JFrame {
         }else if(user.getType() == User.UserType.MANAGER.getValue()){
             try{
                 
-                for (User u : this.users.get(0).Manager_SelectAllUsers()) {
+                for (User u : user.Manager_SelectAllUsers()) {
+                    System.out.println(u);
                     users.add(u);
                     userSelect.addItem(u.getUsername());
                 }
@@ -94,11 +103,11 @@ public class UserFrame extends javax.swing.JFrame {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(410, 300));
-        setMinimumSize(new java.awt.Dimension(410, 300));
-        setPreferredSize(new java.awt.Dimension(410, 300));
+        setMaximumSize(new java.awt.Dimension(385, 360));
+        setMinimumSize(new java.awt.Dimension(385, 360));
+        setPreferredSize(new java.awt.Dimension(385, 360));
         setResizable(false);
-        setSize(new java.awt.Dimension(410, 300));
+        setSize(new java.awt.Dimension(385, 360));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
@@ -203,7 +212,7 @@ public class UserFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_accountButtonActionPerformed
 
     private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
-        // TODO add your handling code here:
+        this.users.get(this.selectedUser).delete();
     }//GEN-LAST:event_deleteUserButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -211,10 +220,7 @@ public class UserFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void userSelectItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_userSelectItemStateChanged
-        this.selectedUser = userSelect.getSelectedIndex();
-        usernameField.setText(this.users.get(this.selectedUser).getUsername());
-        passwordField.setText("");
-        userType.setSelectedIndex(this.users.get(this.selectedUser).getType()-2);
+        setFields();
     }//GEN-LAST:event_userSelectItemStateChanged
 
     /**
