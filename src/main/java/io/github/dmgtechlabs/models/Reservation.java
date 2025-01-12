@@ -8,7 +8,7 @@ import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,10 +52,10 @@ public class Reservation implements Dao {
 	public Reservation() {
 	}
 
-	public Reservation(int id, int reservationRoomFk, int reservationCustomerFk, String checkIn, String checkOut, float cost, Status status) {
+	public Reservation(int id, int reservationCustomerFk, int reservationRoomFk, String checkIn, String checkOut, float cost, Status status) {
 		this.id = id;
-		this.reservationRoomFk = reservationRoomFk;
 		this.reservationCustomerFk = reservationCustomerFk;
+		this.reservationRoomFk = reservationRoomFk;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.cost = cost;
@@ -63,8 +63,8 @@ public class Reservation implements Dao {
 	}
 
 	public Reservation(int reservationCustomerFk, int reservationRoomFk, String checkIn, String checkOut, float cost, Status status) {
-		this.reservationRoomFk = reservationRoomFk;
 		this.reservationCustomerFk = reservationCustomerFk;
+		this.reservationRoomFk = reservationRoomFk;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.cost = cost;
@@ -74,7 +74,7 @@ public class Reservation implements Dao {
 	public Reservation(int id) {
 		this.id = id;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -126,7 +126,7 @@ public class Reservation implements Dao {
 	@Override
 	public boolean update(Object... values) {
 		if (values.length != 1) {
-			throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 4", values.length));
+			throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected 1", values.length));
 		}
 
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
@@ -152,13 +152,26 @@ public class Reservation implements Dao {
 	private static List<Reservation> select(String function, Object... values) {
 		assert (function != null);
 		assert (!function.isBlank());
+		List<Reservation> result = new ArrayList<>();
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 			ResultSet rs = conn.callFunction(function, values);
-			return Adapter.load(rs, Reservation.class);
+			while (rs.next()) {
+				result.add(new Reservation(
+					rs.getInt("id"),
+					rs.getInt("reservation_customer_fk"),
+					rs.getInt("reservation_room_fk"),
+					rs.getString("checkin"),
+					rs.getString("checkout"),
+					rs.getFloat("cost"),
+					Status.fromValue(rs.getInt("status"))
+				));
+			}
+			rs.close();
 		} catch (Exception e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select " + function + " failed", e);
 			return null;
 		}
+		return result;
 	}
 
 	public static List<Reservation> selectAll() {
