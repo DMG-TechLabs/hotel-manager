@@ -11,7 +11,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.math.BigInteger;
 import java.sql.SQLException;
-import java.util.List;
 
 import io.github.dmgtechlabs.models.Customer;
 
@@ -28,11 +27,14 @@ public class Main {
 			System.err.println("Failed to initialize LaF");
 		}
 		java.awt.EventQueue.invokeLater(() -> {
-			new MainFrame(1).setVisible(true);
+//			new MainFrame(new User(26, "test", "test", User.UserType.MANAGER.getValue(), 1), 1).setVisible(true);
+                        new LoginFrame(1).setVisible(true);
 		});
 	}
 
 	public static void main(String[] args) {
 		runGUI();
+//		boolean done = new Hotel("TestName", "TestAddress", 6969696969L).insert();
+//		System.out.println(done);
 	}
 }
