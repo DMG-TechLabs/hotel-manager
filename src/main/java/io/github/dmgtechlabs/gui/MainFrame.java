@@ -62,6 +62,9 @@ public class MainFrame extends javax.swing.JFrame {
 			// Allow only Searching for guest user
 			this.tabbedPane.setEnabledAt(1, false);
 			this.tabbedPane.setEnabledAt(2, false);
+		} else if(user.isEmployee()){
+			// Hide statistics from employees
+			this.tabbedPane.setEnabledAt(2, false);
 		}
 		
 		this.reservations = Reservation.selectByReservationStatus(1);

@@ -1,4 +1,5 @@
 package io.github.dmgtechlabs.models;
+
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
@@ -12,243 +13,248 @@ import java.util.ArrayList;
 import java.util.List;
 //import io.github.dmgtechlabs.users.UserRepository;
 
-
-
 public class User implements Dao {
-    public enum UserType {
-        ADMIN(1),
-        GUEST(2),
-        EMPLOYEE(3),
-        MANAGER(4);
 
-        private final int value;
+	public enum UserType {
+		ADMIN(1),
+		GUEST(2),
+		EMPLOYEE(3),
+		MANAGER(4);
 
-        UserType(int value) {
-            this.value = value;
-        }
+		private final int value;
 
-        public int getValue() {
-            return value;
-        }
+		UserType(int value) {
+			this.value = value;
+		}
 
-        public static User.UserType fromValue(int value) {
-            for (User.UserType type : User.UserType.values()) {
-                if (type.value == value) {
-                    return type;
-                }
-            }
-            throw new IllegalArgumentException("Invalid value for User Type: " + value);
-        }
-    }
-    
-    private int id;
-    private String username;
-    private String password;
-    private int type;
-    private int accountHotelFk;
+		public int getValue() {
+			return value;
+		}
 
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", type=" + type + ", accountHotelFk=" + accountHotelFk + '}';
-    }
-    
-    
+		public static User.UserType fromValue(int value) {
+			for (User.UserType type : User.UserType.values()) {
+				if (type.value == value) {
+					return type;
+				}
+			}
+			throw new IllegalArgumentException("Invalid value for User Type: " + value);
+		}
+	}
 
-    public int getId() {
-        return id;
-    }
+	private int id;
+	private String username;
+	private String password;
+	private int type;
+	private int accountHotelFk;
 
-    public String getUsername() {
-        return username;
-    }
+	@Override
+	public String toString() {
+		return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", type=" + type + ", accountHotelFk=" + accountHotelFk + '}';
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public int getType() {
-        return type;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public int getAccountHotelFk() {
-        return accountHotelFk;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public int getType() {
+		return type;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public int getAccountHotelFk() {
+		return accountHotelFk;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setType(int type) {
-        this.type = type;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public void setAccountHotelFk(int accountHotelFk) {
-        this.accountHotelFk = accountHotelFk;
-    }
-	
-	public boolean isGuest(){
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public void setAccountHotelFk(int accountHotelFk) {
+		this.accountHotelFk = accountHotelFk;
+	}
+
+	public boolean isGuest() {
 		return this.type == User.UserType.GUEST.value;
 	}
-	
-	public boolean isAdmin(){
+
+	public boolean isAdmin() {
 		return this.type == User.UserType.ADMIN.value;
 	}
-    
-    public boolean isManager(){
+
+	public boolean isManager() {
 		return this.type == User.UserType.MANAGER.value;
 	}
 
-  public User(int id, String username, String password, int type, int account_hotel_fk) {
-      this.accountHotelFk = account_hotel_fk;
-      this.password = password;
-      this.id = id;
-      this.type = type;
-      this.username = username;
-    
-  }
-  
-  
+	public boolean isEmployee() {
+		return this.type == User.UserType.EMPLOYEE.value;
+	}
+
+	public User(int id, String username, String password, int type, int account_hotel_fk) {
+		this.accountHotelFk = account_hotel_fk;
+		this.password = password;
+		this.id = id;
+		this.type = type;
+		this.username = username;
+
+	}
+
+	@Override
+	public boolean insert() {
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("insert_account", username, password, type, accountHotelFk);
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert User failed", e);
+			return false;
+		}
+		return true;
+	}
+
+	;
   
   @Override
-  public boolean insert() {
-      try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-        conn.callProcedure("insert_account",username, password, type,  accountHotelFk);
-      } catch (SQLException e) {
-        SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert User failed", e);
-        return false;
-      }
-      return true;
-  };
-  
-  @Override
-  public boolean insertWithException() throws Exception {
-      try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-        conn.callProcedure("insert_account",username, password, type,  accountHotelFk);
-      } catch (SQLException e) {
-        SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert User failed", e);
-        throw new Exception(e.getMessage());
+	public boolean insertWithException() throws Exception {
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("insert_account", username, password, type, accountHotelFk);
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert User failed", e);
+			throw new Exception(e.getMessage());
 //        return false;
-      }
-      return true;
-  }
+		}
+		return true;
+	}
+
+	@Override
+	public boolean update(Object... values) {
+		final int expectedParams = 3;
+		if (values.length != expectedParams) {
+			throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
+		}
+
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("update_account", this.id, values[0], values[1], values[2]);
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
+			return false;
+		}
+		return true;
+	}
+
+	;
 
   @Override
-  public boolean update(Object... values){
-      final int expectedParams = 3;
-		if(values.length != expectedParams)
-            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
+	public boolean delete() {
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("delete_account", this.id);
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete User failed", e);
+			return false;
+		}
+		return true;
+	}
 
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callProcedure("update_account", this.id, values[0], values[1], values[2]);
-        } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
-            return false;
-        }
-        return true;
-  };
-
-  @Override
-   public boolean delete(){
-       try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-        conn.callProcedure("delete_account", this.id);
-      } catch (SQLException e) {
-        SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete User failed", e);
-        return false;
-      }
-      return true;
-   };
+	;
    
    public static List<User> selectWithUsernamePassword(String username, String password, int hotelId) throws Exception {
-        assert (username != null);
-        assert (!username.isBlank());
-        assert (!"".equals(username));
-        
-        assert (password != null);
-        assert (!password.isBlank());
-        assert (!"".equals(password));
-        
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            ResultSet rs = conn.callFunction("select_user_with_username_password", username, password, hotelId);
+		assert (username != null);
+		assert (!username.isBlank());
+		assert (!"".equals(username));
+
+		assert (password != null);
+		assert (!password.isBlank());
+		assert (!"".equals(password));
+
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			ResultSet rs = conn.callFunction("select_user_with_username_password", username, password, hotelId);
 //            while(rs.next()){
 //                System.out.println(rs.getString(0));
 //            }
-            List<User> users = new ArrayList<User>();
-            while(rs.next()){
+			List<User> users = new ArrayList<User>();
+			while (rs.next()) {
 //                int id, String username, String password, int type, int account_hotel_fk
-                System.out.println("aaaa");
-                users.add(new User(rs.getInt("id"),rs.getString("username"),rs.getString("password"),rs.getInt("type"),rs.getInt("account_hotel_fk")));
-            }
+				System.out.println("aaaa");
+				users.add(new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getInt("type"), rs.getInt("account_hotel_fk")));
+			}
 //            return Adapter.load(rs, User.class);
-            return users;
-        } catch (Exception e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
-            throw new Exception(e.getMessage());
+			return users;
+		} catch (Exception e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
+			throw new Exception(e.getMessage());
 //            return null;
-        }
-   }
-   
-   public static User selectUserByName(String username){
-       assert (username != null);
-        assert (!username.isBlank());
-        assert (!"".equals(username));
-        
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            ResultSet rs = conn.callFunction("select_user_with_username", username);
+		}
+	}
 
-            List<User> users = new ArrayList<User>();
-            while(rs.next()){
+	public static User selectUserByName(String username) {
+		assert (username != null);
+		assert (!username.isBlank());
+		assert (!"".equals(username));
 
-                users.add(new User(rs.getInt("id"),rs.getString("username"),"",rs.getInt("type"),rs.getInt("account_hotel_fk")));
-            }
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			ResultSet rs = conn.callFunction("select_user_with_username", username);
 
-            return users.get(0);
-        } catch (Exception e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
+			List<User> users = new ArrayList<User>();
+			while (rs.next()) {
 
-            return null;
-        }
-   }
-   
-   public static User login(String username, String password, int hotelId) throws IllegalArgumentException, Exception{
-       System.out.println(username);
-       System.out.println(password);
-       List<User> users_list = User.selectWithUsernamePassword(username, password, hotelId);
-       System.out.println(users_list);
-       if(users_list.size() == 1){
-           return users_list.get(0);
-       }else{
-           throw new IllegalArgumentException("Username or Password error");
-       }
-   }
-   
-   public List<User> Manager_SelectAllUsers() throws PermissionDenied{
-       if( this.type == User.UserType.MANAGER.value){
-           try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-                ResultSet rs = conn.callFunction("select_all_users_except_this", this.id);
+				users.add(new User(rs.getInt("id"), rs.getString("username"), "", rs.getInt("type"), rs.getInt("account_hotel_fk")));
+			}
+
+			return users.get(0);
+		} catch (Exception e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
+
+			return null;
+		}
+	}
+
+	public static User login(String username, String password, int hotelId) throws IllegalArgumentException, Exception {
+		System.out.println(username);
+		System.out.println(password);
+		List<User> users_list = User.selectWithUsernamePassword(username, password, hotelId);
+		System.out.println(users_list);
+		if (users_list.size() == 1) {
+			return users_list.get(0);
+		} else {
+			throw new IllegalArgumentException("Username or Password error");
+		}
+	}
+
+	public List<User> Manager_SelectAllUsers() throws PermissionDenied {
+		if (this.type == User.UserType.MANAGER.value) {
+			try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+				ResultSet rs = conn.callFunction("select_all_users_except_this", this.id);
 //                return Adapter.load(rs, User.class);
-                List<User> users = new ArrayList<User>();
-                while(rs.next()){
+				List<User> users = new ArrayList<User>();
+				while (rs.next()) {
 
-                    users.add(new User(rs.getInt("id"),rs.getString("username"),"",rs.getInt("type"),rs.getInt("account_hotel_fk")));
-                }
+					users.add(new User(rs.getInt("id"), rs.getString("username"), "", rs.getInt("type"), rs.getInt("account_hotel_fk")));
+				}
 
-                return users;
-            } catch (Exception e) {
-                SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
-                return null;
-            }
-       }else{
-           throw new PermissionDenied();
-       }
-   }
-   
-   
+				return users;
+			} catch (Exception e) {
+				SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
+				return null;
+			}
+		} else {
+			throw new PermissionDenied();
+		}
+	}
+
 }
