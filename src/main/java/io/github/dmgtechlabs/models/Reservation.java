@@ -181,6 +181,10 @@ public class Reservation implements Dao {
 	public static List<Reservation> selectByReservationId(int id) {
 		return select("select_reservations_by_reservation_id", id);
 	}
+	
+	public static List<Reservation> selectByReservationStatus(int status) {
+		return select("select_reservations_by_status", status);
+	}
 
 	public static List<Reservation> selectByCustomerId(int customerId) {
 		return select("select_reservations_by_customer_id", customerId);
@@ -192,6 +196,20 @@ public class Reservation implements Dao {
 
 	public static List<Reservation> selectByCheckInCheckOut(String checkInDate, String checkOutDate) {
 		return select("select_reservations_by_check_in_check_out", checkInDate, checkOutDate);
+	}
+	
+	public String UIString() {
+		return "Reservation ID: " + id + " (" + checkIn + " -- " + checkOut + ")";
+	}
+	
+	public static String[] listToArray(List<Reservation> list) {
+		String[] result = new String[list.size()];
+
+		for (int i = 0; i < list.size(); i++) {
+			result[i] = list.get(i).UIString();
+		}
+
+		return result;
 	}
 
 }

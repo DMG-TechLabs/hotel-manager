@@ -4,6 +4,7 @@ import io.github.dmgtechlabs.State;
 import io.github.dmgtechlabs.models.User;
 
 import io.github.dmgtechlabs.Filters;
+import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Room;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private RoomActionsFrame roomActionsFrame;
 
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
+	private List<Reservation> reservations;
 
 	/**
 	 * Creates new form MainFrame
@@ -60,6 +62,30 @@ public class MainFrame extends javax.swing.JFrame {
 			this.tabbedPane.setEnabledAt(1, false);
 			this.tabbedPane.setEnabledAt(2, false);
 		}
+		
+		this.reservations = Reservation.selectByReservationStatus(1);
+		this.pendingList.setListData(Reservation.listToArray(this.reservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		
+		this.reservations = Reservation.selectByReservationStatus(2);
+		this.acceptedList.setListData(Reservation.listToArray(this.reservations.stream().map(reservation -> (Reservation) reservation).toList()));
+	}
+	
+	public MainFrame() {
+		initComponents();
+		this.setTitle("Hotel Manager");
+		this.setLocationRelativeTo(null);
+
+		this.helpFrame = new HelpFrame();
+		this.aboutFrame = new AboutFrame();
+
+		setupFilters();
+		applyFilters();
+		
+		this.reservations = Reservation.selectByReservationStatus(1);
+		this.pendingList.setListData(Reservation.listToArray(this.reservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		
+		this.reservations = Reservation.selectByReservationStatus(2);
+		this.acceptedList.setListData(Reservation.listToArray(this.reservations.stream().map(reservation -> (Reservation) reservation).toList()));
 	}
 
 	private void setupFilters() {
@@ -102,6 +128,12 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         resultFilterList = new javax.swing.JList<>();
         reservationsPanel = new javax.swing.JPanel();
+        pendingLabel = new javax.swing.JLabel();
+        acceptedLabel = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        pendingList = new javax.swing.JList<>();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        acceptedList = new javax.swing.JList<>();
         statisticsPanel = new javax.swing.JPanel();
         optionsPanel = new javax.swing.JPanel();
         exitButton = new javax.swing.JButton();
@@ -259,15 +291,47 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Search", searchPanel);
 
+        pendingLabel.setFont(new java.awt.Font("URW Gothic", 1, 36)); // NOI18N
+        pendingLabel.setText("Pending");
+
+        acceptedLabel.setFont(new java.awt.Font("URW Gothic", 1, 36)); // NOI18N
+        acceptedLabel.setText("Accepted");
+
+        jScrollPane3.setViewportView(pendingList);
+
+        jScrollPane5.setViewportView(acceptedList);
+
         javax.swing.GroupLayout reservationsPanelLayout = new javax.swing.GroupLayout(reservationsPanel);
         reservationsPanel.setLayout(reservationsPanelLayout);
         reservationsPanelLayout.setHorizontalGroup(
             reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1021, Short.MAX_VALUE)
+            .addGroup(reservationsPanelLayout.createSequentialGroup()
+                .addGap(94, 94, 94)
+                .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(reservationsPanelLayout.createSequentialGroup()
+                        .addGap(98, 98, 98)
+                        .addComponent(pendingLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(acceptedLabel)
+                        .addGap(83, 83, 83))
+                    .addGroup(reservationsPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(108, 108, 108))
         );
         reservationsPanelLayout.setVerticalGroup(
             reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 689, Short.MAX_VALUE)
+            .addGroup(reservationsPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pendingLabel)
+                    .addComponent(acceptedLabel))
+                .addGap(18, 18, 18)
+                .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Reservations", reservationsPanel);
@@ -543,10 +607,44 @@ public class MainFrame extends javax.swing.JFrame {
 		new StartingFrame().setVisible(true);
     }//GEN-LAST:event_exitButtonActionPerformed
 
+	public static void main(String args[]) {
+		/* Set the Nimbus look and feel */
+		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+		 */
+		try {
+			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (ClassNotFoundException ex) {
+			java.util.logging.Logger.getLogger(ReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		} catch (InstantiationException ex) {
+			java.util.logging.Logger.getLogger(ReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		} catch (IllegalAccessException ex) {
+			java.util.logging.Logger.getLogger(ReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+			java.util.logging.Logger.getLogger(ReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+		}
+		//</editor-fold>
+
+		/* Create and display the form */
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new MainFrame().setVisible(true);
+			}
+		});
+	}
+	
 	private javax.swing.JMenuItem addUserMenuItem;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JLabel acceptedLabel;
+    private javax.swing.JList<String> acceptedList;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addRoomMenuItem;
     private javax.swing.JButton applyFiltersButton;
@@ -566,10 +664,14 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JCheckBox kingRoomFilterCheckbox;
     private javax.swing.JFormattedTextField maxPriceFormattedTextField;
     private javax.swing.JFormattedTextField minPriceFormattedTextField;
     private javax.swing.JPanel optionsPanel;
+    private javax.swing.JLabel pendingLabel;
+    private javax.swing.JList<String> pendingList;
     private javax.swing.JCheckBox queenRoomFilterCheckbox;
     private javax.swing.JPanel reservationsPanel;
     private javax.swing.JButton resetFiltersButton;
