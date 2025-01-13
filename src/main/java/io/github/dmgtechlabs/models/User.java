@@ -93,8 +93,18 @@ public class User implements Dao {
     public void setAccountHotelFk(int accountHotelFk) {
         this.accountHotelFk = accountHotelFk;
     }
+	
+	public boolean isGuest(){
+		return this.type == User.UserType.GUEST.value;
+	}
+	
+	public boolean isAdmin(){
+		return this.type == User.UserType.ADMIN.value;
+	}
     
-    
+    public boolean isManager(){
+		return this.type == User.UserType.MANAGER.value;
+	}
 
   public User(int id, String username, String password, int type, int account_hotel_fk) {
       this.accountHotelFk = account_hotel_fk;

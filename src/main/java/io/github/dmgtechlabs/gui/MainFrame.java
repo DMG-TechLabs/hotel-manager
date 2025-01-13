@@ -41,7 +41,7 @@ public class MainFrame extends javax.swing.JFrame {
 		this.helpFrame = new HelpFrame();
 		this.aboutFrame = new AboutFrame();
 
-		if (user.getType() == User.UserType.MANAGER.getValue()) {
+		if (user.isManager()) {
 			addUserMenuItem = new javax.swing.JMenuItem();
 			addUserMenuItem.setText("User");
 			addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -50,11 +50,16 @@ public class MainFrame extends javax.swing.JFrame {
 				}
 			});
 			addMenu.add(addUserMenuItem);
-
 		}
 
 		setupFilters();
 		applyFilters();
+		
+		if(user.isGuest()) {
+			// Allow only Searching for guest user
+			this.tabbedPane.setEnabledAt(1, false);
+			this.tabbedPane.setEnabledAt(2, false);
+		}
 	}
 
 	private void setupFilters() {
@@ -97,6 +102,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         resultFilterList = new javax.swing.JList<>();
         reservationsPanel = new javax.swing.JPanel();
+        statisticsPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
@@ -264,8 +270,22 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Reservations", reservationsPanel);
 
+        javax.swing.GroupLayout statisticsPanelLayout = new javax.swing.GroupLayout(statisticsPanel);
+        statisticsPanel.setLayout(statisticsPanelLayout);
+        statisticsPanelLayout.setHorizontalGroup(
+            statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1021, Short.MAX_VALUE)
+        );
+        statisticsPanelLayout.setVerticalGroup(
+            statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 689, Short.MAX_VALUE)
+        );
+
+        tabbedPane.addTab("Statistics", statisticsPanel);
+
         addMenu.setText("Add");
 
+        addRoomMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         addRoomMenuItem.setText("Room");
         addRoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -299,6 +319,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         deleteMenu.setText("Delete");
 
+        deleteRoomMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         deleteRoomMenuItem.setText("Room");
         deleteRoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -520,6 +541,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JList<String> resultFilterList;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JCheckBox singleRoomFilterCheckbox;
+    private javax.swing.JPanel statisticsPanel;
     private javax.swing.JCheckBox studioRoomFilterCheckbox;
     private javax.swing.JCheckBox suiteRoomFilterCheckbox;
     private javax.swing.JTabbedPane tabbedPane;
