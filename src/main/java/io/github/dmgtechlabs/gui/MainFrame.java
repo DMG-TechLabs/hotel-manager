@@ -7,8 +7,14 @@ import io.github.dmgtechlabs.Filters;
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Room;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
@@ -139,6 +145,9 @@ public class MainFrame extends javax.swing.JFrame {
         acceptButton = new javax.swing.JButton();
         showInfoButton = new javax.swing.JButton();
         statisticsPanel = new javax.swing.JPanel();
+        startDate = new javax.swing.JTextField();
+        endDate = new javax.swing.JTextField();
+        getStatistics = new javax.swing.JButton();
         optionsPanel = new javax.swing.JPanel();
         changePasswordPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -168,6 +177,11 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        tabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabbedPaneStateChanged(evt);
+            }
+        });
 
         jLabel1.setText("Filters");
 
@@ -391,15 +405,39 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Reservations", reservationsPanel);
 
+        startDate.setText("12-01-2025");
+
+        endDate.setText("23-01-2025");
+
+        getStatistics.setText("jButton2");
+        getStatistics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getStatisticsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout statisticsPanelLayout = new javax.swing.GroupLayout(statisticsPanel);
         statisticsPanel.setLayout(statisticsPanelLayout);
         statisticsPanelLayout.setHorizontalGroup(
             statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1021, Short.MAX_VALUE)
+            .addGroup(statisticsPanelLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(getStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(endDate, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                    .addComponent(startDate))
+                .addContainerGap(703, Short.MAX_VALUE))
         );
         statisticsPanelLayout.setVerticalGroup(
             statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 691, Short.MAX_VALUE)
+            .addGroup(statisticsPanelLayout.createSequentialGroup()
+                .addGap(84, 84, 84)
+                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(getStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(473, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Statistics", statisticsPanel);
@@ -811,6 +849,27 @@ public class MainFrame extends javax.swing.JFrame {
 		reservationFrame.setVisible(true);
     }//GEN-LAST:event_showInfoButtonActionPerformed
 
+    private void tabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPaneStateChanged
+        if(tabbedPane.getSelectedIndex() == 2 && this.state.LoggedInUser.getType() == User.UserType.MANAGER.getValue()){
+            
+        }
+    }//GEN-LAST:event_tabbedPaneStateChanged
+
+    private void getStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getStatisticsActionPerformed
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        
+        String sDate = startDate.getText();
+        String eDate = endDate.getText();
+            try {
+                Date sdate = formatter.parse(sDate);
+                Date edate = formatter.parse(eDate);
+                System.out.println("bbbbb");
+                this.state.LoggedInUser.getStatistics(sdate, edate);
+            } catch (ParseException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }//GEN-LAST:event_getStatisticsActionPerformed
+
 	private javax.swing.JMenuItem addUserMenuItem;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -832,9 +891,11 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem editRoomMenuItem;
     private javax.swing.JMenuItem editUserMenuItem;
+    private javax.swing.JTextField endDate;
     private javax.swing.JButton exitButton;
     private javax.swing.JCheckBox familyRoomFilterCheckbox;
     private javax.swing.JPanel filtersPanel;
+    private javax.swing.JButton getStatistics;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JButton jButton1;
@@ -864,6 +925,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel searchPanel;
     private javax.swing.JButton showInfoButton;
     private javax.swing.JCheckBox singleRoomFilterCheckbox;
+    private javax.swing.JTextField startDate;
     private javax.swing.JPanel statisticsPanel;
     private javax.swing.JCheckBox studioRoomFilterCheckbox;
     private javax.swing.JCheckBox suiteRoomFilterCheckbox;
