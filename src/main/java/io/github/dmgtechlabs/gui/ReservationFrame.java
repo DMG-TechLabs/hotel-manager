@@ -21,6 +21,8 @@ public class ReservationFrame extends javax.swing.JFrame {
 	private List<Room> rooms;
 	private List<Customer> customers;
 	
+	private Reservation reservation;
+	
 	/**
 	 * Creates new form ReservationFrame
 	 */
@@ -29,18 +31,24 @@ public class ReservationFrame extends javax.swing.JFrame {
 		this.setLocationRelativeTo(null);
 	}
 	
-	public ReservationFrame(int activeHotelId, int selectedIndex) {
+	public ReservationFrame(int activeHotelId, String selectedValue) {
 		initComponents();
 		this.setLocationRelativeTo(null);
 		
 		//TABLE(hotelid integer, name character varying, address character varying, phone bigint)
 		
 		this.reservations = Reservation.selectAll();
+		for (int i = 0; i < reservations.size(); i++) {
+			if (selectedValue.equals(this.reservations.get(i).UIString())) {
+				this.reservation = this.reservations.get(i);
+				break;
+			}
+		}
 		this.hotels = Hotel.selectById(activeHotelId);
-		this.rooms = Room.selectById(this.reservations.get(selectedIndex).getReservationRoomFk(), activeHotelId);
-		this.customers = Customer.selectById(this.reservations.get(selectedIndex).getReservationCustomerFk());
+		this.rooms = Room.selectById(this.reservation.getReservationRoomFk(), activeHotelId);
+		this.customers = Customer.selectById(this.reservation.getReservationCustomerFk());
 		
-		loadInfo(selectedIndex);
+		loadInfo();
 	}
 
 	/**
@@ -311,7 +319,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	private void loadInfo(int selectedIndex) {		
+	private void loadInfo() {		
 		// Hotel info
 		this.hotelNameLabel.setText(this.hotels.get(0).getName());
 		this.hotelAddressLabel.setText(this.hotels.get(0).getAddress());
@@ -322,8 +330,8 @@ public class ReservationFrame extends javax.swing.JFrame {
 		this.roomNumLabel.setText(this.rooms.get(0).getNumber() + "");
 		this.roomTypeLabel.setText(this.rooms.get(0).getType().name());
 		this.roomPriceLabel.setText(this.rooms.get(0).getPrice() + "");
-		this.checkInLabel.setText(this.reservations.get(selectedIndex).getCheckIn());
-		this.checkOutLabel.setText(this.reservations.get(selectedIndex).getCheckOut());
+		this.checkInLabel.setText(this.reservation.getCheckIn());
+		this.checkOutLabel.setText(this.reservation.getCheckOut());
 		
 		//Customer info
 		this.fnameLabel.setText(this.customers.get(0).getFirstName());
