@@ -1,6 +1,7 @@
 package io.github.dmgtechlabs;
 
 import io.github.dmgtechlabs.gui.LoginFrame;
+import io.github.dmgtechlabs.gui.StartingFrame;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -19,7 +20,7 @@ public class Main {
 			System.err.println("Failed to initialize LaF");
 		}
 		java.awt.EventQueue.invokeLater(() -> {
-			new LoginFrame(1).setVisible(true);
+			new StartingFrame().setVisible(true);
 		});
 	}
 

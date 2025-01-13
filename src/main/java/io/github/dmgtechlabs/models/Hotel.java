@@ -278,10 +278,6 @@ public class Hotel implements Dao {
         return true;
     }
 
-	public String UIString() {
-		return this.name;
-	}
-	
     @Override
     public String toString() {
         return "Hotel{" +
@@ -292,4 +288,8 @@ public class Hotel implements Dao {
                 ", amenities=" + amenities +
                 '}';
     }
+	
+	public String UIString() {
+		return name + " (" + address + ")";
+	}
 }
