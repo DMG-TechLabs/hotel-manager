@@ -61,21 +61,21 @@
                               <Component id="jLabel4" alignment="0" min="-2" pref="98" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="roomTypeIndicator" max="32767" attributes="0"/>
                                       <Component id="roomPriceIndicator" max="32767" attributes="0"/>
-                                      <Component id="roomFloorIndicator" max="32767" attributes="0"/>
                                       <Component id="checkOutIndicator" max="32767" attributes="0"/>
+                                      <Component id="roomFloorIndicator" alignment="0" max="32767" attributes="0"/>
                                       <Component id="roomNumIndicator" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="roomTypeIndicator" alignment="0" max="32767" attributes="0"/>
                                       <Component id="checkInIndicator" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="roomPriceLabel" min="-2" pref="150" max="-2" attributes="0"/>
+                                      <Component id="roomTypeLabel" min="-2" pref="150" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="roomNumLabel" pref="150" max="32767" attributes="0"/>
-                                          <Component id="roomTypeLabel" max="32767" attributes="0"/>
+                                          <Component id="roomFloorLabel" pref="150" max="32767" attributes="0"/>
+                                          <Component id="roomNumLabel" max="32767" attributes="0"/>
                                       </Group>
-                                      <Component id="roomFloorLabel" min="-2" pref="150" max="-2" attributes="0"/>
+                                      <Component id="roomPriceLabel" min="-2" pref="150" max="-2" attributes="0"/>
                                       <Component id="checkInLabel" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
                                       <Component id="checkOutLabel" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
                                   </Group>
@@ -165,23 +165,23 @@
                                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="roomNumLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="roomNumIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="roomFloorLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="roomFloorIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="roomTypeIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="roomNumIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="roomNumLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="roomTypeLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="roomTypeIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="roomPriceLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                                       <Component id="roomPriceIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="roomFloorLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="roomFloorIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -270,24 +270,24 @@
             <Property name="text" type="java.lang.String" value="Phone :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="roomTypeIndicator">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Type :"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="roomNumIndicator">
           <Properties>
             <Property name="text" type="java.lang.String" value="Number :"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="roomPriceIndicator">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Price :"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JLabel" name="roomFloorIndicator">
           <Properties>
             <Property name="text" type="java.lang.String" value="Floor :"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="roomTypeIndicator">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Type :"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="roomPriceIndicator">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Price :"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="checkOutIndicator">
@@ -330,12 +330,12 @@
             <Property name="text" type="java.lang.String" value="jLabel11"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="roomPriceLabel">
+        <Component class="javax.swing.JLabel" name="roomTypeLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel11"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="roomFloorLabel">
+        <Component class="javax.swing.JLabel" name="roomPriceLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel11"/>
           </Properties>
@@ -345,12 +345,12 @@
             <Property name="text" type="java.lang.String" value="jLabel11"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="roomNumLabel">
+        <Component class="javax.swing.JLabel" name="roomFloorLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel11"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="roomTypeLabel">
+        <Component class="javax.swing.JLabel" name="roomNumLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel11"/>
           </Properties>

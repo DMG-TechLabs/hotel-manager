@@ -116,7 +116,7 @@ public class Customer implements Dao {
 
     // Select customers by id
     public static List<Customer> selectById(int id) {
-        return select("select_customer_by_id", id);
+        return select("select_customers_by_id", id);
     }
 
     // Select customers by email

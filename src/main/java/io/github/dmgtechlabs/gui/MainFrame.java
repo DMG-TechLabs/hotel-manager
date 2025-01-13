@@ -6,12 +6,17 @@ import io.github.dmgtechlabs.models.User;
 import io.github.dmgtechlabs.Filters;
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Room;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -26,7 +31,11 @@ public class MainFrame extends javax.swing.JFrame {
 	private ReservationFrame reservationFrame;
 
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
-	private List<Reservation> reservations;
+	private List<Reservation> pendingReservations;
+	private List<Reservation> acceptedReservations;
+	
+//	private FocusAdapter pendingListener;
+//	private FocusAdapter acceptedListener;
 
 	/**
 	 * Creates new form MainFrame
@@ -44,6 +53,23 @@ public class MainFrame extends javax.swing.JFrame {
 		this.helpFrame = new HelpFrame();
 		this.aboutFrame = new AboutFrame();
 
+//		this.pendingListener = new FocusAdapter() {
+//			@Override
+//			public void focusLost(FocusEvent e) {
+//				pendingList.clearSelection();
+//			}
+//		};
+//		
+//		this.acceptedListener = new FocusAdapter() {
+//			@Override
+//			public void focusLost(FocusEvent e) {
+//				acceptedList.clearSelection();
+//			}
+//		};
+//		
+//		pendingList.addFocusListener(pendingListener);
+//		acceptedList.addFocusListener(acceptedListener);
+//		
 		if (user.isManager()) {
 			addUserMenuItem = new javax.swing.JMenuItem();
 			addUserMenuItem.setText("User");
@@ -57,8 +83,8 @@ public class MainFrame extends javax.swing.JFrame {
 
 		setupFilters();
 		applyFilters();
-		
-		if(user.isGuest()) {
+
+		if (user.isGuest()) {
 			// Allow only Searching for guest user
 			this.tabbedPane.setEnabledAt(1, false);
 			this.tabbedPane.setEnabledAt(2, false);
@@ -66,14 +92,14 @@ public class MainFrame extends javax.swing.JFrame {
 			// Hide statistics from employees
 			this.tabbedPane.setEnabledAt(2, false);
 		}
-		
-		this.reservations = Reservation.selectByReservationStatus(1);
-		this.pendingList.setListData(Reservation.listToArray(this.reservations.stream().map(reservation -> (Reservation) reservation).toList()));
-		
-		this.reservations = Reservation.selectByReservationStatus(2);
-		this.acceptedList.setListData(Reservation.listToArray(this.reservations.stream().map(reservation -> (Reservation) reservation).toList()));
+
+		this.pendingReservations = Reservation.selectByReservationStatus(1);
+		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+
+		this.acceptedReservations = Reservation.selectByReservationStatus(2);
+		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 	}
-	
+
 	public MainFrame() {
 		initComponents();
 		this.setTitle("Hotel Manager");
@@ -84,12 +110,12 @@ public class MainFrame extends javax.swing.JFrame {
 
 		setupFilters();
 		applyFilters();
-		
-		this.reservations = Reservation.selectByReservationStatus(1);
-		this.pendingList.setListData(Reservation.listToArray(this.reservations.stream().map(reservation -> (Reservation) reservation).toList()));
-		
-		this.reservations = Reservation.selectByReservationStatus(2);
-		this.acceptedList.setListData(Reservation.listToArray(this.reservations.stream().map(reservation -> (Reservation) reservation).toList()));
+
+		this.pendingReservations = Reservation.selectByReservationStatus(1);
+		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+
+		this.acceptedReservations = Reservation.selectByReservationStatus(2);
+		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 	}
 
 	private void setupFilters() {
@@ -690,24 +716,24 @@ public class MainFrame extends javax.swing.JFrame {
 
 		filters.addType(this.singleRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.SINGLE : null);
 		filters.addType(this.doubleRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.DOUBLE : null);
-		filters.addType(this.twinRoomFilterCheckbox.isSelected()   || noneSelected ? Room.Type.TWIN   : null);
-		filters.addType(this.suiteRoomFilterCheckbox.isSelected()  || noneSelected ? Room.Type.SUITE  : null);
+		filters.addType(this.twinRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.TWIN : null);
+		filters.addType(this.suiteRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.SUITE : null);
 		filters.addType(this.deluxeRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.DELUXE : null);
 		filters.addType(this.familyRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.FAMILY : null);
 		filters.addType(this.studioRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.STUDIO : null);
-		filters.addType(this.kingRoomFilterCheckbox.isSelected()   || noneSelected ? Room.Type.KING   : null);
-		filters.addType(this.queenRoomFilterCheckbox.isSelected()  || noneSelected ? Room.Type.QUEEN  : null);
+		filters.addType(this.kingRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.KING : null);
+		filters.addType(this.queenRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.QUEEN : null);
 
 		return filters;
 	}
-	
-	public Room getSelectedRoom(){
+
+	public Room getSelectedRoom() {
 		Filters filters = getFilters();
 		List<Room> rooms = filters.search();
 		Room room = rooms.get(this.resultFilterList.getSelectedIndex());
 		return room;
 	}
-	
+
     private void resetFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersButtonActionPerformed
 		resetFilters();
     }//GEN-LAST:event_resetFiltersButtonActionPerformed
@@ -720,7 +746,7 @@ public class MainFrame extends javax.swing.JFrame {
 		this.resultFilterList.setModel(model);
 	}
 
-	private void applyFilters(){
+	private void applyFilters() {
 		Filters filters = getFilters();
 		List<Room> rooms = filters.search();
 		setRoomsToResultList(rooms);
@@ -730,24 +756,27 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_applyFiltersButtonActionPerformed
 
     private void resultFilterListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultFilterListMouseClicked
-		if(evt.getButton() != MouseEvent.BUTTON3) return;
-		
+		if (evt.getButton() != MouseEvent.BUTTON3) {
+			return;
+		}
+
 		Room room = getSelectedRoom();
 		GUIUtils.showFrame(new RoomActionsFrame(room));
     }//GEN-LAST:event_resultFilterListMouseClicked
 
     private void deleteRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRoomMenuItemActionPerformed
 		int option = JOptionPane.showConfirmDialog(this, "This action cannot be reversed", "Delete Room?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-		if(option != 0) return;
-		
-		
-        Room room = getSelectedRoom();
-		if(room == null) {
+		if (option != 0) {
+			return;
+		}
+
+		Room room = getSelectedRoom();
+		if (room == null) {
 			JOptionPane.showMessageDialog(this, "Please select a room first", "Failure", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		
-		if(room.delete()){
+
+		if (room.delete()) {
 			JOptionPane.showMessageDialog(this, "Room " + room.getFloor() + "-" + room.getNumber() + " deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(this, "Could not delete room", "Failure", JOptionPane.ERROR_MESSAGE);
@@ -755,7 +784,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteRoomMenuItemActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        this.dispose();
+		this.dispose();
 		new StartingFrame().setVisible(true);
     }//GEN-LAST:event_exitButtonActionPerformed
 
@@ -798,20 +827,67 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_resetPasswordsButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO: change password logic @Mokas
+		// TODO: change password logic @Mokas
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-        // TODO add your handling code here:
+		if (pendingList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Select a pending reservation first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to accept this reservation?", "Accept", JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			this.pendingReservations.get(pendingList.getSelectedIndex()).update(2);
+
+			this.pendingReservations = Reservation.selectByReservationStatus(2);
+			this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+
+			this.acceptedReservations = Reservation.selectByReservationStatus(2);
+			this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		}
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void declineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_declineButtonActionPerformed
-        // TODO add your handling code here:
+		if (pendingList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Select a pending reservation first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to decline this reservation?\nThis means that this will be deleted!", "Accept", JOptionPane.OK_CANCEL_OPTION);
+		if (result == JOptionPane.OK_OPTION) {
+			this.pendingReservations.get(pendingList.getSelectedIndex()).delete();
+
+			this.pendingReservations = Reservation.selectByReservationStatus(1);
+			this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+
+			this.acceptedReservations = Reservation.selectByReservationStatus(2);
+			this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		}
     }//GEN-LAST:event_declineButtonActionPerformed
 
     private void showInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showInfoButtonActionPerformed
-        reservationFrame = new ReservationFrame();
+		if (reservationFrame != null) {
+			reservationFrame.dispose();
+		}
+
+		if (pendingList.getSelectedIndex() < 0 && acceptedList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Select a reservation first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		} else if (pendingList.getSelectedIndex() < 0) {
+			String selectedValue = acceptedList.getSelectedValue();
+
+			reservationFrame = new ReservationFrame(this.state.activeHotelId, selectedValue);
+			reservationFrame.setVisible(true);
+			acceptedList.clearSelection();
+			return;
+		}
+
+		String selectedValue = pendingList.getSelectedValue();
+
+		reservationFrame = new ReservationFrame(this.state.activeHotelId, selectedValue);
 		reservationFrame.setVisible(true);
+		pendingList.clearSelection();
     }//GEN-LAST:event_showInfoButtonActionPerformed
 
 	private javax.swing.JMenuItem addUserMenuItem;
