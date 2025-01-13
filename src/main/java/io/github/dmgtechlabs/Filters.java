@@ -31,11 +31,10 @@ public class Filters {
 	}
 
 	public String toQuery() {
-		String query = new QueryBuilder()
-			.select()
-			.from("room").build() + " WHERE (";
+		StringBuilder query = new StringBuilder(new QueryBuilder()
+                .select()
+                .from("room").build()).append(" WHERE (");
 
-		// TODO: add filters
 		for (int i = 0; i < this.types.size(); i++) {
 			Room.Type type = this.types.get(i);
 			if (type == null) {
@@ -43,19 +42,19 @@ public class Filters {
 			}
 
 			if (i == this.types.size() - 1) {
-				query += "type = " + type.getValue();
+				query.append("type = ").append(type.getValue());
 			} else {
-				query += "type = " + type.getValue() + " OR ";
+				query.append("type = ").append(type.getValue()).append(" OR ");
 			}
 		}
-		query += ")";
+		query.append(")");
 		
-		query += " AND price >= " + this.priceRange.min;
-		query += " AND price <= " + this.priceRange.max;
+		query.append(" AND price >= ").append(this.priceRange.min);
+		query.append(" AND price <= ").append(this.priceRange.max);
 		
-		query += " AND occupied = false;";
+		query.append(" AND occupied = false;");
 		
-		return query;
+		return query.toString();
 	}
 
 	public List<Room> search() {

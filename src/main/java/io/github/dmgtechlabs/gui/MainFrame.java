@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -23,7 +24,6 @@ public class MainFrame extends javax.swing.JFrame {
 	private RoomActionsFrame roomActionsFrame;
 
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
-	private int activeHotelId;
 
 	/**
 	 * Creates new form MainFrame
@@ -96,6 +96,7 @@ public class MainFrame extends javax.swing.JFrame {
         kingRoomFilterCheckbox = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         resultFilterList = new javax.swing.JList<>();
+        reservationsPanel = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
@@ -103,6 +104,7 @@ public class MainFrame extends javax.swing.JFrame {
         editRoomMenuItem = new javax.swing.JMenuItem();
         editUserMenuItem = new javax.swing.JMenuItem();
         deleteMenu = new javax.swing.JMenu();
+        deleteRoomMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -238,7 +240,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(searchPanelLayout.createSequentialGroup()
                 .addComponent(filtersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 808, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE)
                 .addContainerGap())
         );
         searchPanelLayout.setVerticalGroup(
@@ -248,6 +250,19 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         tabbedPane.addTab("Search", searchPanel);
+
+        javax.swing.GroupLayout reservationsPanelLayout = new javax.swing.GroupLayout(reservationsPanel);
+        reservationsPanel.setLayout(reservationsPanelLayout);
+        reservationsPanelLayout.setHorizontalGroup(
+            reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1021, Short.MAX_VALUE)
+        );
+        reservationsPanelLayout.setVerticalGroup(
+            reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 689, Short.MAX_VALUE)
+        );
+
+        tabbedPane.addTab("Reservations", reservationsPanel);
 
         addMenu.setText("Add");
 
@@ -283,6 +298,15 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1.add(editMenu);
 
         deleteMenu.setText("Delete");
+
+        deleteRoomMenuItem.setText("Room");
+        deleteRoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteRoomMenuItemActionPerformed(evt);
+            }
+        });
+        deleteMenu.add(deleteRoomMenuItem);
+
         jMenuBar1.add(deleteMenu);
 
         helpMenu.setText("Help");
@@ -338,7 +362,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     private void addRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomMenuItemActionPerformed
-		this.roomFrame = new RoomFrame(this.activeHotelId);
+		this.roomFrame = new RoomFrame(this.state.activeHotelId);
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
@@ -401,13 +425,13 @@ public class MainFrame extends javax.swing.JFrame {
 
 		filters.addType(this.singleRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.SINGLE : null);
 		filters.addType(this.doubleRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.DOUBLE : null);
-		filters.addType(this.twinRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.TWIN : null);
-		filters.addType(this.suiteRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.SUITE : null);
+		filters.addType(this.twinRoomFilterCheckbox.isSelected()   || noneSelected ? Room.Type.TWIN   : null);
+		filters.addType(this.suiteRoomFilterCheckbox.isSelected()  || noneSelected ? Room.Type.SUITE  : null);
 		filters.addType(this.deluxeRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.DELUXE : null);
 		filters.addType(this.familyRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.FAMILY : null);
 		filters.addType(this.studioRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.STUDIO : null);
-		filters.addType(this.kingRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.KING : null);
-		filters.addType(this.queenRoomFilterCheckbox.isSelected() || noneSelected ? Room.Type.QUEEN : null);
+		filters.addType(this.kingRoomFilterCheckbox.isSelected()   || noneSelected ? Room.Type.KING   : null);
+		filters.addType(this.queenRoomFilterCheckbox.isSelected()  || noneSelected ? Room.Type.QUEEN  : null);
 
 		return filters;
 	}
@@ -447,6 +471,24 @@ public class MainFrame extends javax.swing.JFrame {
 		GUIUtils.showFrame(new RoomActionsFrame(room));
     }//GEN-LAST:event_resultFilterListMouseClicked
 
+    private void deleteRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRoomMenuItemActionPerformed
+		int option = JOptionPane.showConfirmDialog(this, "This action cannot be reversed", "Delete Room?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if(option != 0) return;
+		
+		
+        Room room = getSelectedRoom();
+		if(room == null) {
+			JOptionPane.showMessageDialog(this, "Please select a room first", "Failure", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		if(room.delete()){
+			JOptionPane.showMessageDialog(this, "Room " + room.getFloor() + "-" + room.getNumber() + " deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "Could not delete room", "Failure", JOptionPane.ERROR_MESSAGE);
+		}
+    }//GEN-LAST:event_deleteRoomMenuItemActionPerformed
+
 	private javax.swing.JMenuItem addUserMenuItem;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -455,6 +497,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem addRoomMenuItem;
     private javax.swing.JButton applyFiltersButton;
     private javax.swing.JMenu deleteMenu;
+    private javax.swing.JMenuItem deleteRoomMenuItem;
     private javax.swing.JCheckBox deluxeRoomFilterCheckbox;
     private javax.swing.JCheckBox doubleRoomFilterCheckbox;
     private javax.swing.JMenu editMenu;
@@ -472,6 +515,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField maxPriceFormattedTextField;
     private javax.swing.JFormattedTextField minPriceFormattedTextField;
     private javax.swing.JCheckBox queenRoomFilterCheckbox;
+    private javax.swing.JPanel reservationsPanel;
     private javax.swing.JButton resetFiltersButton;
     private javax.swing.JList<String> resultFilterList;
     private javax.swing.JPanel searchPanel;
