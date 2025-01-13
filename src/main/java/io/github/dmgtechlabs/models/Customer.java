@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Customer {
+public class Customer implements Dao {
 
     // Fields corresponding to the customer table
     private int id;
@@ -75,6 +75,7 @@ public class Customer {
     }
 
     // Insert a new customer
+	@Override
     public boolean insert() {
         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             conn.callProcedure("insert_customer", fName, lName, phone, email);
@@ -86,6 +87,7 @@ public class Customer {
     }
 
     // Update an existing customer
+	@Override
     public boolean update(Object... values) {
         final int expectedParams = 4; // Including all fields
         if (values.length != expectedParams)
@@ -101,6 +103,7 @@ public class Customer {
     }
 
     // Delete an existing customer
+	@Override
     public boolean delete() {
         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             conn.callProcedure("delete_customer", id);
