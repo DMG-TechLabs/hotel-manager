@@ -166,7 +166,7 @@ public class User implements Dao {
       return true;
    };
    
-   public static List<User> selectWithUsernamePassword(String username, String password) throws Exception {
+   public static List<User> selectWithUsernamePassword(String username, String password, int hotelId) throws Exception {
         assert (username != null);
         assert (!username.isBlank());
         assert (!"".equals(username));
@@ -176,7 +176,7 @@ public class User implements Dao {
         assert (!"".equals(password));
         
         try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            ResultSet rs = conn.callFunction("select_user_with_username_password", username, password);
+            ResultSet rs = conn.callFunction("select_user_with_username_password", username, password, hotelId);
 //            while(rs.next()){
 //                System.out.println(rs.getString(0));
 //            }
@@ -217,10 +217,10 @@ public class User implements Dao {
         }
    }
    
-   public static User login(String username, String password) throws IllegalArgumentException, Exception{
+   public static User login(String username, String password, int hotelId) throws IllegalArgumentException, Exception{
        System.out.println(username);
        System.out.println(password);
-       List<User> users_list = User.selectWithUsernamePassword(username, password);
+       List<User> users_list = User.selectWithUsernamePassword(username, password, hotelId);
        System.out.println(users_list);
        if(users_list.size() == 1){
            return users_list.get(0);
