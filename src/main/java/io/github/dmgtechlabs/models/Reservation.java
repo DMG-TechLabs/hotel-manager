@@ -182,6 +182,10 @@ public class Reservation implements Dao {
 		return select("select_reservations_by_reservation_id", id);
 	}
 	
+	public static List<Reservation> selectByHotel(int reservationRoomFk) {
+		return select("select_reservations_by_hotel", reservationRoomFk);
+	}
+	
 	public static List<Reservation> selectByReservationStatus(int status) {
 		return select("select_reservations_by_status", status);
 	}

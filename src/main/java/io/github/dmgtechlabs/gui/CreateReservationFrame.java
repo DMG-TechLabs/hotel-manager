@@ -70,9 +70,9 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         okBtn = new javax.swing.JButton();
         cancelBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("URW Gothic", 1, 30)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("URW Gothic", 0, 30)); // NOI18N
         jLabel1.setText("Reservation Creation");
 
         hotelLabel.setText("Select a hotel");
@@ -122,7 +122,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                                 .addComponent(checkInOutLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(roomLabel)
                                 .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 88, Short.MAX_VALUE)))
+                        .addGap(0, 84, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         reservationPanelLayout.setVerticalGroup(

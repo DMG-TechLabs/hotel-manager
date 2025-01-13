@@ -23,6 +23,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private RoomFrame roomFrame;
 	private UserFrame userFrame;
 	private RoomActionsFrame roomActionsFrame;
+	private ReservationFrame reservationFrame;
 
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
 	private List<Reservation> reservations;
@@ -306,10 +307,10 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Search", searchPanel);
 
-        pendingLabel.setFont(new java.awt.Font("URW Gothic", 1, 36)); // NOI18N
+        pendingLabel.setFont(new java.awt.Font("URW Gothic", 0, 36)); // NOI18N
         pendingLabel.setText("Pending");
 
-        acceptedLabel.setFont(new java.awt.Font("URW Gothic", 1, 36)); // NOI18N
+        acceptedLabel.setFont(new java.awt.Font("URW Gothic", 0, 36)); // NOI18N
         acceptedLabel.setText("Accepted");
 
         jScrollPane3.setViewportView(pendingList);
@@ -806,7 +807,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_declineButtonActionPerformed
 
     private void showInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showInfoButtonActionPerformed
-        // TODO add your handling code here:
+        reservationFrame = new ReservationFrame();
+		reservationFrame.setVisible(true);
     }//GEN-LAST:event_showInfoButtonActionPerformed
 
 	private javax.swing.JMenuItem addUserMenuItem;
