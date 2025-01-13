@@ -136,7 +136,19 @@ public class MainFrame extends javax.swing.JFrame {
         acceptedList = new javax.swing.JList<>();
         statisticsPanel = new javax.swing.JPanel();
         optionsPanel = new javax.swing.JPanel();
+        changePasswordPanel = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        currentPasswordField = new javax.swing.JPasswordField();
+        jLabel5 = new javax.swing.JLabel();
+        newPasswordField = new javax.swing.JPasswordField();
+        jLabel6 = new javax.swing.JLabel();
+        confirmNewPasswordField = new javax.swing.JPasswordField();
+        resetPasswordsButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        miscButtonsPanel = new javax.swing.JPanel();
         exitButton = new javax.swing.JButton();
+        switchUserButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
@@ -349,6 +361,73 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Statistics", statisticsPanel);
 
+        jLabel3.setFont(new java.awt.Font("sansserif", 2, 18)); // NOI18N
+        jLabel3.setText("Change Password");
+
+        jLabel4.setText("Current Password");
+
+        jLabel5.setText("New Password");
+
+        jLabel6.setText("Confirm New Password");
+
+        resetPasswordsButton.setText("Reset");
+        resetPasswordsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetPasswordsButtonActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Confirm");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout changePasswordPanelLayout = new javax.swing.GroupLayout(changePasswordPanel);
+        changePasswordPanel.setLayout(changePasswordPanelLayout);
+        changePasswordPanelLayout.setHorizontalGroup(
+            changePasswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(changePasswordPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(changePasswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(changePasswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel6)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel4)
+                        .addComponent(jLabel3)
+                        .addComponent(currentPasswordField)
+                        .addComponent(newPasswordField)
+                        .addComponent(confirmNewPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(changePasswordPanelLayout.createSequentialGroup()
+                        .addComponent(resetPasswordsButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1))))
+        );
+        changePasswordPanelLayout.setVerticalGroup(
+            changePasswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, changePasswordPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(currentPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(newPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(confirmNewPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(changePasswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(resetPasswordsButton))
+                .addContainerGap())
+        );
+
         exitButton.setText("Exit");
         exitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -356,21 +435,48 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        switchUserButton.setText("Switch User");
+
+        javax.swing.GroupLayout miscButtonsPanelLayout = new javax.swing.GroupLayout(miscButtonsPanel);
+        miscButtonsPanel.setLayout(miscButtonsPanelLayout);
+        miscButtonsPanelLayout.setHorizontalGroup(
+            miscButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(miscButtonsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(miscButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(switchUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        miscButtonsPanelLayout.setVerticalGroup(
+            miscButtonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(miscButtonsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(exitButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(switchUserButton)
+                .addContainerGap(98, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
         optionsPanel.setLayout(optionsPanelLayout);
         optionsPanelLayout.setHorizontalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, optionsPanelLayout.createSequentialGroup()
-                .addContainerGap(918, Short.MAX_VALUE)
-                .addComponent(exitButton)
-                .addGap(31, 31, 31))
+            .addGroup(optionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(miscButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addComponent(changePasswordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(625, Short.MAX_VALUE))
         );
         optionsPanelLayout.setVerticalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, optionsPanelLayout.createSequentialGroup()
-                .addContainerGap(639, Short.MAX_VALUE)
-                .addComponent(exitButton)
-                .addGap(25, 25, 25))
+            .addGroup(optionsPanelLayout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(changePasswordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(miscButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(395, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Options", optionsPanel);
@@ -638,7 +744,17 @@ public class MainFrame extends javax.swing.JFrame {
 			}
 		});
 	}
-	
+
+    private void resetPasswordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPasswordsButtonActionPerformed
+		this.currentPasswordField.setText("");
+		this.newPasswordField.setText("");
+		this.confirmNewPasswordField.setText("");
+    }//GEN-LAST:event_resetPasswordsButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO: change password logic @Mokas
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 	private javax.swing.JMenuItem addUserMenuItem;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -648,6 +764,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addRoomMenuItem;
     private javax.swing.JButton applyFiltersButton;
+    private javax.swing.JPanel changePasswordPanel;
+    private javax.swing.JPasswordField confirmNewPasswordField;
+    private javax.swing.JPasswordField currentPasswordField;
     private javax.swing.JMenu deleteMenu;
     private javax.swing.JMenuItem deleteRoomMenuItem;
     private javax.swing.JCheckBox deluxeRoomFilterCheckbox;
@@ -660,8 +779,13 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel filtersPanel;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem helpMenuItem;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
@@ -669,18 +793,22 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox kingRoomFilterCheckbox;
     private javax.swing.JFormattedTextField maxPriceFormattedTextField;
     private javax.swing.JFormattedTextField minPriceFormattedTextField;
+    private javax.swing.JPanel miscButtonsPanel;
+    private javax.swing.JPasswordField newPasswordField;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JLabel pendingLabel;
     private javax.swing.JList<String> pendingList;
     private javax.swing.JCheckBox queenRoomFilterCheckbox;
     private javax.swing.JPanel reservationsPanel;
     private javax.swing.JButton resetFiltersButton;
+    private javax.swing.JButton resetPasswordsButton;
     private javax.swing.JList<String> resultFilterList;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JCheckBox singleRoomFilterCheckbox;
     private javax.swing.JPanel statisticsPanel;
     private javax.swing.JCheckBox studioRoomFilterCheckbox;
     private javax.swing.JCheckBox suiteRoomFilterCheckbox;
+    private javax.swing.JButton switchUserButton;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox twinRoomFilterCheckbox;
     // End of variables declaration//GEN-END:variables
