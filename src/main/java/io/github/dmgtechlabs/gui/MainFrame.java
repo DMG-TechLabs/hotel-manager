@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 public class MainFrame extends javax.swing.JFrame {
@@ -799,7 +800,13 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-        // TODO add your handling code here:
+        if (pendingList.getSelectedIndex() < 0) {
+			JDialog dialog = new JDialog(this, "Select a reservation first");
+			dialog.setVisible(true);
+			return;
+		}
+		
+		System.out.println("here");
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void declineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_declineButtonActionPerformed
@@ -807,8 +814,20 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_declineButtonActionPerformed
 
     private void showInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showInfoButtonActionPerformed
-        reservationFrame = new ReservationFrame();
+        if (pendingList.getSelectedIndex() < 0) {
+			return;
+		}
+		
+		if (reservationFrame != null) {
+			reservationFrame.dispose();
+		}
+		
+		int selectedIndex = pendingList.getSelectedIndex();
+
+		reservationFrame = new ReservationFrame(this.state.activeHotelId, selectedIndex);
 		reservationFrame.setVisible(true);
+		
+		
     }//GEN-LAST:event_showInfoButtonActionPerformed
 
 	private javax.swing.JMenuItem addUserMenuItem;
