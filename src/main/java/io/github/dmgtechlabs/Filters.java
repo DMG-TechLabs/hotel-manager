@@ -12,11 +12,13 @@ import java.util.List;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 
 public class Filters {
+	public State state;
 
 	public List<Room.Type> types = new ArrayList<>();
 	public Range priceRange;
 
-	public Filters() {
+	public Filters(State state) {
+		this.state = state;
 	}
 
 	public void setRange(float min, float max) {
@@ -52,13 +54,15 @@ public class Filters {
 		query.append(" AND price >= ").append(this.priceRange.min);
 		query.append(" AND price <= ").append(this.priceRange.max);
 		
-		query.append(" AND occupied = false;");
+		query.append(" AND occupied = false");
+		query.append(" AND room_hotel_fk = ").append(this.state.activeHotelId).append(";");
 		
 		return query.toString();
 	}
 
 	public List<Room> search() {
 		String query = toQuery();
+		System.out.println(query);
 		List<Room> result = new ArrayList<>();
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 			ResultSet rs = conn.executeQuery(query);

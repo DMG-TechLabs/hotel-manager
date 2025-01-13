@@ -103,6 +103,8 @@ public class MainFrame extends javax.swing.JFrame {
         resultFilterList = new javax.swing.JList<>();
         reservationsPanel = new javax.swing.JPanel();
         statisticsPanel = new javax.swing.JPanel();
+        optionsPanel = new javax.swing.JPanel();
+        exitButton = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
@@ -283,6 +285,32 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Statistics", statisticsPanel);
 
+        exitButton.setText("Exit");
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout optionsPanelLayout = new javax.swing.GroupLayout(optionsPanel);
+        optionsPanel.setLayout(optionsPanelLayout);
+        optionsPanelLayout.setHorizontalGroup(
+            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, optionsPanelLayout.createSequentialGroup()
+                .addContainerGap(918, Short.MAX_VALUE)
+                .addComponent(exitButton)
+                .addGap(31, 31, 31))
+        );
+        optionsPanelLayout.setVerticalGroup(
+            optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, optionsPanelLayout.createSequentialGroup()
+                .addContainerGap(639, Short.MAX_VALUE)
+                .addComponent(exitButton)
+                .addGap(25, 25, 25))
+        );
+
+        tabbedPane.addTab("Options", optionsPanel);
+
         addMenu.setText("Add");
 
         addRoomMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
@@ -420,7 +448,7 @@ public class MainFrame extends javax.swing.JFrame {
 	}
 
 	private Filters getFilters() {
-		Filters filters = new Filters();
+		Filters filters = new Filters(state);
 
 		float min, max;
 		try {
@@ -510,6 +538,11 @@ public class MainFrame extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_deleteRoomMenuItemActionPerformed
 
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+        this.dispose();
+		new StartingFrame().setVisible(true);
+    }//GEN-LAST:event_exitButtonActionPerformed
+
 	private javax.swing.JMenuItem addUserMenuItem;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -524,6 +557,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem editRoomMenuItem;
     private javax.swing.JMenuItem editUserMenuItem;
+    private javax.swing.JButton exitButton;
     private javax.swing.JCheckBox familyRoomFilterCheckbox;
     private javax.swing.JPanel filtersPanel;
     private javax.swing.JMenu helpMenu;
@@ -535,6 +569,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox kingRoomFilterCheckbox;
     private javax.swing.JFormattedTextField maxPriceFormattedTextField;
     private javax.swing.JFormattedTextField minPriceFormattedTextField;
+    private javax.swing.JPanel optionsPanel;
     private javax.swing.JCheckBox queenRoomFilterCheckbox;
     private javax.swing.JPanel reservationsPanel;
     private javax.swing.JButton resetFiltersButton;
