@@ -33,7 +33,7 @@ public class Customer implements Dao {
         this.phone = phone;
         this.email = email;
     }
-	
+
     public Customer(String firstName, String lastName, BigInteger phone, String email) {
         this.fName = firstName;
         this.lName = lastName;
@@ -120,11 +120,6 @@ public class Customer implements Dao {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Customer failed", e);
             return false;
         }
-    }
-    
-    //Check if customer exists
-    public static boolean checkCustomer(String email){
-        return !Customer.selectByEmail(email).isEmpty();
     }
 
     // Select customers by id
