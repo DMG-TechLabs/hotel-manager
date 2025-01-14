@@ -5,10 +5,9 @@ import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 import java.sql.SQLException;
-import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.exceptions.PermissionDenied;
 import java.sql.ResultSet;
-import io.github.kdesp73.databridge.helpers.Adapter;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 //import io.github.dmgtechlabs.users.UserRepository;
@@ -172,6 +171,63 @@ public class User implements Dao {
 	}
 
 	;
+   
+   public void getStatistics(Date start_date, Date end_date){
+       System.out.println("ccccc");
+       if( this.type == User.UserType.MANAGER.value || this.type == User.UserType.ADMIN.value){
+           System.out.println("fffff");
+            try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+                System.out.println("1");
+                ResultSet rs = conn.callFunction("get_reservation_distribution", 1);
+                System.out.println("1");
+                while(rs.next()){
+    //                int id, String username, String password, int type, int account_hotel_fk
+                    System.out.println(
+                            rs.getInt(0)+
+                            rs.getString(1)
+                    );
+                    
+                }
+            } catch (SQLException e) {
+                SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_reservation_distribution failed", e);
+            }
+
+            try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+                System.out.println("2");
+                ResultSet rs = conn.callFunction("get_total_revenue", this.accountHotelFk, start_date, end_date);
+//                System.out.println();
+                System.out.println("2");
+                
+                while(rs.next()){
+    //                int id, String username, String password, int type, int account_hotel_fk
+                    System.out.println(
+                            rs.getInt(0)
+                    );
+                    
+                }
+            } catch (SQLException e) {
+                SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_total_revenue failed", e);
+            }
+
+            try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+                System.out.println("3");
+                ResultSet rs = conn.callFunction("get_occupancy_rate", this.accountHotelFk, start_date, end_date);
+                System.out.println("3");
+                while(rs.next()){
+    //                int id, String username, String password, int type, int account_hotel_fk
+                    System.out.println(
+                            rs.getInt(0)+
+                            rs.getInt(1)+
+                            rs.getInt(2)+
+                            rs.getInt(3)
+                    );
+                    
+                }
+            } catch (SQLException e) {
+                SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_occupancy_rate failed", e);
+            }
+       }
+   }
    
    public static List<User> selectWithUsernamePassword(String username, String password, int hotelId) throws Exception {
 		assert (username != null);
