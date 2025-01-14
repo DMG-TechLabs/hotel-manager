@@ -412,4 +412,24 @@ public class ReservationFrame extends javax.swing.JFrame {
     private javax.swing.JLabel serviceInfoLabel;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
+
+
+        /*
+        //Checks if customer should be inserted or updated
+        public void customerHandling(){
+            Customer c = new Customer();
+            if(Customer.checkCustomer(textfield.getemail)){
+                c = Customer.selectByEmail(textfield.getemail).getFirst();
+                c.update(textfield.getfname, textfield.getlname, textfield.getphone, textfield.getemail);
+            }
+            else{
+                c.setFirstName(textfield.getname);
+                c.setLastName(textfield.getname);
+                c.setPhone(textfield.phone);
+                c.setEmail(textfield.email);
+                c.insert();
+            }
+        }
+        */
+
 }
