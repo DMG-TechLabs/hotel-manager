@@ -4,13 +4,24 @@
  */
 package io.github.dmgtechlabs.gui;
 
+import io.github.dmgtechlabs.models.Customer;
+import io.github.dmgtechlabs.models.Hotel;
+import io.github.dmgtechlabs.models.Reservation;
+import io.github.dmgtechlabs.models.Room;
+import java.util.List;
+
 /**
  *
  * @author thanasis
  */
 public class ReservationFrame extends javax.swing.JFrame {
-
-	private MainFrame mf;
+	
+	private List<Reservation> reservations;
+	private List<Hotel> hotels;
+	private List<Room> rooms;
+	private List<Customer> customers;
+	
+	private Reservation reservation;
 	
 	/**
 	 * Creates new form ReservationFrame
@@ -20,13 +31,24 @@ public class ReservationFrame extends javax.swing.JFrame {
 		this.setLocationRelativeTo(null);
 	}
 	
-	public ReservationFrame(MainFrame mf) {
+	public ReservationFrame(int activeHotelId, String selectedValue) {
 		initComponents();
 		this.setLocationRelativeTo(null);
 		
-		this.mf = mf;
+		//TABLE(hotelid integer, name character varying, address character varying, phone bigint)
 		
+		this.reservations = Reservation.selectAll();
+		for (int i = 0; i < reservations.size(); i++) {
+			if (selectedValue.equals(this.reservations.get(i).UIString())) {
+				this.reservation = this.reservations.get(i);
+				break;
+			}
+		}
+		this.hotels = Hotel.selectById(activeHotelId);
+		this.rooms = Room.selectById(this.reservation.getReservationRoomFk(), activeHotelId);
+		this.customers = Customer.selectById(this.reservation.getReservationCustomerFk());
 		
+		loadInfo();
 	}
 
 	/**
@@ -49,10 +71,10 @@ public class ReservationFrame extends javax.swing.JFrame {
         hotelNameIndicator = new javax.swing.JLabel();
         hotelAddressIndicator = new javax.swing.JLabel();
         hotelPhoneIndicator = new javax.swing.JLabel();
-        roomTypeIndicator = new javax.swing.JLabel();
         roomNumIndicator = new javax.swing.JLabel();
-        roomPriceIndicator = new javax.swing.JLabel();
         roomFloorIndicator = new javax.swing.JLabel();
+        roomTypeIndicator = new javax.swing.JLabel();
+        roomPriceIndicator = new javax.swing.JLabel();
         checkOutIndicator = new javax.swing.JLabel();
         checkInIndicator = new javax.swing.JLabel();
         fnameLabel = new javax.swing.JLabel();
@@ -61,11 +83,11 @@ public class ReservationFrame extends javax.swing.JFrame {
         checkInLabel = new javax.swing.JLabel();
         checkOutLabel = new javax.swing.JLabel();
         phoneLabel = new javax.swing.JLabel();
-        roomPriceLabel = new javax.swing.JLabel();
-        roomFloorLabel = new javax.swing.JLabel();
-        hotelPhoneLabel = new javax.swing.JLabel();
-        roomNumLabel = new javax.swing.JLabel();
         roomTypeLabel = new javax.swing.JLabel();
+        roomPriceLabel = new javax.swing.JLabel();
+        hotelPhoneLabel = new javax.swing.JLabel();
+        roomFloorLabel = new javax.swing.JLabel();
+        roomNumLabel = new javax.swing.JLabel();
         hotelNameLabel = new javax.swing.JLabel();
         hotelAddressLabel = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -99,13 +121,13 @@ public class ReservationFrame extends javax.swing.JFrame {
 
         hotelPhoneIndicator.setText("Phone :");
 
-        roomTypeIndicator.setText("Type :");
-
         roomNumIndicator.setText("Number :");
 
-        roomPriceIndicator.setText("Price :");
-
         roomFloorIndicator.setText("Floor :");
+
+        roomTypeIndicator.setText("Type :");
+
+        roomPriceIndicator.setText("Price :");
 
         checkOutIndicator.setText("Check-Out date :");
 
@@ -123,15 +145,15 @@ public class ReservationFrame extends javax.swing.JFrame {
 
         phoneLabel.setText("jLabel11");
 
-        roomPriceLabel.setText("jLabel11");
+        roomTypeLabel.setText("jLabel11");
 
-        roomFloorLabel.setText("jLabel11");
+        roomPriceLabel.setText("jLabel11");
 
         hotelPhoneLabel.setText("jLabel11");
 
-        roomNumLabel.setText("jLabel11");
+        roomFloorLabel.setText("jLabel11");
 
-        roomTypeLabel.setText("jLabel11");
+        roomNumLabel.setText("jLabel11");
 
         hotelNameLabel.setText("jLabel11");
 
@@ -169,19 +191,19 @@ public class ReservationFrame extends javax.swing.JFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(reservationPanelLayout.createSequentialGroup()
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(roomPriceIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(roomFloorIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(checkOutIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(roomNumIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(roomTypeIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(roomPriceIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(checkOutIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(roomFloorIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(roomNumIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(checkInIndicator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(20, 20, 20)
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(roomPriceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(roomTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(roomNumLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                        .addComponent(roomTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(roomFloorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(roomFloorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                                        .addComponent(roomNumLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(roomPriceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(checkInLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(checkOutLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -252,20 +274,20 @@ public class ReservationFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel4)
                                 .addGap(16, 16, 16)
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(roomNumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(roomNumIndicator))
+                                    .addComponent(roomFloorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(roomFloorIndicator))
                                 .addGap(18, 18, 18)
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(roomTypeIndicator)
-                                    .addComponent(roomTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(roomNumIndicator)
+                                    .addComponent(roomNumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(roomTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(roomTypeIndicator))
                                 .addGap(18, 18, 18)
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(roomPriceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(roomPriceIndicator))
-                                .addGap(18, 18, 18)
-                                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(roomFloorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(roomFloorIndicator))
                                 .addGap(40, 40, 40)
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(checkInLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -297,6 +319,27 @@ public class ReservationFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+	private void loadInfo() {		
+		// Hotel info
+		this.hotelNameLabel.setText(this.hotels.get(0).getName());
+		this.hotelAddressLabel.setText(this.hotels.get(0).getAddress());
+		this.hotelPhoneLabel.setText(this.hotels.get(0).getPhone() + "");
+
+		// Room info
+		this.roomFloorLabel.setText(this.rooms.get(0).getFloor() + "");
+		this.roomNumLabel.setText(this.rooms.get(0).getNumber() + "");
+		this.roomTypeLabel.setText(this.rooms.get(0).getType().name());
+		this.roomPriceLabel.setText(this.rooms.get(0).getPrice() + "");
+		this.checkInLabel.setText(this.reservation.getCheckIn());
+		this.checkOutLabel.setText(this.reservation.getCheckOut());
+		
+		//Customer info
+		this.fnameLabel.setText(this.customers.get(0).getFirstName());
+		this.lnameLabel.setText(this.customers.get(0).getLastName());
+		this.emailLabel.setText(this.customers.get(0).getEmail());
+		this.phoneLabel.setText(this.customers.get(0).getPhone() + "");
+	}
+	
 	/**
 	 * @param args the command line arguments
 	 */

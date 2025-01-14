@@ -18,28 +18,32 @@ import org.jdesktop.swingx.JXDatePicker;
  */
 public class CreateReservationFrame extends javax.swing.JFrame {
 	private Reservation reservation = null;
-	private List<Hotel> hotels;
 	private List<Room> rooms;
 
 	/**
 	 * Creates new form ReservationFrame
 	 */
-	public CreateReservationFrame() {
+	public CreateReservationFrame(int activeHotelfk) {
 		initComponents();
 		GUIUtils.commonSetup(null, this);
 		
-		this.hotels = Hotel.selectAll();
-		for (Hotel h : this.hotels) {
-			this.hotelComboBox.addItem(h.UIString());
-		}
-		
-		this.rooms = Room.selectAll();
+		this.rooms = Room.selectByOccupiedAndHotelId(activeHotelfk);
 		for (Room r : this.rooms) {
 			this.roomComboBox.addItem(r.UIString());
 		}
 		
-//		var model = new DefaultComboBoxModel(hotels.toArray());
-//		this.hotelComboBox.setModel(model);
+		JXDatePicker picker = new JXDatePicker();
+        picker.setDate(Calendar.getInstance().getTime());
+        picker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
+		
+		this.reservationPanel.add(picker);
+		this.getContentPane().add(reservationPanel);
+		
+	}
+	
+	public CreateReservationFrame() {
+		initComponents();
+		GUIUtils.commonSetup(null, this);
 		
 		JXDatePicker picker = new JXDatePicker();
         picker.setDate(Calendar.getInstance().getTime());
@@ -61,8 +65,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
         reservationPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        hotelLabel = new javax.swing.JLabel();
-        hotelComboBox = new javax.swing.JComboBox<>();
         checkInOutLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         roomLabel = new javax.swing.JLabel();
@@ -74,10 +76,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("URW Gothic", 0, 30)); // NOI18N
         jLabel1.setText("Reservation Creation");
-
-        hotelLabel.setText("Select a hotel");
-
-        hotelComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
 
         checkInOutLabel.setText("Select a Check-In/Check-Out date");
 
@@ -97,8 +95,18 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         roomLabel.setText("Select room");
 
         okBtn.setText("OK");
+        okBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okBtnActionPerformed(evt);
+            }
+        });
 
         cancelBtn.setText("Cancel");
+        cancelBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout reservationPanelLayout = new javax.swing.GroupLayout(reservationPanel);
         reservationPanel.setLayout(reservationPanelLayout);
@@ -117,12 +125,10 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(hotelLabel)
-                                .addComponent(hotelComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(checkInOutLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(roomLabel)
-                                .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 84, Short.MAX_VALUE)))
+                                .addComponent(roomLabel))
+                            .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 32, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         reservationPanelLayout.setVerticalGroup(
@@ -131,10 +137,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(hotelLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(hotelComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(checkInOutLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -142,7 +144,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                 .addComponent(roomLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 194, Short.MAX_VALUE)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okBtn)
                     .addComponent(cancelBtn))
@@ -162,6 +164,14 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancelBtnActionPerformed
+
+    private void okBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okBtnActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_okBtnActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -202,8 +212,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelBtn;
     private javax.swing.JLabel checkInOutLabel;
-    private javax.swing.JComboBox<String> hotelComboBox;
-    private javax.swing.JLabel hotelLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton okBtn;
