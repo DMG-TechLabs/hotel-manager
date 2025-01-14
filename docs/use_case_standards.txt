@@ -1,4 +1,0 @@
-Mokas: Hotel Managment, Statistics
-Thanasis: Reservation Managment, Check room availability, Reservation Status
-Despoinidis: Manage Users, Search room
-Giantselidis: Room managment, Reservation Request, Create Customer
