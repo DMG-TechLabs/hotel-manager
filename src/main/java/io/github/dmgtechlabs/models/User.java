@@ -171,13 +171,13 @@ public class User implements Dao {
            System.out.println("fffff");
             try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
                 System.out.println("1");
-                ResultSet rs = conn.callFunction("get_reservation_distribution", this.accountHotelFk);
+                ResultSet rs = conn.callFunction("get_reservation_distribution", 1);
                 System.out.println("1");
                 while(rs.next()){
     //                int id, String username, String password, int type, int account_hotel_fk
                     System.out.println(
                             rs.getInt(0)+
-                            rs.getString(1)+rs.getString(2)+rs.getInt(3)+rs.getInt(3)
+                            rs.getString(1)
                     );
                     
                 }

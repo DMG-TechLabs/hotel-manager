@@ -405,9 +405,9 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Reservations", reservationsPanel);
 
-        startDate.setText("12-01-2025");
+        startDate.setText("2025-01-01");
 
-        endDate.setText("23-01-2025");
+        endDate.setText("2025-02-01");
 
         getStatistics.setText("jButton2");
         getStatistics.addActionListener(new java.awt.event.ActionListener() {
@@ -517,6 +517,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         switchUserButton.setText("Switch User");
+        switchUserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                switchUserButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout miscButtonsPanelLayout = new javax.swing.GroupLayout(miscButtonsPanel);
         miscButtonsPanel.setLayout(miscButtonsPanelLayout);
@@ -833,7 +838,15 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_resetPasswordsButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO: change password logic @Mokas
+        String newPassword = this.newPasswordField.getText();
+                
+        if(!this.state.LoggedInUser.isGuest() && 
+                this.currentPasswordField.getText() == this.state.LoggedInUser.getPassword() && 
+                newPassword == this.confirmNewPasswordField.getText() &&
+                newPassword != "" 
+           ){
+            this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
@@ -856,7 +869,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tabbedPaneStateChanged
 
     private void getStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getStatisticsActionPerformed
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-DD", Locale.ENGLISH);
         
         String sDate = startDate.getText();
         String eDate = endDate.getText();
@@ -869,6 +882,12 @@ public class MainFrame extends javax.swing.JFrame {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
     }//GEN-LAST:event_getStatisticsActionPerformed
+
+    private void switchUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchUserButtonActionPerformed
+        this.dispose();
+        this.state.LoggedInUser = null;
+        new LoginFrame(this.state.activeHotelId).setVisible(true);
+    }//GEN-LAST:event_switchUserButtonActionPerformed
 
 	private javax.swing.JMenuItem addUserMenuItem;
 
