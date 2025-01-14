@@ -1082,7 +1082,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addCustomerMenuItemActionPerformed
 
     private void viewCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCustomerMenuItemActionPerformed
-        // TODO add your handling code here:
+        ViewCustomersFrame vCF = new ViewCustomersFrame();
+        vCF.setVisible(true);
     }//GEN-LAST:event_viewCustomerMenuItemActionPerformed
 
     private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
