@@ -188,11 +188,16 @@ public class MainFrame extends javax.swing.JFrame {
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
         addReservationMenuItem = new javax.swing.JMenuItem();
+        addCustomerMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         editRoomMenuItem = new javax.swing.JMenuItem();
         editUserMenuItem = new javax.swing.JMenuItem();
+        editCustomerMenuItem = new javax.swing.JMenuItem();
         deleteMenu = new javax.swing.JMenu();
         deleteRoomMenuItem = new javax.swing.JMenuItem();
+        deleteCustomerMenuItem = new javax.swing.JMenuItem();
+        viewMenu = new javax.swing.JMenu();
+        viewCustomerMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -247,7 +252,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(hotelNameLabel)
                         .addGap(55, 55, 55)
                         .addComponent(hotelLabel)))
-                .addContainerGap(210, Short.MAX_VALUE))
+                .addContainerGap(211, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Home", homePanel);
@@ -385,7 +390,7 @@ public class MainFrame extends javax.swing.JFrame {
         searchPanelLayout.setVerticalGroup(
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(filtersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
         );
 
         tabbedPane.addTab("Search", searchPanel);
@@ -469,7 +474,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(declineButton))
                     .addComponent(jScrollPane3))
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(79, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Reservations", reservationsPanel);
@@ -506,7 +511,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(getStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(473, Short.MAX_VALUE))
+                .addContainerGap(488, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Statistics", statisticsPanel);
@@ -631,7 +636,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(changePasswordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(miscButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(404, Short.MAX_VALUE))
+                .addContainerGap(432, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Options", optionsPanel);
@@ -655,6 +660,14 @@ public class MainFrame extends javax.swing.JFrame {
         });
         addMenu.add(addReservationMenuItem);
 
+        addCustomerMenuItem.setText("Customer");
+        addCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addCustomerMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(addCustomerMenuItem);
+
         jMenuBar1.add(addMenu);
 
         editMenu.setText("Edit");
@@ -676,6 +689,14 @@ public class MainFrame extends javax.swing.JFrame {
         });
         editMenu.add(editUserMenuItem);
 
+        editCustomerMenuItem.setText("Customer");
+        editCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editCustomerMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(editCustomerMenuItem);
+
         jMenuBar1.add(editMenu);
 
         deleteMenu.setText("Delete");
@@ -689,7 +710,27 @@ public class MainFrame extends javax.swing.JFrame {
         });
         deleteMenu.add(deleteRoomMenuItem);
 
+        deleteCustomerMenuItem.setText("Customer");
+        deleteCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteCustomerMenuItemActionPerformed(evt);
+            }
+        });
+        deleteMenu.add(deleteCustomerMenuItem);
+
         jMenuBar1.add(deleteMenu);
+
+        viewMenu.setText("View");
+
+        viewCustomerMenuItem.setText("Customer");
+        viewCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewCustomerMenuItemActionPerformed(evt);
+            }
+        });
+        viewMenu.add(viewCustomerMenuItem);
+
+        jMenuBar1.add(viewMenu);
 
         helpMenu.setText("Help");
 
@@ -1032,6 +1073,22 @@ public class MainFrame extends javax.swing.JFrame {
 	   GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
+    private void editCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editCustomerMenuItemActionPerformed
+
+    private void addCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addCustomerMenuItemActionPerformed
+
+    private void viewCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCustomerMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewCustomerMenuItemActionPerformed
+
+    private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteCustomerMenuItemActionPerformed
+
 
 	private javax.swing.JMenuItem addUserMenuItem;
 
@@ -1040,6 +1097,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton acceptButton;
     private javax.swing.JLabel acceptedLabel;
     private javax.swing.JList<String> acceptedList;
+    private javax.swing.JMenuItem addCustomerMenuItem;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addReservationMenuItem;
     private javax.swing.JMenuItem addRoomMenuItem;
@@ -1048,10 +1106,12 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPasswordField confirmNewPasswordField;
     private javax.swing.JPasswordField currentPasswordField;
     private javax.swing.JButton declineButton;
+    private javax.swing.JMenuItem deleteCustomerMenuItem;
     private javax.swing.JMenu deleteMenu;
     private javax.swing.JMenuItem deleteRoomMenuItem;
     private javax.swing.JCheckBox deluxeRoomFilterCheckbox;
     private javax.swing.JCheckBox doubleRoomFilterCheckbox;
+    private javax.swing.JMenuItem editCustomerMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem editRoomMenuItem;
     private javax.swing.JMenuItem editUserMenuItem;
@@ -1100,6 +1160,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton switchUserButton;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox twinRoomFilterCheckbox;
+    private javax.swing.JMenuItem viewCustomerMenuItem;
+    private javax.swing.JMenu viewMenu;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }
