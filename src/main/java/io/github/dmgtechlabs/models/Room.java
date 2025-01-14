@@ -201,6 +201,10 @@ public class Room implements Dao {
 	public static List<Room> selectById(int id, int hotelFk) {
 		return select("select_rooms_by_id", id, hotelFk);
 	}
+	
+	public static List<Room> selectByHotelId(int hotelFk) {
+		return select("select_rooms_by_hotel_id", hotelFk);
+	}
 
 	public static List<Room> selectByFloor(int floor, int hotelFk) {
 		return select("select_rooms_by_floor", floor, hotelFk);
@@ -225,7 +229,7 @@ public class Room implements Dao {
 	}
 
 	public String UIString() {
-		return "Room " + this.number;
+		return "Floor " + this.floor + " - " + "Room " + this.number + " - " + "Price " + this.price + "$" + " - " + "Type " + this.type.name();
 	}
 	
 	@Override

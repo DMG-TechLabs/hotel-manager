@@ -29,13 +29,13 @@ public class MainFrame extends javax.swing.JFrame {
 	private UserFrame userFrame;
 	private RoomActionsFrame roomActionsFrame;
 	private ReservationFrame reservationFrame;
+	private CreateReservationFrame createReservationFrame;
 
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
 	private List<Reservation> pendingReservations;
 	private List<Reservation> acceptedReservations;
-	
-//	private FocusAdapter pendingListener;
-//	private FocusAdapter acceptedListener;
+	private List<Room> rooms;
+
 
 	/**
 	 * Creates new form MainFrame
@@ -53,23 +53,6 @@ public class MainFrame extends javax.swing.JFrame {
 		this.helpFrame = new HelpFrame();
 		this.aboutFrame = new AboutFrame();
 
-//		this.pendingListener = new FocusAdapter() {
-//			@Override
-//			public void focusLost(FocusEvent e) {
-//				pendingList.clearSelection();
-//			}
-//		};
-//		
-//		this.acceptedListener = new FocusAdapter() {
-//			@Override
-//			public void focusLost(FocusEvent e) {
-//				acceptedList.clearSelection();
-//			}
-//		};
-//		
-//		pendingList.addFocusListener(pendingListener);
-//		acceptedList.addFocusListener(acceptedListener);
-//		
 		if (user.isManager()) {
 			addUserMenuItem = new javax.swing.JMenuItem();
 			addUserMenuItem.setText("User");
@@ -86,8 +69,8 @@ public class MainFrame extends javax.swing.JFrame {
 
 		if (user.isGuest()) {
 			// Allow only Searching for guest user
-			this.tabbedPane.setEnabledAt(1, false);
 			this.tabbedPane.setEnabledAt(2, false);
+			this.tabbedPane.setEnabledAt(3, false);
 		} else if(user.isEmployee()){
 			// Hide statistics from employees
 			this.tabbedPane.setEnabledAt(2, false);
@@ -138,6 +121,11 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         tabbedPane = new javax.swing.JTabbedPane();
+        homePanel = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         searchPanel = new javax.swing.JPanel();
         filtersPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -185,6 +173,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
+        addReservationMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         editRoomMenuItem = new javax.swing.JMenuItem();
         editUserMenuItem = new javax.swing.JMenuItem();
@@ -197,6 +186,52 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+
+        jLabel7.setFont(new java.awt.Font("URW Gothic", 1, 60)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("WELCOME TO");
+
+        jLabel8.setFont(new java.awt.Font("URW Gothic", 1, 60)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("jLabel8");
+
+        jLabel9.setFont(new java.awt.Font("URW Gothic", 1, 60)); // NOI18N
+        jLabel9.setText("HOTEL");
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/output-onlinepngtools.png"))); // NOI18N
+
+        javax.swing.GroupLayout homePanelLayout = new javax.swing.GroupLayout(homePanel);
+        homePanel.setLayout(homePanelLayout);
+        homePanelLayout.setHorizontalGroup(
+            homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(homePanelLayout.createSequentialGroup()
+                .addGap(120, 120, 120)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
+                .addGroup(homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(24, 24, 24))
+        );
+        homePanelLayout.setVerticalGroup(
+            homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(homePanelLayout.createSequentialGroup()
+                .addGroup(homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(homePanelLayout.createSequentialGroup()
+                        .addGap(194, 194, 194)
+                        .addComponent(jLabel10))
+                    .addGroup(homePanelLayout.createSequentialGroup()
+                        .addGap(152, 152, 152)
+                        .addComponent(jLabel7)
+                        .addGap(55, 55, 55)
+                        .addComponent(jLabel8)
+                        .addGap(55, 55, 55)
+                        .addComponent(jLabel9)))
+                .addContainerGap(210, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Home", homePanel);
 
         jLabel1.setText("Filters");
 
@@ -564,6 +599,14 @@ public class MainFrame extends javax.swing.JFrame {
         });
         addMenu.add(addRoomMenuItem);
 
+        addReservationMenuItem.setText("Reservation");
+        addReservationMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addReservationMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(addReservationMenuItem);
+
         jMenuBar1.add(addMenu);
 
         editMenu.setText("Edit");
@@ -839,13 +882,19 @@ public class MainFrame extends javax.swing.JFrame {
 		int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to accept this reservation?", "Accept", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			this.pendingReservations.get(pendingList.getSelectedIndex()).update(2);
+			
+			this.rooms = Room.selectById(this.pendingReservations.get(pendingList.getSelectedIndex()).getReservationRoomFk(), this.state.activeHotelId);
+			this.rooms.get(0).markOccupiedAs(true);
 
-			this.pendingReservations = Reservation.selectByReservationStatus(2);
+			this.pendingReservations = Reservation.selectByReservationStatus(1);
 			this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 
 			this.acceptedReservations = Reservation.selectByReservationStatus(2);
 			this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 		}
+		
+		pendingList.clearSelection();
+		acceptedList.clearSelection();
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void declineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_declineButtonActionPerformed
@@ -864,6 +913,9 @@ public class MainFrame extends javax.swing.JFrame {
 			this.acceptedReservations = Reservation.selectByReservationStatus(2);
 			this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 		}
+		
+		pendingList.clearSelection();
+		acceptedList.clearSelection();
     }//GEN-LAST:event_declineButtonActionPerformed
 
     private void showInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showInfoButtonActionPerformed
@@ -890,6 +942,11 @@ public class MainFrame extends javax.swing.JFrame {
 		pendingList.clearSelection();
     }//GEN-LAST:event_showInfoButtonActionPerformed
 
+    private void addReservationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReservationMenuItemActionPerformed
+       this.createReservationFrame = new CreateReservationFrame(this.state.activeHotelId);
+	   GUIUtils.showFrame(this.createReservationFrame);
+    }//GEN-LAST:event_addReservationMenuItemActionPerformed
+
 	private javax.swing.JMenuItem addUserMenuItem;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -898,6 +955,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel acceptedLabel;
     private javax.swing.JList<String> acceptedList;
     private javax.swing.JMenu addMenu;
+    private javax.swing.JMenuItem addReservationMenuItem;
     private javax.swing.JMenuItem addRoomMenuItem;
     private javax.swing.JButton applyFiltersButton;
     private javax.swing.JPanel changePasswordPanel;
@@ -916,13 +974,18 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel filtersPanel;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem helpMenuItem;
+    private javax.swing.JPanel homePanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
