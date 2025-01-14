@@ -4,6 +4,7 @@ import io.github.dmgtechlabs.State;
 import io.github.dmgtechlabs.models.User;
 
 import io.github.dmgtechlabs.Filters;
+import io.github.dmgtechlabs.models.Hotel;
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Room;
 import java.awt.event.FocusAdapter;
@@ -35,6 +36,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private List<Reservation> pendingReservations;
 	private List<Reservation> acceptedReservations;
 	private List<Room> rooms;
+	private List<Hotel> hotels;
 
 
 	/**
@@ -52,6 +54,9 @@ public class MainFrame extends javax.swing.JFrame {
 
 		this.helpFrame = new HelpFrame();
 		this.aboutFrame = new AboutFrame();
+		
+		this.hotels = Hotel.selectById(hotelId);
+		this.hotelNameLabel.setText(this.hotels.get(0).getName());
 
 		if (user.isManager()) {
 			addUserMenuItem = new javax.swing.JMenuItem();
@@ -122,9 +127,9 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane = new javax.swing.JTabbedPane();
         homePanel = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        welcomeLabel = new javax.swing.JLabel();
+        hotelNameLabel = new javax.swing.JLabel();
+        hotelLabel = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         searchPanel = new javax.swing.JPanel();
         filtersPanel = new javax.swing.JPanel();
@@ -187,16 +192,16 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
-        jLabel7.setFont(new java.awt.Font("URW Gothic", 1, 60)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setText("WELCOME TO");
+        welcomeLabel.setFont(new java.awt.Font("URW Gothic", 1, 60)); // NOI18N
+        welcomeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        welcomeLabel.setText("WELCOME TO");
 
-        jLabel8.setFont(new java.awt.Font("URW Gothic", 1, 60)); // NOI18N
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel8.setText("jLabel8");
+        hotelNameLabel.setFont(new java.awt.Font("URW Gothic", 1, 60)); // NOI18N
+        hotelNameLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        hotelNameLabel.setText("jLabel8");
 
-        jLabel9.setFont(new java.awt.Font("URW Gothic", 1, 60)); // NOI18N
-        jLabel9.setText("HOTEL");
+        hotelLabel.setFont(new java.awt.Font("URW Gothic", 1, 60)); // NOI18N
+        hotelLabel.setText("HOTEL");
 
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/output-onlinepngtools.png"))); // NOI18N
 
@@ -209,9 +214,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
                 .addGroup(homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(hotelLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(hotelNameLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(welcomeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24))
         );
         homePanelLayout.setVerticalGroup(
@@ -223,11 +228,11 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(jLabel10))
                     .addGroup(homePanelLayout.createSequentialGroup()
                         .addGap(152, 152, 152)
-                        .addComponent(jLabel7)
+                        .addComponent(welcomeLabel)
                         .addGap(55, 55, 55)
-                        .addComponent(jLabel8)
+                        .addComponent(hotelNameLabel)
                         .addGap(55, 55, 55)
-                        .addComponent(jLabel9)))
+                        .addComponent(hotelLabel)))
                 .addContainerGap(210, Short.MAX_VALUE))
         );
 
@@ -975,6 +980,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JPanel homePanel;
+    private javax.swing.JLabel hotelLabel;
+    private javax.swing.JLabel hotelNameLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -983,9 +990,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
@@ -1012,5 +1016,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton switchUserButton;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox twinRoomFilterCheckbox;
+    private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }
