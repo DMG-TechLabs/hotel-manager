@@ -148,6 +148,7 @@ public class Customer implements Dao {
     }
 
     // Select all customers
+    //Not tested yet
     public static List<Customer> selectAll() {
         List<Customer> customers = new ArrayList<>();
         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
