@@ -3,7 +3,6 @@ package io.github.dmgtechlabs;
 import io.github.dmgtechlabs.gui.LoginFrame;
 import io.github.dmgtechlabs.gui.StartingFrame;
 
-
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -28,6 +27,5 @@ public class Main {
 	public static void main(String[] args) {
 		runGUI();
                 
-
 	}
 }
