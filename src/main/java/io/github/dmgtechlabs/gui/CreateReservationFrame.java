@@ -27,7 +27,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		initComponents();
 		GUIUtils.commonSetup(null, this);
 		
-		this.rooms = Room.selectByHotelId(activeHotelfk);
+		this.rooms = Room.selectByOccupiedAndHotelId(activeHotelfk);
 		for (Room r : this.rooms) {
 			this.roomComboBox.addItem(r.UIString());
 		}
