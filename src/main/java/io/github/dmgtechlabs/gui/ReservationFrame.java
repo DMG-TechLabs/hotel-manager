@@ -418,7 +418,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         //Checks if customer should be inserted or updated
         public void customerHandling(){
             Customer c = new Customer();
-            if(Customer.checkCustomer(textfield.getemail)){
+            if(!Customer.selectByEmail(textfield.getemail).isEmpty()){
                 c = Customer.selectByEmail(textfield.getemail).getFirst();
                 c.update(textfield.getfname, textfield.getlname, textfield.getphone, textfield.getemail);
             }

@@ -120,11 +120,6 @@ public class Customer implements Dao {
             return false;
         }
     }
-    
-    //Check if customer exists
-    public static boolean checkCustomer(String email){
-        return !Customer.selectByEmail(email).isEmpty();
-    }
 
     // Select customers by id
     public static List<Customer> selectById(int id) {
