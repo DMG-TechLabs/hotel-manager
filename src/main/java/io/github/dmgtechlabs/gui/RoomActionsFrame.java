@@ -109,7 +109,7 @@ public class RoomActionsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveButtonActionPerformed
-		// TODO: reservation logic
+        // TODO: reservation logic @Thanasis		
 		this.dispose();
     }//GEN-LAST:event_reserveButtonActionPerformed
 

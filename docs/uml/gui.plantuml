@@ -1,4 +1,4 @@
-@startuml
+@startuml gui
 
 package gui {
     class AboutFrame

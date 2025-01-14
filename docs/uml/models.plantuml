@@ -1,4 +1,4 @@
-@startuml
+@startuml models
 
 package db {
     interface Dao {

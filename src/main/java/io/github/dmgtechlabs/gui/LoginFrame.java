@@ -42,9 +42,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
-        setMaximumSize(new java.awt.Dimension(400, 260));
         setMinimumSize(new java.awt.Dimension(400, 260));
-        setPreferredSize(new java.awt.Dimension(400, 260));
         setResizable(false);
         setSize(new java.awt.Dimension(400, 260));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());

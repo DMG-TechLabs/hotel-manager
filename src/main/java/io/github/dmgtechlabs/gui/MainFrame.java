@@ -78,7 +78,7 @@ public class MainFrame extends javax.swing.JFrame {
 			this.tabbedPane.setEnabledAt(3, false);
 		} else if(user.isEmployee()){
 			// Hide statistics from employees
-			this.tabbedPane.setEnabledAt(2, false);
+			this.tabbedPane.setEnabledAt(3, false);
 		}
 
 		this.pendingReservations = Reservation.selectByReservationStatus(1);
