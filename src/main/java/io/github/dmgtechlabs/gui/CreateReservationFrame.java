@@ -4,15 +4,20 @@
  */
 package io.github.dmgtechlabs.gui;
 
+import io.github.dmgtechlabs.models.Customer;
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Room;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.jdesktop.swingx.JXDatePicker;
@@ -23,7 +28,13 @@ import org.jdesktop.swingx.JXDatePicker;
  */
 public class CreateReservationFrame extends javax.swing.JFrame {
 
-	private Reservation reservation = null;
+	private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+	public static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+	private static final Pattern PHONE_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+	private JXDatePicker checkInPicker;
+	private JXDatePicker checkOutPicker;
+
 	private List<Room> rooms;
 
 	/**
@@ -37,7 +48,9 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		this.setLayout(null);
 		this.setResizable(false);
 
-		setDatePanel();
+		initDatePanel();
+
+		this.emailFormattedTextField.setInputVerifier(new EmailVerifier());
 
 		this.rooms = Room.selectByOccupiedAndHotelId(activeHotelfk);
 		for (Room r : this.rooms) {
@@ -45,22 +58,22 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		}
 	}
 
-	private void setDatePanel() {
+	private void initDatePanel() {
 		this.datePanel = new JPanel(null);
 		this.datePanel.setBounds(5, 50, 475, 100);
 
-		JXDatePicker checkInPicker = new JXDatePicker();
-		checkInPicker.setDate(Calendar.getInstance().getTime());
-		checkInPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
-		checkInPicker.setBounds(5, 50, 200, 30);
+		this.checkInPicker = new JXDatePicker();
+		this.checkInPicker.setDate(Calendar.getInstance().getTime());
+		this.checkInPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
+		this.checkInPicker.setBounds(5, 50, 200, 30);
 
-		JXDatePicker checkOutPicker = new JXDatePicker();
-		checkOutPicker.setDate(Calendar.getInstance().getTime());
-		checkOutPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
-		checkOutPicker.setBounds(240, 50, 200, 30);
+		this.checkOutPicker = new JXDatePicker();
+		this.checkOutPicker.setDate(Calendar.getInstance().getTime());
+		this.checkOutPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
+		this.checkOutPicker.setBounds(260, 50, 200, 30);
 
-		this.datePanel.add(checkInPicker);
-		this.datePanel.add(checkOutPicker);
+		this.datePanel.add(this.checkInPicker);
+		this.datePanel.add(this.checkOutPicker);
 
 		SwingUtilities.invokeLater(() -> {
 			this.datePanel.revalidate();
@@ -92,6 +105,15 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         datePanel = new javax.swing.JPanel();
         checkInLabel = new javax.swing.JLabel();
         checkOutLabel = new javax.swing.JLabel();
+        personalInfoLabel = new javax.swing.JLabel();
+        fNameIndicator = new javax.swing.JLabel();
+        fNameTextField = new javax.swing.JTextField();
+        lnameTextField = new javax.swing.JTextField();
+        emailFormattedTextField = new javax.swing.JFormattedTextField();
+        lnameIndicator = new javax.swing.JLabel();
+        emailIndicator = new javax.swing.JLabel();
+        phoneIndicator = new javax.swing.JLabel();
+        phoneTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -137,31 +159,51 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                 .addContainerGap(62, Short.MAX_VALUE))
         );
 
+        personalInfoLabel.setFont(new java.awt.Font("URW Gothic", 0, 24)); // NOI18N
+        personalInfoLabel.setText("Personal information");
+
+        fNameIndicator.setText("First name");
+
+        lnameIndicator.setText("Last name");
+
+        emailIndicator.setText("Email");
+
+        phoneIndicator.setText("Phone");
+
         javax.swing.GroupLayout reservationPanelLayout = new javax.swing.GroupLayout(reservationPanel);
         reservationPanel.setLayout(reservationPanelLayout);
         reservationPanelLayout.setHorizontalGroup(
             reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(reservationPanelLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservationPanelLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cancelBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(okBtn))
+                    .addComponent(datePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(reservationPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
                         .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(datePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(roomLabel)
+                            .addComponent(jLabel1)
+                            .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(personalInfoLabel)
                             .addGroup(reservationPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lnameIndicator)
+                                    .addComponent(fNameIndicator)
+                                    .addComponent(phoneIndicator, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(emailIndicator, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(fNameTextField)
+                                    .addComponent(lnameTextField)
+                                    .addComponent(emailFormattedTextField)
+                                    .addComponent(phoneTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))))
+                        .addGap(0, 35, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(reservationPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(roomLabel))
-                .addContainerGap(47, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservationPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cancelBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(okBtn)
+                .addGap(12, 12, 12))
         );
         reservationPanelLayout.setVerticalGroup(
             reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,11 +216,29 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                 .addComponent(roomLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 358, Short.MAX_VALUE)
+                .addGap(32, 32, 32)
+                .addComponent(personalInfoLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fNameIndicator)
+                    .addComponent(fNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lnameIndicator))
+                .addGap(18, 18, 18)
+                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(emailFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(emailIndicator))
+                .addGap(18, 18, 18)
+                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(phoneIndicator)
+                    .addComponent(phoneTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okBtn)
                     .addComponent(cancelBtn))
-                .addContainerGap())
+                .addGap(14, 14, 14))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -195,12 +255,99 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+	private boolean isEmailValid() {
+		String email = this.emailFormattedTextField.getText();
+		if (email.isBlank()) {
+			return false;
+		}
+
+		Matcher matcher = EMAIL_PATTERN.matcher(email);
+		return matcher.matches();
+	}
+
+	public int validatePhone(String phone) {
+		Integer integerValue;
+
+		try {
+			integerValue = Integer.valueOf(phone);
+		} catch (NumberFormatException e) {
+			return -1;
+		}
+
+		return integerValue;
+	}
+	
+//	private int validateServiceInfo() {
+//		
+//	}
+
+	private int validatePersonalInfo(String fname, String lname, String email, String phone) {
+
+		if (fname.isBlank()) {
+			GUIUtils.logUserError(this, "Provide First Name");
+			return -1;
+		}
+
+		if (lname.isBlank()) {
+			GUIUtils.logUserError(this, "Provide Last Name");
+			return -1;
+		}
+
+		if (email.isBlank()) {
+			GUIUtils.logUserError(this, "Provide email");
+			return -1;
+		}
+
+		if (!isEmailValid()) {
+			GUIUtils.logUserError(this, "Invalid email");
+			return -1;
+		}
+
+		if (phone.isBlank()) {
+			GUIUtils.logUserError(this, "Provide phone number");
+		}
+		
+		return 1;
+
+	}
+
+	private boolean customerExists() {
+		return Customer.checkCustomer(this.emailFormattedTextField.getText());
+	}
+
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
 		this.dispose();
     }//GEN-LAST:event_cancelBtnActionPerformed
 
     private void okBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okBtnActionPerformed
-		this.dispose();
+		String fname = this.fNameTextField.getText();
+		String lname = this.lnameTextField.getText();
+		String email = this.emailFormattedTextField.getText();
+		String phone = this.phoneTextField.getText();
+		Integer integerValue = validatePhone(phone);
+		BigInteger phoneNum;
+
+		if (validatePersonalInfo(fname, lname, email, phone) < 0) {
+			return;
+		}
+
+		if (integerValue < 0) {
+			GUIUtils.logUserError(this, "Invalid phone number");
+			return;
+		}
+		
+		phoneNum = BigInteger.valueOf(integerValue);
+
+		if (customerExists()) {
+			System.out.println("Customer exists");
+//			Customer.selectByEmail(email).getFirst().update(fname, lname, phoneNum, email);
+			return;
+		}
+
+		System.out.println("Customer does not exists");
+
+//		new Customer(fname, lname, phoneNum, email).insert();
+//		this.dispose();
     }//GEN-LAST:event_okBtnActionPerformed
 
 	/**
@@ -244,8 +391,17 @@ public class CreateReservationFrame extends javax.swing.JFrame {
     private javax.swing.JLabel checkInLabel;
     private javax.swing.JLabel checkOutLabel;
     private javax.swing.JPanel datePanel;
+    private javax.swing.JFormattedTextField emailFormattedTextField;
+    private javax.swing.JLabel emailIndicator;
+    private javax.swing.JLabel fNameIndicator;
+    private javax.swing.JTextField fNameTextField;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lnameIndicator;
+    private javax.swing.JTextField lnameTextField;
     private javax.swing.JButton okBtn;
+    private javax.swing.JLabel personalInfoLabel;
+    private javax.swing.JLabel phoneIndicator;
+    private javax.swing.JTextField phoneTextField;
     private javax.swing.JPanel reservationPanel;
     private javax.swing.JComboBox<String> roomComboBox;
     private javax.swing.JLabel roomLabel;

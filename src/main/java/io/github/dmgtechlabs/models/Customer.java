@@ -33,6 +33,13 @@ public class Customer implements Dao {
         this.phone = phone;
         this.email = email;
     }
+	
+    public Customer(String firstName, String lastName, BigInteger phone, String email) {
+        this.fName = firstName;
+        this.lName = lastName;
+        this.phone = phone;
+        this.email = email;
+    }
 
     // Getters and Setters
     public int getId() {

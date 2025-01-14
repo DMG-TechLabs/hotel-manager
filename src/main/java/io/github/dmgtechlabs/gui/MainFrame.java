@@ -231,12 +231,12 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(homePanelLayout.createSequentialGroup()
                 .addGap(120, 120, 120)
                 .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                 .addGroup(homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(hotelLabel, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(hotelNameLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(welcomeLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24))
+                .addGap(60, 60, 60))
         );
         homePanelLayout.setVerticalGroup(
             homePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,13 +246,13 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(194, 194, 194)
                         .addComponent(jLabel10))
                     .addGroup(homePanelLayout.createSequentialGroup()
-                        .addGap(152, 152, 152)
+                        .addGap(167, 167, 167)
                         .addComponent(welcomeLabel)
                         .addGap(55, 55, 55)
                         .addComponent(hotelNameLabel)
                         .addGap(55, 55, 55)
                         .addComponent(hotelLabel)))
-                .addContainerGap(211, Short.MAX_VALUE))
+                .addContainerGap(223, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Home", homePanel);
