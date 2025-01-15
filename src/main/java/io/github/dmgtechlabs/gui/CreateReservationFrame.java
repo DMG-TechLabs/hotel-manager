@@ -459,7 +459,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
 		createReservation(customer, selectedRoom, checkIn, checkOut);
 
-		JOptionPane.showMessageDialog(this, "You have successfully booked a reservation\nWe will keep you informed about the acceptance of your reservation", "Mesasge", JOptionPane.OK_OPTION);
+		JOptionPane.showMessageDialog(this, "You have successfully booked a reservation\nWe will keep you informed about the acceptance of your reservation", "Mesasge", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_okBtnActionPerformed
 
 	/**
