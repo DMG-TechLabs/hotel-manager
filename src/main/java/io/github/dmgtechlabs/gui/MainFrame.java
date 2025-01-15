@@ -919,38 +919,6 @@ public class MainFrame extends javax.swing.JFrame {
 		new StartingFrame().setVisible(true);
     }//GEN-LAST:event_exitButtonActionPerformed
 
-	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
-		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-		 */
-		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(CreateReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(CreateReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(CreateReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(CreateReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		}
-		//</editor-fold>
-
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new MainFrame().setVisible(true);
-			}
-		});
-	}
-
     private void resetPasswordsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPasswordsButtonActionPerformed
 		this.currentPasswordField.setText("");
 		this.newPasswordField.setText("");
@@ -960,11 +928,18 @@ public class MainFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String newPassword = this.newPasswordField.getText();
                 
-        if(!this.state.LoggedInUser.isGuest() && 
-                this.currentPasswordField.getText() == this.state.LoggedInUser.getPassword() && 
-                newPassword == this.confirmNewPasswordField.getText() &&
-                newPassword != "" 
-           ){
+        if(
+			!this.state.LoggedInUser.isGuest() && 
+            (this.currentPasswordField.getText() == null
+				? this.state.LoggedInUser.getPassword() == null
+				: this.currentPasswordField.getText().equals(this.state.LoggedInUser.getPassword())
+			) && 
+            (newPassword == null 
+				? this.confirmNewPasswordField.getText() == null 
+				: newPassword.equals(this.confirmNewPasswordField.getText())
+			) &&
+            !newPassword.isBlank()
+		){
             this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
         }
 
