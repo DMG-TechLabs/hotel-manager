@@ -6,17 +6,16 @@ package io.github.dmgtechlabs.gui;
 
 import io.github.dmgtechlabs.models.Customer;
 import io.github.dmgtechlabs.models.Reservation;
+import io.github.dmgtechlabs.models.Reservation.Status;
 import io.github.dmgtechlabs.models.Room;
-import java.awt.Component;
-import java.awt.FlowLayout;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -30,7 +29,8 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 	public static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
-	private static final Pattern PHONE_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+	private int activeHotelfk;
 
 	private JXDatePicker checkInPicker;
 	private JXDatePicker checkOutPicker;
@@ -47,12 +47,19 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		GUIUtils.commonSetup(null, this);
 		this.setLayout(null);
 		this.setResizable(false);
+		this.activeHotelfk = activeHotelfk;
 
 		initDatePanel();
 
 		this.emailFormattedTextField.setInputVerifier(new EmailVerifier());
 
-		this.rooms = Room.selectByOccupiedAndHotelId(activeHotelfk);
+		loadRooms();
+	}
+
+	private void loadRooms() {
+		this.roomComboBox.removeAllItems();
+
+		this.rooms = Room.selectByOccupiedAndHotelId(this.activeHotelfk);
 		for (Room r : this.rooms) {
 			this.roomComboBox.addItem(r.UIString());
 		}
@@ -255,6 +262,33 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+	private int isCheckInOutDateValid(int[] checkInDate, int[] checkOutDate) {
+		LocalDate currentDate = LocalDate.now();
+		Date localDate = new Date(currentDate.getYear() - 1900, currentDate.getMonthValue() - 1, currentDate.getDayOfMonth());
+
+		if (this.checkInPicker.getDate().compareTo(localDate) < 0) {
+			GUIUtils.logUserError(this, "Can't pick past dates");
+			return -1;
+		}
+
+		if (checkInDate[0] > checkOutDate[0]) {
+			GUIUtils.logUserError(this, "Select a valid date combination");
+			return -1;
+		}
+
+		if (checkInDate[1] > checkOutDate[1]) {
+			GUIUtils.logUserError(this, "Select a valid date combination");
+			return -1;
+		}
+
+		if ((checkInDate[2] > checkOutDate[2]) && (checkInDate[1] >= checkOutDate[1])) {
+			GUIUtils.logUserError(this, "Select a valid date combination");
+			return -1;
+		}
+
+		return 1;
+	}
+
 	private boolean isEmailValid() {
 		String email = this.emailFormattedTextField.getText();
 		if (email.isBlank()) {
@@ -265,7 +299,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		return matcher.matches();
 	}
 
-	public int validatePhone(String phone) {
+	private int validatePhone(String phone) {
 		Integer integerValue;
 
 		try {
@@ -276,10 +310,18 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
 		return integerValue;
 	}
-	
-//	private int validateServiceInfo() {
-//		
-//	}
+
+	private int validateDatesAndRoom(int[] checkInDate, int[] checkOutDate) {
+		if (isCheckInOutDateValid(checkInDate, checkOutDate) < 0) {
+			return -1;
+		}
+
+		if (this.roomComboBox.getSelectedIndex() < 0) {
+			GUIUtils.logUserError(this, "Select a room");
+			return -1;
+		}
+		return 1;
+	}
 
 	private int validatePersonalInfo(String fname, String lname, String email, String phone) {
 
@@ -306,13 +348,15 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		if (phone.isBlank()) {
 			GUIUtils.logUserError(this, "Provide phone number");
 		}
-		
+
 		return 1;
 
 	}
 
-	private boolean customerExists() {
-		return Customer.checkCustomer(this.emailFormattedTextField.getText());
+	private void createReservation(Customer customer, Room selectedRoom, String checkIn, String checkOut) {
+		new Reservation(customer.getId(), selectedRoom.getRoomId(), checkIn, checkOut, selectedRoom.getPrice(), Status.PENDING).insert();
+		selectedRoom.update(selectedRoom.getFloor(), selectedRoom.getNumber(), selectedRoom.getType(), selectedRoom.getPrice());
+		selectedRoom.markOccupiedAs(true);
 	}
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
@@ -324,8 +368,33 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		String lname = this.lnameTextField.getText();
 		String email = this.emailFormattedTextField.getText();
 		String phone = this.phoneTextField.getText();
+		int checkInYear = this.checkInPicker.getDate().getYear() + 1900;
+		int checkInMonth = this.checkInPicker.getDate().getMonth();
+		int checkInDay = this.checkInPicker.getDate().getDate();
+		int checkOutYear = this.checkOutPicker.getDate().getYear() + 1900;
+		int checkOutMonth = this.checkOutPicker.getDate().getMonth();
+		int checkOutDay = this.checkOutPicker.getDate().getDate();
+		String checkIn = checkInYear + "-" + checkInMonth + "-" + checkInDay;
+		String checkOut = checkOutYear + "-" + checkOutMonth + "-" + checkOutDay;
+		int[] checkInDate = {
+			checkInYear,
+			checkInMonth,
+			checkInDay
+		};
+		int[] checkOutDate = {
+			checkOutYear,
+			checkOutMonth,
+			checkOutDay
+		};
+		Room selectedRoom = this.rooms.get(this.roomComboBox.getSelectedIndex());
+		Customer customer;
+
 		Integer integerValue = validatePhone(phone);
 		BigInteger phoneNum;
+
+		if (validateDatesAndRoom(checkInDate, checkOutDate) < 0) {
+			return;
+		}
 
 		if (validatePersonalInfo(fname, lname, email, phone) < 0) {
 			return;
@@ -335,19 +404,30 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 			GUIUtils.logUserError(this, "Invalid phone number");
 			return;
 		}
-		
+
 		phoneNum = BigInteger.valueOf(integerValue);
 
-		if (customerExists()) {
-			System.out.println("Customer exists");
-//			Customer.selectByEmail(email).getFirst().update(fname, lname, phoneNum, email);
+		if (Customer.exists(email)) {
+			customer = Customer.selectByEmail(email).get(0);
+			customer.update(fname, lname, phoneNum, email);
+
+			createReservation(customer, selectedRoom, checkIn, checkOut);
+
+			loadRooms();
+
+			JOptionPane.showMessageDialog(this, "You have successfully booked a reservation!\nWe will keep you informed about the acceptance of your reservation.", "Mesasge", JOptionPane.INFORMATION_MESSAGE);
+
 			return;
 		}
 
-		System.out.println("Customer does not exists");
+		new Customer(fname, lname, phoneNum, email).insert();
+		customer = Customer.selectByEmail(email).get(0);
 
-//		new Customer(fname, lname, phoneNum, email).insert();
-//		this.dispose();
+		createReservation(customer, selectedRoom, checkIn, checkOut);
+
+		loadRooms();
+
+		JOptionPane.showMessageDialog(this, "You have successfully booked a reservation\nWe will keep you informed about the acceptance of your reservation", "Mesasge", JOptionPane.OK_OPTION);
     }//GEN-LAST:event_okBtnActionPerformed
 
 	/**

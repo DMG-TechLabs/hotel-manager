@@ -81,6 +81,10 @@ public class Customer implements Dao {
     public void setEmail(String email) {
         this.email = email;
     }
+	
+	public static boolean exists(String email) {
+		return !Customer.selectByEmail(email).isEmpty();
+	}
 
     // Insert a new customer
 	@Override
