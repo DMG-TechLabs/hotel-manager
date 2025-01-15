@@ -102,6 +102,42 @@ public class Reservation implements Dao {
 	public Status getStatus() {
 		return status;
 	}
+	
+	public int getCheckInYear() {
+		String checkInYear = checkIn.substring(0, 3);
+		
+		return Integer.parseInt(checkInYear);
+	}
+	
+	public int getCheckInMonth() {
+		String checkInMonth = checkIn.substring(5, 6);
+		
+		return Integer.parseInt(checkInMonth);
+	}
+	
+	public int getCheckInDay() {
+		String checkInDay = checkIn.substring(8, 9);
+		
+		return Integer.parseInt(checkInDay);
+	}
+	
+	public int getCheckOutYear() {
+		String checkOutYear = checkOut.substring(0, 3);
+		
+		return Integer.parseInt(checkOutYear);
+	}
+	
+	public int getCheckOutMonth() {
+		String checkOutMonth = checkOut.substring(5, 6).replaceAll("0", "");
+		
+		return Integer.parseInt(checkOutMonth);
+	}
+	
+	public int getCheckOutDay() {
+		String checkoOutDay = checkOut.substring(8, 9).replaceAll("0", "");
+		
+		return Integer.parseInt(checkoOutDay);
+	}
 
 	@Override
 	public boolean insert() {
@@ -198,8 +234,8 @@ public class Reservation implements Dao {
 		return select("select_reservations_by_room_id", roomId);
 	}
 
-	public static List<Reservation> selectByCheckInCheckOut(String checkInDate, String checkOutDate) {
-		return select("select_reservations_by_check_in_check_out", checkInDate, checkOutDate);
+	public static List<Reservation> selectByCheckInCheckOut(int reservationRoomFk, String checkInDate, String checkOutDate) {
+		return select("select_reservations_by_check_in_check_out", reservationRoomFk, checkInDate, checkOutDate);
 	}
 	
 	public String UIString() {

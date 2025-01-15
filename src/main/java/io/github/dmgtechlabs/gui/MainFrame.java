@@ -971,6 +971,9 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
+		int selectedRoomId = this.pendingReservations.get(pendingList.getSelectedIndex()).getReservationRoomFk();
+		Room selectedRoom = Room.selectById(selectedRoomId, this.state.activeHotelId).get(0);
+		
 		if (pendingList.getSelectedIndex() < 0) {
 			JOptionPane.showMessageDialog(this, "Select a pending reservation first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -979,6 +982,7 @@ public class MainFrame extends javax.swing.JFrame {
 		int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to accept this reservation?", "Accept", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			this.pendingReservations.get(pendingList.getSelectedIndex()).update(2);
+			selectedRoom.markOccupiedAs(true);
 
 			this.pendingReservations = Reservation.selectByReservationStatus(1);
 			this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
@@ -992,9 +996,6 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     private void declineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_declineButtonActionPerformed
-		int selectedRoomId = this.pendingReservations.get(pendingList.getSelectedIndex()).getReservationRoomFk();
-		Room selectedRoom = Room.selectById(selectedRoomId, this.state.activeHotelId).get(0);
-		
 		if (pendingList.getSelectedIndex() < 0) {
 			JOptionPane.showMessageDialog(this, "Select a pending reservation first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
@@ -1003,7 +1004,6 @@ public class MainFrame extends javax.swing.JFrame {
 		int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to decline this reservation?\nThis means that this will be deleted!", "Accept", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			this.pendingReservations.get(pendingList.getSelectedIndex()).delete();
-			selectedRoom.markOccupiedAs(false);
 			
 			this.pendingReservations = Reservation.selectByReservationStatus(1);
 			this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));

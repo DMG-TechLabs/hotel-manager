@@ -36,6 +36,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	private JXDatePicker checkOutPicker;
 
 	private List<Room> rooms;
+	private List<Reservation> reservations;
 
 	/**
 	 * Creates new form ReservationFrame
@@ -57,9 +58,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	}
 
 	private void loadRooms() {
-		this.roomComboBox.removeAllItems();
-
-		this.rooms = Room.selectByOccupiedAndHotelId(this.activeHotelfk);
+		this.rooms = Room.selectByHotelId(this.activeHotelfk);
 		for (Room r : this.rooms) {
 			this.roomComboBox.addItem(r.UIString());
 		}
@@ -262,7 +261,8 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	private int isCheckInOutDateValid(int[] checkInDate, int[] checkOutDate) {
+	private int isCheckInOutDateValid(int selectedRoomId, int[] checkInDate, int[] checkOutDate, String checkIn, String checkOut) {
+		Reservation reservedRoom;
 		LocalDate currentDate = LocalDate.now();
 		Date localDate = new Date(currentDate.getYear() - 1900, currentDate.getMonthValue() - 1, currentDate.getDayOfMonth());
 
@@ -284,6 +284,15 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		if ((checkInDate[2] > checkOutDate[2]) && (checkInDate[1] >= checkOutDate[1])) {
 			GUIUtils.logUserError(this, "Select a valid date combination");
 			return -1;
+		}
+		
+		if (Reservation.selectByCheckInCheckOut(selectedRoomId, checkIn, checkOut) != null && !Reservation.selectByCheckInCheckOut(selectedRoomId, checkIn, checkOut).isEmpty()) {
+			reservedRoom = Reservation.selectByCheckInCheckOut(selectedRoomId, checkIn, checkOut).get(0);
+
+//			if (/*Check if the picked dates are the same with the exist ones*/) {
+//				GUIUtils.logUserError(this, "Can't pick these dates for that room");
+//				return -1;
+//			}
 		}
 
 		return 1;
@@ -311,20 +320,15 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		return integerValue;
 	}
 
-	private int validateDatesAndRoom(int[] checkInDate, int[] checkOutDate) {
-		if (isCheckInOutDateValid(checkInDate, checkOutDate) < 0) {
+	private int validateDatesAndRoom(int selectedRoomId, int[] checkInDate, int[] checkOutDate, String checkIn, String checkOut) {
+		if (isCheckInOutDateValid(selectedRoomId, checkInDate, checkOutDate, checkIn, checkOut) < 0) {
 			return -1;
 		}
 
-		if (this.roomComboBox.getSelectedIndex() < 0) {
-			GUIUtils.logUserError(this, "Select a room");
-			return -1;
-		}
 		return 1;
 	}
 
 	private int validatePersonalInfo(String fname, String lname, String email, String phone) {
-
 		if (fname.isBlank()) {
 			GUIUtils.logUserError(this, "Provide First Name");
 			return -1;
@@ -353,10 +357,41 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
 	}
 
+	private String formatCheckInDate(int checkInYear, int checkInMonth, int checkInDay) {
+		if (checkInMonth < 10 && checkInDay < 10) {
+			return checkInYear + "-0" + checkInMonth + "-0" + checkInDay;
+		}
+
+		if (checkInMonth < 10) {
+			return checkInYear + "-0" + checkInMonth + "-" + checkInDay;
+		}
+
+		if (checkInDay < 10) {
+			return checkInYear + "-" + checkInMonth + "-0" + checkInDay;
+		}
+
+		return checkInYear + "-" + checkInMonth + "-" + checkInDay;
+	}
+
+	private String formatCheckOutDate(int checkOutYear, int checkOutMonth, int checkOutDay) {
+		if (checkOutMonth < 10 && checkOutDay < 10) {
+			return checkOutYear + "-0" + checkOutMonth + "-0" + checkOutDay;
+		}
+
+		if (checkOutMonth < 10) {
+			return checkOutYear + "-0" + checkOutMonth + "-" + checkOutDay;
+		}
+
+		if (checkOutDay < 10) {
+			return checkOutYear + "-" + checkOutMonth + "-0" + checkOutDay;
+		}
+
+		return checkOutYear + "-" + checkOutMonth + "-" + checkOutDay;
+	}
+
 	private void createReservation(Customer customer, Room selectedRoom, String checkIn, String checkOut) {
 		new Reservation(customer.getId(), selectedRoom.getRoomId(), checkIn, checkOut, selectedRoom.getPrice(), Status.PENDING).insert();
 		selectedRoom.update(selectedRoom.getFloor(), selectedRoom.getNumber(), selectedRoom.getType(), selectedRoom.getPrice());
-		selectedRoom.markOccupiedAs(true);
 	}
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
@@ -369,13 +404,14 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		String email = this.emailFormattedTextField.getText();
 		String phone = this.phoneTextField.getText();
 		int checkInYear = this.checkInPicker.getDate().getYear() + 1900;
-		int checkInMonth = this.checkInPicker.getDate().getMonth();
+		int checkInMonth = this.checkInPicker.getDate().getMonth() + 1;
 		int checkInDay = this.checkInPicker.getDate().getDate();
 		int checkOutYear = this.checkOutPicker.getDate().getYear() + 1900;
-		int checkOutMonth = this.checkOutPicker.getDate().getMonth();
+		int checkOutMonth = this.checkOutPicker.getDate().getMonth() + 1;
 		int checkOutDay = this.checkOutPicker.getDate().getDate();
-		String checkIn = checkInYear + "-" + checkInMonth + "-" + checkInDay;
-		String checkOut = checkOutYear + "-" + checkOutMonth + "-" + checkOutDay;
+		String checkIn = formatCheckInDate(checkInYear, checkInMonth, checkInDay);
+		String checkOut = formatCheckOutDate(checkOutYear, checkOutMonth, checkOutDay);
+
 		int[] checkInDate = {
 			checkInYear,
 			checkInMonth,
@@ -392,7 +428,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		Integer integerValue = validatePhone(phone);
 		BigInteger phoneNum;
 
-		if (validateDatesAndRoom(checkInDate, checkOutDate) < 0) {
+		if (validateDatesAndRoom(selectedRoom.getRoomId(), checkInDate, checkOutDate, checkIn, checkOut) < 0) {
 			return;
 		}
 
@@ -413,8 +449,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
 			createReservation(customer, selectedRoom, checkIn, checkOut);
 
-			loadRooms();
-
 			JOptionPane.showMessageDialog(this, "You have successfully booked a reservation!\nWe will keep you informed about the acceptance of your reservation.", "Mesasge", JOptionPane.INFORMATION_MESSAGE);
 
 			return;
@@ -424,8 +458,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		customer = Customer.selectByEmail(email).get(0);
 
 		createReservation(customer, selectedRoom, checkIn, checkOut);
-
-		loadRooms();
 
 		JOptionPane.showMessageDialog(this, "You have successfully booked a reservation\nWe will keep you informed about the acceptance of your reservation", "Mesasge", JOptionPane.OK_OPTION);
     }//GEN-LAST:event_okBtnActionPerformed
