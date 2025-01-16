@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -60,8 +61,10 @@ public class MainFrame extends javax.swing.JFrame {
 		this.state.activeHotelId = hotelId;
 		this.state.LoggedInUser = user;
 		initComponents();
+		GUIUtils.commonSetup(null, this);
 		this.setTitle("Hotel Manager");
 		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.helpFrame = new HelpFrame();
 		this.aboutFrame = new AboutFrame();
@@ -1208,7 +1211,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_switchUserButtonActionPerformed
 
     private void addReservationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReservationMenuItemActionPerformed
-		this.createReservationFrame = new CreateReservationFrame(this.state.activeHotelId);
+		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
 		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
@@ -1230,14 +1233,12 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteCustomerMenuItemActionPerformed
 
     private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
-		System.err.println("Selected Index: " + this.acceptedList.getSelectedIndex());
 		if (acceptedList.getSelectedIndex() < 0) {
 			JOptionPane.showMessageDialog(this, "Select an accepted reservation first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
 		Reservation selectedAccepted = this.acceptedReservations.get(this.acceptedList.getSelectedIndex());
-		System.err.println("Room Fk: " + selectedAccepted.getReservationRoomFk());
 		Room room = Room.selectById(selectedAccepted.getReservationRoomFk()).get(0);
 		assert (room != null);
 

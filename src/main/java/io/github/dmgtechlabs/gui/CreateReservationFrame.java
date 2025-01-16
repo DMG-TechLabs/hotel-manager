@@ -33,20 +33,21 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 	public static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
-	private int activeHotelfk;
-
 	private JXDatePicker checkInPicker;
 	private JXDatePicker checkOutPicker;
 
 	private List<Room> rooms;
 	private List<Reservation> reservations;
 
+	private Room room;
+	
 	/**
 	 * Creates new form ReservationFrame
 	 *
 	 * @param activeHotelfk
 	 */
-	public CreateReservationFrame(int activeHotelfk) {
+	public CreateReservationFrame(Room room) {
+		this.room = room;
 		initComponents();
 		initDatePanel();
 		this.setLayout(null);
@@ -55,18 +56,8 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		GUIUtils.commonSetup(null, this);
 		
 		this.setResizable(false);
-		this.activeHotelfk = activeHotelfk;
 
 		this.emailFormattedTextField.setInputVerifier(new EmailVerifier());
-
-		loadRooms();
-	}
-
-	private void loadRooms() {
-		this.rooms = Room.selectByHotelId(this.activeHotelfk);
-		for (Room r : this.rooms) {
-			this.roomComboBox.addItem(r.UIString());
-		}
 	}
 	
 	private void initDatePanel() {
@@ -102,8 +93,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
         reservationPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        roomLabel = new javax.swing.JLabel();
-        roomComboBox = new javax.swing.JComboBox<>();
         okBtn = new javax.swing.JButton();
         cancelBtn = new javax.swing.JButton();
         personalInfoLabel = new javax.swing.JLabel();
@@ -122,8 +111,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("URW Gothic", 0, 30)); // NOI18N
         jLabel1.setText("Reservation Creation");
-
-        roomLabel.setText("Select room");
 
         okBtn.setText("OK");
         okBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -169,9 +156,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(reservationPanelLayout.createSequentialGroup()
                         .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(roomLabel)
                             .addComponent(jLabel1)
-                            .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(personalInfoLabel)
                             .addGroup(reservationPanelLayout.createSequentialGroup()
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,7 +170,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                                     .addComponent(lnameTextField)
                                     .addComponent(emailFormattedTextField)
                                     .addComponent(phoneTextField))))
-                        .addContainerGap(41, Short.MAX_VALUE))
+                        .addContainerGap(186, Short.MAX_VALUE))
                     .addGroup(reservationPanelLayout.createSequentialGroup()
                         .addComponent(checkInLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -201,11 +186,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(checkInLabel)
                     .addComponent(checkOutLabel))
-                .addGap(80, 80, 80)
-                .addComponent(roomLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(129, 129, 129)
                 .addComponent(personalInfoLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -223,7 +204,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(phoneIndicator)
                     .addComponent(phoneTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okBtn)
                     .addComponent(cancelBtn))
@@ -299,13 +280,13 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 			return -1;
 		}
 
-		this.reservations = Reservation.selectByHotel(activeHotelfk);
+		this.reservations = Reservation.selectByHotel(room.getHotelId());
 		if (this.reservations.isEmpty() || this.reservations == null) {
 			return 1;
 		} else {
-			reservedRooms = Room.selectByReserved(activeHotelfk);
-			for (Room room : reservedRooms) {
-				if (this.roomComboBox.getSelectedItem().toString().equals(room.UIString())) {
+			reservedRooms = Room.selectByReserved(room.getHotelId());
+			for (Room r : reservedRooms) {
+				if (room.getHotelId() == r.getHotelId()) {
 					reservationRooms = Reservation.selectByRoomId(room.getRoomId());
 					for (Reservation reservation : reservationRooms) {
 						existingCheckIn = LocalDate.of(reservation.getCheckInYear(), reservation.getCheckInMonth(), reservation.getCheckInDay());
@@ -424,7 +405,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 			checkOutMonth,
 			checkOutDay
 		};
-		Room selectedRoom = this.rooms.get(this.roomComboBox.getSelectedIndex());
 		Customer customer;
 
 
@@ -445,7 +425,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 			customer = Customer.selectByEmail(email).get(0);
 			customer.update(fname, lname, phone, email);
 
-			createReservation(customer, selectedRoom, checkIn, checkOut);
+			createReservation(customer, room, checkIn, checkOut);
 
 			JOptionPane.showMessageDialog(this, "You have successfully booked a reservation!\nWe will keep you informed about the acceptance of your reservation.", "Mesasge", JOptionPane.INFORMATION_MESSAGE);
 
@@ -455,7 +435,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		new Customer(fname, lname, phone, email).insert();
 		customer = Customer.selectByEmail(email).get(0);
 
-		createReservation(customer, selectedRoom, checkIn, checkOut);
+		createReservation(customer, room, checkIn, checkOut);
 
 		JOptionPane.showMessageDialog(this, "You have successfully booked a reservation\nWe will keep you informed about the acceptance of your reservation", "Mesasge", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_okBtnActionPerformed
@@ -476,7 +456,5 @@ public class CreateReservationFrame extends javax.swing.JFrame {
     private javax.swing.JLabel phoneIndicator;
     private javax.swing.JFormattedTextField phoneTextField;
     private javax.swing.JPanel reservationPanel;
-    private javax.swing.JComboBox<String> roomComboBox;
-    private javax.swing.JLabel roomLabel;
     // End of variables declaration//GEN-END:variables
 }
