@@ -988,6 +988,13 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+	public  Runnable refreshReservationsCustomers() {
+		return () -> {
+			MainFrame.this.loadReservations();
+			MainFrame.this.loadCustomers();
+		};
+	}
+	
 	private void loadReservations() {
 		this.pendingReservations = Reservation.selectByReservationStatus(Reservation.Status.PENDING.getValue());
 		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
@@ -1130,8 +1137,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
             return Customer.selectById(customerId).getFirst();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NumberFormatException e) {
             return null;
         }
     }
@@ -1344,7 +1350,7 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 
 		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
-		GUIUtils.addWindowClosedListener(this.createReservationFrame, () -> { loadReservations(); loadCustomers(); });
+		GUIUtils.addWindowClosedListener(this.createReservationFrame, refreshReservationsCustomers());
 		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
@@ -1397,10 +1403,6 @@ public class MainFrame extends javax.swing.JFrame {
 		this.acceptedList.clearSelection();
     }//GEN-LAST:event_undoButtonActionPerformed
 
-    
-
-       
-    
     private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserMenuItemActionPerformed
         this.userFrame = new UserFrame(this.state.activeHotelId);
 		GUIUtils.showFrame(this.userFrame);
