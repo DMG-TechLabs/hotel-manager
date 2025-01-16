@@ -1,6 +1,5 @@
 linter: jetbrains/qodana-jvm:2024.3
 projectJDK: 23
-project-configurator: Maven
 profile:
   name: "All Java Inspections"
   baseProfile: qodana.recommended
