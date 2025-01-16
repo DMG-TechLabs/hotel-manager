@@ -117,8 +117,18 @@ public class MainFrame extends javax.swing.JFrame {
                         addHotelMenuItem.setEnabled(false);
                         editHotelMenuItem.setEnabled(false);
                         
+                        editRoomMenuItem.setEnabled(false);
+                        editCustomerMenuItem.setEnabled(false);
+                        
+                        addRoomMenuItem.setEnabled(false);
+                        confirmChangePassword.setEnabled(false);
+                        deleteRoomMenuItem.setEnabled(false);
+                        deleteCustomerMenuItem.setEnabled(false);
+                        
+                        
 			this.tabbedPane.setEnabledAt(2, false);
 			this.tabbedPane.setEnabledAt(3, false);
+                        this.tabbedPane.setEnabledAt(4, false);
 		} else if (user.isEmployee()) {
 			// Hide statistics from employees
 			this.tabbedPane.setEnabledAt(3, false);
@@ -237,7 +247,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         confirmNewPasswordField = new javax.swing.JPasswordField();
         resetPasswordsButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        confirmChangePassword = new javax.swing.JButton();
         miscButtonsPanel = new javax.swing.JPanel();
         exitButton = new javax.swing.JButton();
         switchUserButton = new javax.swing.JButton();
@@ -737,10 +747,10 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Confirm");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        confirmChangePassword.setText("Confirm");
+        confirmChangePassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                confirmChangePasswordActionPerformed(evt);
             }
         });
 
@@ -762,7 +772,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(changePasswordPanelLayout.createSequentialGroup()
                         .addComponent(resetPasswordsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))))
+                        .addComponent(confirmChangePassword))))
         );
         changePasswordPanelLayout.setVerticalGroup(
             changePasswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -783,7 +793,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(confirmNewPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(changePasswordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(confirmChangePassword)
                     .addComponent(resetPasswordsButton))
                 .addContainerGap())
         );
@@ -1188,7 +1198,7 @@ public class MainFrame extends javax.swing.JFrame {
 		this.confirmNewPasswordField.setText("");
     }//GEN-LAST:event_resetPasswordsButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void confirmChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmChangePasswordActionPerformed
 		String newPassword = this.newPasswordField.getText();
 
 		if (!this.state.LoggedInUser.isGuest()
@@ -1202,7 +1212,7 @@ public class MainFrame extends javax.swing.JFrame {
 			this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
 		}
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_confirmChangePasswordActionPerformed
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
 		if (pendingList.getSelectedIndex() < 0) {
@@ -1422,6 +1432,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem addUserMenuItem;
     private javax.swing.JButton applyFiltersButton;
     private javax.swing.JPanel changePasswordPanel;
+    private javax.swing.JButton confirmChangePassword;
     private javax.swing.JPasswordField confirmNewPasswordField;
     private javax.swing.JPasswordField currentPasswordField;
     private javax.swing.JPanel customerPanel;
@@ -1447,7 +1458,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel homePanel;
     private javax.swing.JLabel hotelLabel;
     private javax.swing.JLabel hotelNameLabel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
