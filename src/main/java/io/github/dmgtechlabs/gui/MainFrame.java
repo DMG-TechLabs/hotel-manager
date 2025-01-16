@@ -1209,17 +1209,17 @@ public class MainFrame extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Select a reservation first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		} else if (pendingList.getSelectedIndex() < 0) {
-			String selectedValue = acceptedList.getSelectedValue();
+			Room reservedRoom = Room.selectById(this.acceptedReservations.get(this.acceptedList.getSelectedIndex()).getReservationRoomFk()).get(0);
 
-			reservationFrame = new ReservationFrame(this.state.activeHotelId, selectedValue);
+			reservationFrame = new ReservationFrame(this.state.activeHotelId, reservedRoom);
 			reservationFrame.setVisible(true);
 			acceptedList.clearSelection();
 			return;
 		}
 
-		String selectedValue = pendingList.getSelectedValue();
+		Room reservedRoom = Room.selectById(this.pendingReservations.get(this.pendingList.getSelectedIndex()).getReservationRoomFk()).get(0);
 
-		reservationFrame = new ReservationFrame(this.state.activeHotelId, selectedValue);
+		reservationFrame = new ReservationFrame(this.state.activeHotelId, reservedRoom);
 		reservationFrame.setVisible(true);
 		pendingList.clearSelection();
     }//GEN-LAST:event_showInfoButtonActionPerformed
@@ -1306,7 +1306,23 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editCustomerMenuItemActionPerformed
 
     private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
-		// TODO add your handling code here:
+		int option = JOptionPane.showConfirmDialog(this, "This action cannot be reversed", "Delete Customer?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (option != 0) {
+			return;
+		}
+
+		Customer customer = getSelectedCustomer();
+		if (customer == null) {
+			JOptionPane.showMessageDialog(this, "Please select a customer first", "Failure", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (customer.delete()) {
+                        loadCustomers();
+			JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "Could not delete Customer", "Failure", JOptionPane.ERROR_MESSAGE);
+		}
     }//GEN-LAST:event_deleteCustomerMenuItemActionPerformed
 
     private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed

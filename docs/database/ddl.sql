@@ -2,45 +2,45 @@
 
 CREATE SCHEMA hoteldb AUTHORIZATION iee2021035;
 
--- DROP SEQUENCE account_id_seq;
+-- DROP SEQUENCE hoteldb.account_id_seq;
 
-CREATE SEQUENCE account_id_seq
+CREATE SEQUENCE hoteldb.account_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
--- DROP SEQUENCE customer_id_seq;
+-- DROP SEQUENCE hoteldb.customer_id_seq;
 
-CREATE SEQUENCE customer_id_seq
+CREATE SEQUENCE hoteldb.customer_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
--- DROP SEQUENCE hotel_id_seq;
+-- DROP SEQUENCE hoteldb.hotel_id_seq;
 
-CREATE SEQUENCE hotel_id_seq
+CREATE SEQUENCE hoteldb.hotel_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
--- DROP SEQUENCE reservation_id_seq;
+-- DROP SEQUENCE hoteldb.reservation_id_seq;
 
-CREATE SEQUENCE reservation_id_seq
+CREATE SEQUENCE hoteldb.reservation_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
--- DROP SEQUENCE room_id_seq;
+-- DROP SEQUENCE hoteldb.room_id_seq;
 
-CREATE SEQUENCE room_id_seq
+CREATE SEQUENCE hoteldb.room_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
@@ -50,9 +50,9 @@ CREATE SEQUENCE room_id_seq
 
 -- Drop table
 
--- DROP TABLE customer;
+-- DROP TABLE hoteldb.customer;
 
-CREATE TABLE customer (
+CREATE TABLE hoteldb.customer (
 	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
 	fname varchar NOT NULL,
 	lname varchar NOT NULL,
@@ -66,9 +66,9 @@ CREATE TABLE customer (
 
 -- Drop table
 
--- DROP TABLE hotel;
+-- DROP TABLE hoteldb.hotel;
 
-CREATE TABLE hotel (
+CREATE TABLE hoteldb.hotel (
 	"name" varchar NOT NULL,
 	address varchar NOT NULL,
 	phone int8 NOT NULL,
@@ -81,9 +81,9 @@ CREATE TABLE hotel (
 
 -- Drop table
 
--- DROP TABLE account;
+-- DROP TABLE hoteldb.account;
 
-CREATE TABLE account (
+CREATE TABLE hoteldb.account (
 	username varchar NOT NULL,
 	"password" varchar NOT NULL,
 	"type" int4 NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE account (
 	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
 	CONSTRAINT account_pk PRIMARY KEY (id),
 	CONSTRAINT account_unique UNIQUE (username),
-	CONSTRAINT account_hotel_fk FOREIGN KEY (account_hotel_fk) REFERENCES hotel(id)
+	CONSTRAINT account_hotel_fk FOREIGN KEY (account_hotel_fk) REFERENCES hoteldb.hotel(id)
 );
 
 
@@ -99,13 +99,13 @@ CREATE TABLE account (
 
 -- Drop table
 
--- DROP TABLE amenities;
+-- DROP TABLE hoteldb.amenities;
 
-CREATE TABLE amenities (
+CREATE TABLE hoteldb.amenities (
 	amenity int4 NOT NULL,
 	hotel_id int4 NOT NULL,
 	CONSTRAINT amenities_pk PRIMARY KEY (amenity, hotel_id),
-	CONSTRAINT amenities_hotel_fk FOREIGN KEY (hotel_id) REFERENCES hotel(id)
+	CONSTRAINT amenities_hotel_fk FOREIGN KEY (hotel_id) REFERENCES hoteldb.hotel(id)
 );
 
 
@@ -113,9 +113,9 @@ CREATE TABLE amenities (
 
 -- Drop table
 
--- DROP TABLE room;
+-- DROP TABLE hoteldb.room;
 
-CREATE TABLE room (
+CREATE TABLE hoteldb.room (
 	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
 	"number" int4 NOT NULL,
 	"type" int4 NOT NULL,
@@ -125,7 +125,7 @@ CREATE TABLE room (
 	room_hotel_fk int4 NOT NULL,
 	CONSTRAINT room_pk PRIMARY KEY (id),
 	CONSTRAINT room_unique UNIQUE (number, floor, room_hotel_fk),
-	CONSTRAINT room_hotel_fk FOREIGN KEY (room_hotel_fk) REFERENCES hotel(id)
+	CONSTRAINT room_hotel_fk FOREIGN KEY (room_hotel_fk) REFERENCES hoteldb.hotel(id)
 );
 
 
@@ -133,9 +133,9 @@ CREATE TABLE room (
 
 -- Drop table
 
--- DROP TABLE reservation;
+-- DROP TABLE hoteldb.reservation;
 
-CREATE TABLE reservation (
+CREATE TABLE hoteldb.reservation (
 	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
 	reservation_customer_fk int4 NOT NULL,
 	reservation_room_fk int4 NOT NULL,
@@ -144,8 +144,8 @@ CREATE TABLE reservation (
 	"cost" float4 NOT NULL,
 	status int4 NOT NULL,
 	CONSTRAINT reservation_pk PRIMARY KEY (id),
-	CONSTRAINT reservation_customer_fk FOREIGN KEY (reservation_customer_fk) REFERENCES customer(id),
-	CONSTRAINT reservation_room_fk FOREIGN KEY (reservation_room_fk) REFERENCES room(id)
+	CONSTRAINT reservation_customer_fk FOREIGN KEY (reservation_customer_fk) REFERENCES hoteldb.customer(id) ON DELETE SET NULL ON UPDATE CASCADE,
+	CONSTRAINT reservation_room_fk FOREIGN KEY (reservation_room_fk) REFERENCES hoteldb.room(id)
 );
 
 

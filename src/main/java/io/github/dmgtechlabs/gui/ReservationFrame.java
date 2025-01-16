@@ -31,15 +31,13 @@ public class ReservationFrame extends javax.swing.JFrame {
 		this.setLocationRelativeTo(null);
 	}
 	
-	public ReservationFrame(int activeHotelId, String selectedValue) {
+	public ReservationFrame(int activeHotelId, Room reservedRoom) {
 		initComponents();
 		this.setLocationRelativeTo(null);
 		
-		//TABLE(hotelid integer, name character varying, address character varying, phone bigint)
-		
 		this.reservations = Reservation.selectAll();
 		for (int i = 0; i < reservations.size(); i++) {
-			if (selectedValue.equals(this.reservations.get(i).UIString())) {
+			if (reservedRoom.getRoomId() == this.reservations.get(i).getReservationRoomFk()) {
 				this.reservation = this.reservations.get(i);
 				break;
 			}
