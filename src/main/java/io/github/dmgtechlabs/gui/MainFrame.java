@@ -1270,7 +1270,23 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editCustomerMenuItemActionPerformed
 
     private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
-		// TODO add your handling code here:
+		int option = JOptionPane.showConfirmDialog(this, "This action cannot be reversed", "Delete Customer?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (option != 0) {
+			return;
+		}
+
+		Customer customer = getSelectedCustomer();
+                System.out.println(customer);
+		if (customer == null) {
+			JOptionPane.showMessageDialog(this, "Please select a customer first", "Failure", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (customer.delete()) {
+			JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "Could not delete Customer", "Failure", JOptionPane.ERROR_MESSAGE);
+		}
     }//GEN-LAST:event_deleteCustomerMenuItemActionPerformed
 
     private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
