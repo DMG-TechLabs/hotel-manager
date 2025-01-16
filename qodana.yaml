@@ -3,6 +3,27 @@ linter: jetbrains/qodana-jvm:2024.3
 projectJDK: 23
 profile:
   name: qodana.recommended
+  inspections:
+    - group: "Java"
+      enabled: true
+    - group: "Code style issues"
+      enabled: true
+    - group: "Potential Bugs"
+      enabled: true
+    - group: "Performance"
+      enabled: true
+    - group: "Security"
+      enabled: true
+    - group: "Redundant Code"
+      enabled: true
+    - group: "Code smells"
+      enabled: true
+    - group: "Inheritance Issues"
+      enabled: true
+    - group: "Concurrency"
+      enabled: true
+    - group: "Tests"
+      enabled: true
 include:
   - name: CheckDependencyLicenses
   - name: JvmTaintAnalysis
