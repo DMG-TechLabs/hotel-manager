@@ -1334,7 +1334,7 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 
 		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
-		GUIUtils.addWindowClosedListener(this.createReservationFrame, () -> { loadReservations(); });
+		GUIUtils.addWindowClosedListener(this.createReservationFrame, () -> { loadReservations(); loadCustomers(); });
 		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
