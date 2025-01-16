@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -26,6 +27,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -162,9 +168,19 @@ public class MainFrame extends javax.swing.JFrame {
         showInfoButton = new javax.swing.JButton();
         undoButton = new javax.swing.JButton();
         statisticsPanel = new javax.swing.JPanel();
-        startDate = new javax.swing.JTextField();
-        endDate = new javax.swing.JTextField();
         getStatistics = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        endDate = new javax.swing.JTextField();
+        startDate = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        revenue = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        occupiedRooms = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        occupancyRate = new javax.swing.JLabel();
         optionsPanel = new javax.swing.JPanel();
         changePasswordPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -488,39 +504,147 @@ public class MainFrame extends javax.swing.JFrame {
 
         tabbedPane.addTab("Reservations", reservationsPanel);
 
-        startDate.setText("2025-01-01");
-
-        endDate.setText("2025-02-01");
-
-        getStatistics.setText("jButton2");
+        getStatistics.setText("Load Statistics");
         getStatistics.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 getStatisticsActionPerformed(evt);
             }
         });
 
+        endDate.setText("2025-02-01");
+
+        startDate.setText("2025-01-01");
+
+        jLabel7.setText("Revenue Period");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(104, 104, 104)
+                        .addComponent(jLabel7)))
+                .addGap(20, 20, 20))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
+        );
+
+        revenue.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        revenue.setText("0 $");
+
+        jLabel11.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel11.setText("Total Revenue:");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addComponent(revenue)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(revenue)
+                    .addComponent(jLabel11))
+                .addGap(10, 10, 10))
+        );
+
+        occupiedRooms.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        occupiedRooms.setText("0");
+
+        jLabel13.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel13.setText("Occupied Rooms:");
+
+        jLabel14.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel14.setText("Occupancy Rate: ");
+
+        occupancyRate.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        occupancyRate.setText("0");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel13)
+                .addGap(18, 18, 18)
+                .addComponent(occupiedRooms)
+                .addGap(173, 173, 173)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(occupancyRate)
+                .addContainerGap(425, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(occupiedRooms)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel14)
+                    .addComponent(occupancyRate))
+                .addGap(10, 10, 10))
+        );
+
         javax.swing.GroupLayout statisticsPanelLayout = new javax.swing.GroupLayout(statisticsPanel);
         statisticsPanel.setLayout(statisticsPanelLayout);
         statisticsPanelLayout.setHorizontalGroup(
             statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statisticsPanelLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(getStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(endDate, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-                    .addComponent(startDate))
-                .addContainerGap(703, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticsPanelLayout.createSequentialGroup()
+                        .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(statisticsPanelLayout.createSequentialGroup()
+                                .addComponent(getStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(20, 20, 20))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticsPanelLayout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         statisticsPanelLayout.setVerticalGroup(
             statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statisticsPanelLayout.createSequentialGroup()
-                .addGap(84, 84, 84)
-                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(statisticsPanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(statisticsPanelLayout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(getStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(getStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(488, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(478, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Statistics", statisticsPanel);
@@ -1026,17 +1150,58 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_tabbedPaneStateChanged
 
     private void getStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getStatisticsActionPerformed
-		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-DD", Locale.ENGLISH);
 
-		String sDate = startDate.getText();
-		String eDate = endDate.getText();
-		try {
-			System.out.println("bbbbb");
-			new Statistics().getStatistics(this.state.LoggedInUser.getAccountHotelFk(), sDate, eDate);
+        String sDate = startDate.getText();
+        String eDate = endDate.getText();
+            try {
+                Statistics statistics = new Statistics();
+                statistics.getStatistics(this.state.LoggedInUser.getAccountHotelFk() , sDate, eDate);
+                revenue.setText(statistics.totalRevenue + " $");
+                occupiedRooms.setText(String.valueOf(statistics.occupiedRooms));
+                occupancyRate.setText(String.valueOf(statistics.occupancyRate) + " %");
+                
+//                TimeSeries series = new TimeSeries("Monthly Sales");
+//                series.add(new Month(1, 2024), 200);
+//                series.add(new Month(2, 2024), 150);
+//                series.add(new Month(3, 2024), 180);
+//
+//                TimeSeriesCollection dataset = new TimeSeriesCollection();
+//                dataset.addSeries(series);
+//
+//                JFreeChart chart = ChartFactory.createTimeSeriesChart(
+//                    "Monthly Sales",
+//                    "Date",
+//                    "Sales",
+//                    dataset,
+//                    true,    // legend
+//                    false,   // tooltips
+//                    false);  // no URLs
+                
+                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+                System.out.println(statistics.reservationDistribution.size());
+                for (Map.Entry<String, Integer> entry :
+                    statistics.reservationDistribution.entrySet()) {
+                    System.out.println(entry.getValue());
+                    System.out.println(entry.getKey());
+                    dataset.addValue(entry.getValue(), "Reservations", entry.getKey());
+               }
 
-		} catch (Exception ex) {
-			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-		}
+                JFreeChart chart = ChartFactory.createBarChart("Reservation Distribution", "month", "Reservations", dataset);
+                ChartPanel jFreeChartPanel = new ChartPanel(chart);
+                jFreeChartPanel.setVisible(true);
+                jFreeChartPanel.setBounds(5, 240, 1009, 470);
+                SwingUtilities.invokeLater(() -> {
+                    statisticsPanel.add(jFreeChartPanel);
+                    statisticsPanel.revalidate();
+                    statisticsPanel.repaint();
+                });
+                
+            } catch (Exception ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            
     }//GEN-LAST:event_getStatisticsActionPerformed
 
     private void switchUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchUserButtonActionPerformed
@@ -1124,12 +1289,19 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
@@ -1138,6 +1310,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField minPriceFormattedTextField;
     private javax.swing.JPanel miscButtonsPanel;
     private javax.swing.JPasswordField newPasswordField;
+    private javax.swing.JLabel occupancyRate;
+    private javax.swing.JLabel occupiedRooms;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JLabel pendingLabel;
     private javax.swing.JList<String> pendingList;
@@ -1146,6 +1320,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton resetFiltersButton;
     private javax.swing.JButton resetPasswordsButton;
     private javax.swing.JList<String> resultFilterList;
+    private javax.swing.JLabel revenue;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JButton showInfoButton;
     private javax.swing.JCheckBox singleRoomFilterCheckbox;
