@@ -10,32 +10,56 @@ import io.github.kdesp73.databridge.helpers.SQLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author kostas
  */
+
 public class Statistics {
+    public float totalRevenue;
+    public Map<String, Integer> reservationDistribution = new HashMap<String, Integer>();
+    public int totalRooms;
+    public int occupiedRooms;
+    public float occupancyRate;
+    
     public void getStatistics(int accountHotelFk, String start_date, String end_date) {
-		System.out.println("ccccc");
-		
-			System.out.println("fffff");
 			try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-				ResultSet rs = conn.callFunction("get_reservation_distribution", 1);
+				ResultSet rs = conn.callFunction("get_reservation_distribution", accountHotelFk);
 				SQLogger.getLogger().logResultSet(rs);
+                                while (rs.next()){
+                                    reservationDistribution.put(rs.getString(0), rs.getInt(1));
+                                }
 				rs.close();
 			} catch (SQLException ex) {
 				SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_reservation_distribution failed", ex);
-			}
+			} catch (Exception e) {System.out.println(e.getMessage());}
 
 			try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-				System.out.println("2");
-				var total_revenue = (float) conn.callFunctionValue("get_total_revenue", Types.REAL, accountHotelFk, start_date, end_date);
-				System.out.println("Total Revenue: " + total_revenue);
+				this.totalRevenue = (float) conn.callFunctionValue("get_total_revenue", Types.REAL, accountHotelFk, start_date, end_date);
+				System.out.println("Total Revenue: " + totalRevenue);
 			} catch (SQLException e) {
 				System.out.println(e.getMessage());
 				SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_total_revenue failed", e);
-			}
+			} catch (Exception e) {System.out.println(e.getMessage());}
+                        
+                        try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+				ResultSet rs = conn.callFunction("get_occupancy_rate", accountHotelFk);
+				SQLogger.getLogger().logResultSet(rs);
+                                this.totalRooms = rs.getInt(0);
+                                this.occupiedRooms = rs.getInt(1);
+                                this.occupancyRate = rs.getFloat(2);
+				rs.close();
+			} catch (SQLException ex) {
+				SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_occupancy_rate failed", ex);
+			} catch (Exception e) {System.out.println(e.getMessage());}
 		
 	}
 }
+
+
+;
