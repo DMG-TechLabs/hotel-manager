@@ -1161,17 +1161,17 @@ public class MainFrame extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Select a reservation first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		} else if (pendingList.getSelectedIndex() < 0) {
-			String selectedValue = acceptedList.getSelectedValue();
+			Room reservedRoom = Room.selectById(this.acceptedReservations.get(this.acceptedList.getSelectedIndex()).getReservationRoomFk()).get(0);
 
-			reservationFrame = new ReservationFrame(this.state.activeHotelId, selectedValue);
+			reservationFrame = new ReservationFrame(this.state.activeHotelId, reservedRoom);
 			reservationFrame.setVisible(true);
 			acceptedList.clearSelection();
 			return;
 		}
 
-		String selectedValue = pendingList.getSelectedValue();
+		Room reservedRoom = Room.selectById(this.pendingReservations.get(this.pendingList.getSelectedIndex()).getReservationRoomFk()).get(0);
 
-		reservationFrame = new ReservationFrame(this.state.activeHotelId, selectedValue);
+		reservationFrame = new ReservationFrame(this.state.activeHotelId, reservedRoom);
 		reservationFrame.setVisible(true);
 		pendingList.clearSelection();
     }//GEN-LAST:event_showInfoButtonActionPerformed
