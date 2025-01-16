@@ -7,23 +7,23 @@ import io.github.dmgtechlabs.Filters;
 import io.github.dmgtechlabs.models.Hotel;
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Room;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import io.github.dmgtechlabs.models.Statistics;
+import io.github.dmgtechlabs.models.Customer;
 import java.awt.event.MouseEvent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -33,16 +33,16 @@ public class MainFrame extends javax.swing.JFrame {
 	private AboutFrame aboutFrame;
 	private HotelFrame hotelFrame;
 	private RoomFrame roomFrame;
+        private CustomerFrame customerFrame;
 	private UserFrame userFrame;
-	private RoomActionsFrame roomActionsFrame;
 	private ReservationFrame reservationFrame;
 	private CreateReservationFrame createReservationFrame;
 
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
 	private List<Reservation> pendingReservations;
 	private List<Reservation> acceptedReservations;
+	private List<Customer> customers;
 	private List<Hotel> hotels;
-
 
 	/**
 	 * Creates new form MainFrame
@@ -54,12 +54,14 @@ public class MainFrame extends javax.swing.JFrame {
 		this.state.activeHotelId = hotelId;
 		this.state.LoggedInUser = user;
 		initComponents();
+		GUIUtils.commonSetup(null, this);
 		this.setTitle("Hotel Manager");
 		this.setLocationRelativeTo(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.helpFrame = new HelpFrame();
 		this.aboutFrame = new AboutFrame();
-		
+
 		this.hotels = Hotel.selectById(hotelId);
 		this.hotelNameLabel.setText(this.hotels.get(0).getName());
 
@@ -81,16 +83,13 @@ public class MainFrame extends javax.swing.JFrame {
 			// Allow only Searching for guest user
 			this.tabbedPane.setEnabledAt(2, false);
 			this.tabbedPane.setEnabledAt(3, false);
-		} else if(user.isEmployee()){
+		} else if (user.isEmployee()) {
 			// Hide statistics from employees
 			this.tabbedPane.setEnabledAt(3, false);
 		}
 
-		this.pendingReservations = Reservation.selectByReservationStatus(1);
-		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
-
-		this.acceptedReservations = Reservation.selectByReservationStatus(2);
-		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		loadReservations();
+		loadCustomers();
 	}
 
 	public MainFrame() {
@@ -104,11 +103,8 @@ public class MainFrame extends javax.swing.JFrame {
 		setupFilters();
 		applyFilters();
 
-		this.pendingReservations = Reservation.selectByReservationStatus(1);
-		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
-
-		this.acceptedReservations = Reservation.selectByReservationStatus(2);
-		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		loadReservations();
+		loadCustomers();
 	}
 
 	private void setupFilters() {
@@ -165,10 +161,24 @@ public class MainFrame extends javax.swing.JFrame {
         declineButton = new javax.swing.JButton();
         acceptButton = new javax.swing.JButton();
         showInfoButton = new javax.swing.JButton();
+        undoButton = new javax.swing.JButton();
+        customerPanel = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        customersList = new javax.swing.JList<>();
         statisticsPanel = new javax.swing.JPanel();
-        startDate = new javax.swing.JTextField();
-        endDate = new javax.swing.JTextField();
         getStatistics = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        endDate = new javax.swing.JTextField();
+        startDate = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        revenue = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        occupiedRooms = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        occupancyRate = new javax.swing.JLabel();
         optionsPanel = new javax.swing.JPanel();
         changePasswordPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -187,7 +197,6 @@ public class MainFrame extends javax.swing.JFrame {
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
         addReservationMenuItem = new javax.swing.JMenuItem();
-        addCustomerMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         editRoomMenuItem = new javax.swing.JMenuItem();
         editUserMenuItem = new javax.swing.JMenuItem();
@@ -195,8 +204,6 @@ public class MainFrame extends javax.swing.JFrame {
         deleteMenu = new javax.swing.JMenu();
         deleteRoomMenuItem = new javax.swing.JMenuItem();
         deleteCustomerMenuItem = new javax.swing.JMenuItem();
-        viewMenu = new javax.swing.JMenu();
-        viewCustomerMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -389,7 +396,7 @@ public class MainFrame extends javax.swing.JFrame {
         searchPanelLayout.setVerticalGroup(
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(filtersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 731, Short.MAX_VALUE)
         );
 
         tabbedPane.addTab("Search", searchPanel);
@@ -411,7 +418,8 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        acceptButton.setText("Accept");
+        acceptButton.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        acceptButton.setText("---->");
         acceptButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 acceptButtonActionPerformed(evt);
@@ -425,6 +433,14 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        undoButton.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        undoButton.setText("<----");
+        undoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout reservationsPanelLayout = new javax.swing.GroupLayout(reservationsPanel);
         reservationsPanel.setLayout(reservationsPanelLayout);
         reservationsPanelLayout.setHorizontalGroup(
@@ -435,18 +451,21 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(215, 215, 215)
                         .addComponent(pendingLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(reservationsPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservationsPanelLayout.createSequentialGroup()
                         .addContainerGap(118, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(declineButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(reservationsPanelLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(showInfoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(reservationsPanelLayout.createSequentialGroup()
-                                .addGap(30, 30, 30)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(acceptButton)
-                                    .addComponent(declineButton))))
+                                    .addGroup(reservationsPanelLayout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(showInfoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(reservationsPanelLayout.createSequentialGroup()
+                                        .addGap(34, 34, 34)
+                                        .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(acceptButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(undoButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                         .addGap(18, 18, 18)))
                 .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(reservationsPanelLayout.createSequentialGroup()
@@ -470,47 +489,183 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(showInfoButton)
                         .addGap(63, 63, 63)
                         .addComponent(acceptButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(declineButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(undoButton))
                     .addComponent(jScrollPane3))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(declineButton)
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Reservations", reservationsPanel);
 
-        startDate.setText("2025-01-01");
+        customersList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(customersList);
 
-        endDate.setText("2025-02-01");
+        javax.swing.GroupLayout customerPanelLayout = new javax.swing.GroupLayout(customerPanel);
+        customerPanel.setLayout(customerPanelLayout);
+        customerPanelLayout.setHorizontalGroup(
+            customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(customerPanelLayout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 889, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(57, Short.MAX_VALUE))
+        );
+        customerPanelLayout.setVerticalGroup(
+            customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(customerPanelLayout.createSequentialGroup()
+                .addGap(89, 89, 89)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(66, Short.MAX_VALUE))
+        );
 
-        getStatistics.setText("jButton2");
+        tabbedPane.addTab("Customers", customerPanel);
+
+        getStatistics.setText("Load Statistics");
         getStatistics.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 getStatisticsActionPerformed(evt);
             }
         });
 
+        endDate.setText("2025-02-01");
+
+        startDate.setText("2025-01-01");
+
+        jLabel7.setText("Revenue Period");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(104, 104, 104)
+                        .addComponent(jLabel7)))
+                .addGap(20, 20, 20))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
+        );
+
+        revenue.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        revenue.setText("0 $");
+
+        jLabel11.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel11.setText("Total Revenue:");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addComponent(revenue)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(revenue)
+                    .addComponent(jLabel11))
+                .addGap(10, 10, 10))
+        );
+
+        occupiedRooms.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        occupiedRooms.setText("0");
+
+        jLabel13.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel13.setText("Occupied Rooms:");
+
+        jLabel14.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel14.setText("Occupancy Rate: ");
+
+        occupancyRate.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        occupancyRate.setText("0");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel13)
+                .addGap(18, 18, 18)
+                .addComponent(occupiedRooms)
+                .addGap(173, 173, 173)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(occupancyRate)
+                .addContainerGap(425, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(occupiedRooms)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel14)
+                    .addComponent(occupancyRate))
+                .addGap(10, 10, 10))
+        );
+
         javax.swing.GroupLayout statisticsPanelLayout = new javax.swing.GroupLayout(statisticsPanel);
         statisticsPanel.setLayout(statisticsPanelLayout);
         statisticsPanelLayout.setHorizontalGroup(
             statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statisticsPanelLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(getStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(endDate, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-                    .addComponent(startDate))
-                .addContainerGap(703, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticsPanelLayout.createSequentialGroup()
+                        .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(statisticsPanelLayout.createSequentialGroup()
+                                .addComponent(getStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(20, 20, 20))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticsPanelLayout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         statisticsPanelLayout.setVerticalGroup(
             statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statisticsPanelLayout.createSequentialGroup()
-                .addGap(84, 84, 84)
-                .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(statisticsPanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(statisticsPanelLayout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(getStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(getStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(488, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(478, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Statistics", statisticsPanel);
@@ -635,7 +790,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(changePasswordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(miscButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(432, Short.MAX_VALUE))
+                .addContainerGap(459, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Options", optionsPanel);
@@ -658,14 +813,6 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
         addMenu.add(addReservationMenuItem);
-
-        addCustomerMenuItem.setText("Customer");
-        addCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addCustomerMenuItemActionPerformed(evt);
-            }
-        });
-        addMenu.add(addCustomerMenuItem);
 
         jMenuBar1.add(addMenu);
 
@@ -719,18 +866,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(deleteMenu);
 
-        viewMenu.setText("View");
-
-        viewCustomerMenuItem.setText("Customer");
-        viewCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewCustomerMenuItemActionPerformed(evt);
-            }
-        });
-        viewMenu.add(viewCustomerMenuItem);
-
-        jMenuBar1.add(viewMenu);
-
         helpMenu.setText("Help");
 
         helpMenuItem.setText("Help");
@@ -767,6 +902,25 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+	private void loadReservations() {
+		this.pendingReservations = Reservation.selectByReservationStatus(Reservation.Status.PENDING.getValue());
+		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+
+		this.acceptedReservations = Reservation.selectByReservationStatus(Reservation.Status.ACCEPTED.getValue());
+		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+	}
+
+	private void loadCustomers() {
+		DefaultListModel<String> model = new DefaultListModel<>();
+		List<Customer> customerList = Customer.selectAll();
+		for (Customer customer : customerList) {
+			String row = "Customer ID: " + customer.getId() + " " + customer.getFirstName() + " " + customer.getLastName()
+				+ " " + customer.getPhone() + " " + customer.getEmail();
+			model.addElement(row);
+		}
+		customersList.setModel(model);
+	}
+
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
 		if (helpFrame.isShowing()) {
 			return;
@@ -785,6 +939,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomMenuItemActionPerformed
 		this.roomFrame = new RoomFrame(this.state.activeHotelId);
+		GUIUtils.addWindowClosedListener(this.roomFrame, () -> { this.applyFilters(); });
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
@@ -864,6 +1019,37 @@ public class MainFrame extends javax.swing.JFrame {
 		Room room = rooms.get(this.resultFilterList.getSelectedIndex());
 		return room;
 	}
+        
+    public Customer getSelectedCustomer() {
+        // Get the selected index from the list
+        int selectedIndex = customersList.getSelectedIndex();
+        // Check if an item is selected
+        if (selectedIndex == -1) {
+            return null;
+        }
+
+        // Retrieve the selected item's text
+        String selectedValue = customersList.getModel().getElementAt(selectedIndex);
+
+        // Parse the customer ID from the selected item text
+        try {
+            String[] parts = selectedValue.split(" ");
+            int customerId = -1;
+            for (int i = 0; i < parts.length; i++) {
+                if (parts[i].equals("ID:")) {
+                    customerId = Integer.parseInt(parts[i + 1]);
+                    break;
+                }
+            }
+            return Customer.selectById(customerId).getFirst();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     private void resetFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersButtonActionPerformed
 		resetFilters();
@@ -926,46 +1112,35 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_resetPasswordsButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String newPassword = this.newPasswordField.getText();
-                
-        if(
-			!this.state.LoggedInUser.isGuest() && 
-            (this.currentPasswordField.getText() == null
-				? this.state.LoggedInUser.getPassword() == null
-				: this.currentPasswordField.getText().equals(this.state.LoggedInUser.getPassword())
-			) && 
-            (newPassword == null 
-				? this.confirmNewPasswordField.getText() == null 
-				: newPassword.equals(this.confirmNewPasswordField.getText())
-			) &&
-            !newPassword.isBlank()
-		){
-            this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
-        }
+		String newPassword = this.newPasswordField.getText();
+
+		if (!this.state.LoggedInUser.isGuest()
+			&& (this.currentPasswordField.getText() == null
+			? this.state.LoggedInUser.getPassword() == null
+			: this.currentPasswordField.getText().equals(this.state.LoggedInUser.getPassword()))
+			&& (newPassword == null
+				? this.confirmNewPasswordField.getText() == null
+				: newPassword.equals(this.confirmNewPasswordField.getText()))
+			&& newPassword != null && !newPassword.isBlank()) {
+			this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
+		}
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-		int selectedRoomId = this.pendingReservations.get(pendingList.getSelectedIndex()).getReservationRoomFk();
-		Room selectedRoom = Room.selectById(selectedRoomId, this.state.activeHotelId).get(0);
-		
 		if (pendingList.getSelectedIndex() < 0) {
 			JOptionPane.showMessageDialog(this, "Select a pending reservation first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to accept this reservation?", "Accept", JOptionPane.OK_CANCEL_OPTION);
-		if (result == JOptionPane.OK_OPTION) {
-			this.pendingReservations.get(pendingList.getSelectedIndex()).update(2);
-			selectedRoom.markOccupiedAs(true);
+		int selectedRoomId = this.pendingReservations.get(pendingList.getSelectedIndex()).getReservationRoomFk();
+		Room selectedRoom = Room.selectById(selectedRoomId).get(0);
 
-			this.pendingReservations = Reservation.selectByReservationStatus(1);
-			this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		this.pendingReservations.get(pendingList.getSelectedIndex()).update(2);
+		selectedRoom.markOccupiedAs(true);
 
-			this.acceptedReservations = Reservation.selectByReservationStatus(2);
-			this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
-		}
-		
+		loadReservations();
+
 		pendingList.clearSelection();
 		acceptedList.clearSelection();
     }//GEN-LAST:event_acceptButtonActionPerformed
@@ -979,14 +1154,10 @@ public class MainFrame extends javax.swing.JFrame {
 		int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to decline this reservation?\nThis means that this will be deleted!", "Accept", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			this.pendingReservations.get(pendingList.getSelectedIndex()).delete();
-			
-			this.pendingReservations = Reservation.selectByReservationStatus(1);
-			this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 
-			this.acceptedReservations = Reservation.selectByReservationStatus(2);
-			this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+			loadReservations();
 		}
-		
+
 		pendingList.clearSelection();
 		acceptedList.clearSelection();
     }//GEN-LAST:event_declineButtonActionPerformed
@@ -1017,54 +1188,109 @@ public class MainFrame extends javax.swing.JFrame {
 
 
     private void tabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPaneStateChanged
-        if(tabbedPane.getSelectedIndex() == 2 && this.state.LoggedInUser.getType() == User.UserType.MANAGER.getValue()){
-            
-        }
+		if (tabbedPane.getSelectedIndex() == 2 && this.state.LoggedInUser.getType() == User.UserType.MANAGER.getValue()) {
+
+		}
     }//GEN-LAST:event_tabbedPaneStateChanged
 
     private void getStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getStatisticsActionPerformed
-        SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-DD", Locale.ENGLISH);
-        
-        String sDate = startDate.getText();
-        String eDate = endDate.getText();
-            try {
-                Date sdate = formatter.parse(sDate);
-                Date edate = formatter.parse(eDate);
-                System.out.println("bbbbb");
-                this.state.LoggedInUser.getStatistics(sdate, edate);
-            } catch (ParseException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
+		String sDate = startDate.getText();
+		String eDate = endDate.getText();
+		try {
+			Statistics statistics = new Statistics();
+			statistics.getStatistics(this.state.LoggedInUser.getAccountHotelFk(), sDate, eDate);
+			revenue.setText(statistics.totalRevenue + " $");
+			occupiedRooms.setText(String.valueOf(statistics.occupiedRooms));
+			occupancyRate.setText(String.valueOf(statistics.occupancyRate) + " %");
+
+//                TimeSeries series = new TimeSeries("Monthly Sales");
+//                series.add(new Month(1, 2024), 200);
+//                series.add(new Month(2, 2024), 150);
+//                series.add(new Month(3, 2024), 180);
+//
+//                TimeSeriesCollection dataset = new TimeSeriesCollection();
+//                dataset.addSeries(series);
+//
+//                JFreeChart chart = ChartFactory.createTimeSeriesChart(
+//                    "Monthly Sales",
+//                    "Date",
+//                    "Sales",
+//                    dataset,
+//                    true,    // legend
+//                    false,   // tooltips
+//                    false);  // no URLs
+			DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+			System.out.println(statistics.reservationDistribution.size());
+			for (Map.Entry<String, Integer> entry
+				: statistics.reservationDistribution.entrySet()) {
+				System.out.println(entry.getValue());
+				System.out.println(entry.getKey());
+				dataset.addValue(entry.getValue(), "Reservations", entry.getKey());
+			}
+
+			JFreeChart chart = ChartFactory.createBarChart("Reservation Distribution", "month", "Reservations", dataset);
+			ChartPanel jFreeChartPanel = new ChartPanel(chart);
+			jFreeChartPanel.setVisible(true);
+			jFreeChartPanel.setBounds(5, 240, 1009, 470);
+			SwingUtilities.invokeLater(() -> {
+				statisticsPanel.add(jFreeChartPanel);
+				statisticsPanel.revalidate();
+				statisticsPanel.repaint();
+			});
+
+		} catch (Exception ex) {
+			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+
     }//GEN-LAST:event_getStatisticsActionPerformed
 
     private void switchUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchUserButtonActionPerformed
-        this.dispose();
-        this.state.LoggedInUser = null;
-        new LoginFrame(this.state.activeHotelId).setVisible(true);
+		this.dispose();
+		this.state.LoggedInUser = null;
+		new LoginFrame(this.state.activeHotelId).setVisible(true);
     }//GEN-LAST:event_switchUserButtonActionPerformed
 
     private void addReservationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReservationMenuItemActionPerformed
-       this.createReservationFrame = new CreateReservationFrame(this.state.activeHotelId);
-	   GUIUtils.showFrame(this.createReservationFrame);
+		if (this.resultFilterList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Choose an available room from the search tab first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
+		GUIUtils.addWindowClosedListener(this.createReservationFrame, () -> { loadReservations(); });
+		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
     private void editCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerMenuItemActionPerformed
-        // TODO add your handling code here:
+        this.customerFrame = new CustomerFrame(getSelectedCustomer());
+        GUIUtils.addWindowClosedListener(this.customerFrame, () -> { this.loadCustomers();});
+        GUIUtils.showFrame(this.customerFrame);
     }//GEN-LAST:event_editCustomerMenuItemActionPerformed
 
-    private void addCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerMenuItemActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addCustomerMenuItemActionPerformed
-
-    private void viewCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCustomerMenuItemActionPerformed
-        ViewCustomersFrame vCF = new ViewCustomersFrame();
-        vCF.setVisible(true);
-    }//GEN-LAST:event_viewCustomerMenuItemActionPerformed
-
     private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
-        // TODO add your handling code here:
+		// TODO add your handling code here:
     }//GEN-LAST:event_deleteCustomerMenuItemActionPerformed
 
+    private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
+		if (acceptedList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Select an accepted reservation first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		Reservation selectedAccepted = this.acceptedReservations.get(this.acceptedList.getSelectedIndex());
+		Room room = Room.selectById(selectedAccepted.getReservationRoomFk()).get(0);
+		assert (room != null);
+
+		selectedAccepted.update(Reservation.Status.PENDING.getValue());
+		room.markOccupiedAs(false);
+
+		loadReservations();
+
+		this.pendingList.clearSelection();
+		this.acceptedList.clearSelection();
+    }//GEN-LAST:event_undoButtonActionPerformed
 
 	private javax.swing.JMenuItem addUserMenuItem;
 
@@ -1073,7 +1299,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton acceptButton;
     private javax.swing.JLabel acceptedLabel;
     private javax.swing.JList<String> acceptedList;
-    private javax.swing.JMenuItem addCustomerMenuItem;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addReservationMenuItem;
     private javax.swing.JMenuItem addRoomMenuItem;
@@ -1081,6 +1306,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel changePasswordPanel;
     private javax.swing.JPasswordField confirmNewPasswordField;
     private javax.swing.JPasswordField currentPasswordField;
+    private javax.swing.JPanel customerPanel;
+    private javax.swing.JList<String> customersList;
     private javax.swing.JButton declineButton;
     private javax.swing.JMenuItem deleteCustomerMenuItem;
     private javax.swing.JMenu deleteMenu;
@@ -1104,13 +1331,21 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JCheckBox kingRoomFilterCheckbox;
@@ -1118,6 +1353,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField minPriceFormattedTextField;
     private javax.swing.JPanel miscButtonsPanel;
     private javax.swing.JPasswordField newPasswordField;
+    private javax.swing.JLabel occupancyRate;
+    private javax.swing.JLabel occupiedRooms;
     private javax.swing.JPanel optionsPanel;
     private javax.swing.JLabel pendingLabel;
     private javax.swing.JList<String> pendingList;
@@ -1126,6 +1363,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton resetFiltersButton;
     private javax.swing.JButton resetPasswordsButton;
     private javax.swing.JList<String> resultFilterList;
+    private javax.swing.JLabel revenue;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JButton showInfoButton;
     private javax.swing.JCheckBox singleRoomFilterCheckbox;
@@ -1136,8 +1374,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton switchUserButton;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox twinRoomFilterCheckbox;
-    private javax.swing.JMenuItem viewCustomerMenuItem;
-    private javax.swing.JMenu viewMenu;
+    private javax.swing.JButton undoButton;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }

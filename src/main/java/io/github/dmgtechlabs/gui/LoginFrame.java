@@ -7,6 +7,7 @@ package io.github.dmgtechlabs.gui;
 import io.github.dmgtechlabs.models.User;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -48,7 +49,7 @@ public class LoginFrame extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTextField1.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        jTextField1.setText("guest");
+        jTextField1.setText("test4");
         jTextField1.setName("username_textfield"); // NOI18N
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -66,7 +67,7 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel2.setText("Password:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 100, 30));
 
-        jPasswordField1.setText("guest");
+        jPasswordField1.setText("test");
         jPasswordField1.setName("password_textfield"); // NOI18N
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -106,13 +107,8 @@ public class LoginFrame extends javax.swing.JFrame {
             User user = User.login(jTextField1.getText().toString(), jPasswordField1.getText(), this.hotelId);
             this.dispose();
             new MainFrame(user, this.hotelId).setVisible(true);
-        }catch (Exception e){
-            JDialog j = new JDialog(this, "Error");
-            JLabel l = new JLabel(e.getMessage());
-            j.add(l);
-            j.setSize(100, 100);
-            j.setLocationRelativeTo(null);
-            j.setVisible(true);
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(this, "Incorrect username or password", "Error", JOptionPane.ERROR_MESSAGE);
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed

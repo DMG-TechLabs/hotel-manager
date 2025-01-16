@@ -70,12 +70,12 @@ public class Filters {
 			}
 			rs.close();
 		} catch (Exception e) {
-//			SQLogger.getLogger().log("Failed running filter query", e);
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Failed running filter query", e);
 		}
 		return result;
 	}
 
-	private static class Range {
+	public static class Range {
 
 		public float min;
 		public float max;

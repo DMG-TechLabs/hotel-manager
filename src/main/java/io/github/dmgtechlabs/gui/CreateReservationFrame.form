@@ -38,15 +38,19 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="cancelBtn" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="okBtn" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="datePanel" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="roomLabel" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="roomComboBox" alignment="0" min="-2" pref="450" max="-2" attributes="0"/>
                               <Component id="personalInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -57,24 +61,22 @@
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="fNameTextField" max="32767" attributes="0"/>
+                                      <Component id="fNameTextField" pref="162" max="32767" attributes="0"/>
                                       <Component id="lnameTextField" max="32767" attributes="0"/>
                                       <Component id="emailFormattedTextField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="phoneTextField" alignment="0" pref="162" max="32767" attributes="0"/>
+                                      <Component id="phoneTextField" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace min="0" pref="35" max="32767" attributes="0"/>
+                          <EmptySpace pref="186" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="checkInLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="checkOutLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
-                  <Component id="cancelBtn" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="okBtn" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -84,12 +86,11 @@
                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" pref="48" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="datePanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="roomLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="roomComboBox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="checkInLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="checkOutLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="129" max="-2" attributes="0"/>
                   <Component id="personalInfoLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -111,7 +112,7 @@
                       <Component id="phoneIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="phoneTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="38" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="okBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cancelBtn" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -130,21 +131,6 @@
             <Property name="text" type="java.lang.String" value="Reservation Creation"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="roomLabel">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Select room"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="roomComboBox">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-          </AuxValues>
-        </Component>
         <Component class="javax.swing.JButton" name="okBtn">
           <Properties>
             <Property name="text" type="java.lang.String" value="OK"/>
@@ -161,44 +147,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelBtnActionPerformed"/>
           </Events>
         </Component>
-        <Container class="javax.swing.JPanel" name="datePanel">
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="checkInLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="checkOutLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="checkInLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="checkOutLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="62" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JLabel" name="checkInLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Select a check-In date"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="checkOutLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Select a check-out date"/>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
         <Component class="javax.swing.JLabel" name="personalInfoLabel">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -233,7 +181,17 @@
             <Property name="text" type="java.lang.String" value="Phone"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="phoneTextField">
+        <Component class="javax.swing.JLabel" name="checkInLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Select a check-In date"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="checkOutLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Select a check-out date"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="phoneTextField">
         </Component>
       </SubComponents>
     </Container>

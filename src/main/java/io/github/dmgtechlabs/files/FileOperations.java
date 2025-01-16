@@ -21,7 +21,7 @@ public class FileOperations {
 	public static int maxDepth = 10;
 
 	private static boolean chechPath(String path) throws IllegalArgumentException {
-		if (path == null || path == "" || path.lastIndexOf(slash) <= 0 || path.lastIndexOf(".") < 0) {
+		if (path == null || path.isEmpty() || path.lastIndexOf(slash) <= 0 || path.lastIndexOf(".") < 0) {
 			if (throwErrors)
 				throw new IllegalArgumentException("Invalid path");
 			return true;
@@ -89,7 +89,7 @@ public class FileOperations {
 	}
 
 	public static String readFile(String path) {
-		String content = "";
+		StringBuilder content = new StringBuilder();
 		try {
 			// Create a FileReader to read the file
 			FileReader fileReader = new FileReader(path);
@@ -99,7 +99,7 @@ public class FileOperations {
 
 			String line;
 			while ((line = bufferedReader.readLine()) != null) {
-				content += line + "\n";
+				content.append(line).append("\n");
 			}
 
 			// Close the BufferedReader and FileReader when done
@@ -109,7 +109,7 @@ public class FileOperations {
 			e.printStackTrace();
 		}
 
-		return content;
+		return content.toString();
 	}
 
 }

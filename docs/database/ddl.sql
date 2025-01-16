@@ -2,45 +2,45 @@
 
 CREATE SCHEMA hoteldb AUTHORIZATION iee2021035;
 
--- DROP SEQUENCE hoteldb.account_id_seq;
+-- DROP SEQUENCE account_id_seq;
 
-CREATE SEQUENCE hoteldb.account_id_seq
+CREATE SEQUENCE account_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
--- DROP SEQUENCE hoteldb.customer_id_seq;
+-- DROP SEQUENCE customer_id_seq;
 
-CREATE SEQUENCE hoteldb.customer_id_seq
+CREATE SEQUENCE customer_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
--- DROP SEQUENCE hoteldb.hotel_id_seq;
+-- DROP SEQUENCE hotel_id_seq;
 
-CREATE SEQUENCE hoteldb.hotel_id_seq
+CREATE SEQUENCE hotel_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
--- DROP SEQUENCE hoteldb.reservation_id_seq;
+-- DROP SEQUENCE reservation_id_seq;
 
-CREATE SEQUENCE hoteldb.reservation_id_seq
+CREATE SEQUENCE reservation_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
 	START 1
 	CACHE 1
 	NO CYCLE;
--- DROP SEQUENCE hoteldb.room_id_seq;
+-- DROP SEQUENCE room_id_seq;
 
-CREATE SEQUENCE hoteldb.room_id_seq
+CREATE SEQUENCE room_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
@@ -50,9 +50,9 @@ CREATE SEQUENCE hoteldb.room_id_seq
 
 -- Drop table
 
--- DROP TABLE hoteldb.customer;
+-- DROP TABLE customer;
 
-CREATE TABLE hoteldb.customer (
+CREATE TABLE customer (
 	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
 	fname varchar NOT NULL,
 	lname varchar NOT NULL,
@@ -66,9 +66,9 @@ CREATE TABLE hoteldb.customer (
 
 -- Drop table
 
--- DROP TABLE hoteldb.hotel;
+-- DROP TABLE hotel;
 
-CREATE TABLE hoteldb.hotel (
+CREATE TABLE hotel (
 	"name" varchar NOT NULL,
 	address varchar NOT NULL,
 	phone int8 NOT NULL,
@@ -81,9 +81,9 @@ CREATE TABLE hoteldb.hotel (
 
 -- Drop table
 
--- DROP TABLE hoteldb.account;
+-- DROP TABLE account;
 
-CREATE TABLE hoteldb.account (
+CREATE TABLE account (
 	username varchar NOT NULL,
 	"password" varchar NOT NULL,
 	"type" int4 NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE hoteldb.account (
 	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
 	CONSTRAINT account_pk PRIMARY KEY (id),
 	CONSTRAINT account_unique UNIQUE (username),
-	CONSTRAINT account_hotel_fk FOREIGN KEY (account_hotel_fk) REFERENCES hoteldb.hotel(id)
+	CONSTRAINT account_hotel_fk FOREIGN KEY (account_hotel_fk) REFERENCES hotel(id)
 );
 
 
@@ -99,13 +99,13 @@ CREATE TABLE hoteldb.account (
 
 -- Drop table
 
--- DROP TABLE hoteldb.amenities;
+-- DROP TABLE amenities;
 
-CREATE TABLE hoteldb.amenities (
+CREATE TABLE amenities (
 	amenity int4 NOT NULL,
 	hotel_id int4 NOT NULL,
 	CONSTRAINT amenities_pk PRIMARY KEY (amenity, hotel_id),
-	CONSTRAINT amenities_hotel_fk FOREIGN KEY (hotel_id) REFERENCES hoteldb.hotel(id)
+	CONSTRAINT amenities_hotel_fk FOREIGN KEY (hotel_id) REFERENCES hotel(id)
 );
 
 
@@ -113,9 +113,9 @@ CREATE TABLE hoteldb.amenities (
 
 -- Drop table
 
--- DROP TABLE hoteldb.room;
+-- DROP TABLE room;
 
-CREATE TABLE hoteldb.room (
+CREATE TABLE room (
 	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
 	"number" int4 NOT NULL,
 	"type" int4 NOT NULL,
@@ -125,7 +125,7 @@ CREATE TABLE hoteldb.room (
 	room_hotel_fk int4 NOT NULL,
 	CONSTRAINT room_pk PRIMARY KEY (id),
 	CONSTRAINT room_unique UNIQUE (number, floor, room_hotel_fk),
-	CONSTRAINT room_hotel_fk FOREIGN KEY (room_hotel_fk) REFERENCES hoteldb.hotel(id)
+	CONSTRAINT room_hotel_fk FOREIGN KEY (room_hotel_fk) REFERENCES hotel(id)
 );
 
 
@@ -133,9 +133,9 @@ CREATE TABLE hoteldb.room (
 
 -- Drop table
 
--- DROP TABLE hoteldb.reservation;
+-- DROP TABLE reservation;
 
-CREATE TABLE hoteldb.reservation (
+CREATE TABLE reservation (
 	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
 	reservation_customer_fk int4 NOT NULL,
 	reservation_room_fk int4 NOT NULL,
@@ -144,8 +144,8 @@ CREATE TABLE hoteldb.reservation (
 	"cost" float4 NOT NULL,
 	status int4 NOT NULL,
 	CONSTRAINT reservation_pk PRIMARY KEY (id),
-	CONSTRAINT reservation_customer_fk FOREIGN KEY (reservation_customer_fk) REFERENCES hoteldb.customer(id),
-	CONSTRAINT reservation_room_fk FOREIGN KEY (reservation_room_fk) REFERENCES hoteldb.room(id)
+	CONSTRAINT reservation_customer_fk FOREIGN KEY (reservation_customer_fk) REFERENCES customer(id),
+	CONSTRAINT reservation_room_fk FOREIGN KEY (reservation_room_fk) REFERENCES room(id)
 );
 
 
@@ -222,46 +222,25 @@ RETURNING id;
 $function$
 ;
 
--- DROP FUNCTION hoteldb.get_occupancy_rate(int4, date, date);
+-- DROP FUNCTION hoteldb.get_occupancy_rate(int4);
 
-CREATE OR REPLACE FUNCTION hoteldb.get_occupancy_rate(hotel_id_input integer, start_date date, end_date date)
- RETURNS TABLE(room_id integer, occupied_days integer, total_days integer, occupancy_rate numeric)
+CREATE OR REPLACE FUNCTION hoteldb.get_occupancy_rate(hotel_id_input integer)
+ RETURNS TABLE(total_rooms integer, occupied_rooms integer, occupancy_rate numeric)
  LANGUAGE plpgsql
 AS $function$
 BEGIN
-    RETURN QUERY
-    SELECT 
-        r.room_id,
-        COUNT(DISTINCT res.check_in_date) AS occupied_days,
-        DATE_PART('day', end_date - start_date) AS total_days,
-        ROUND((COUNT(DISTINCT res.check_in_date)::NUMERIC / NULLIF(DATE_PART('day', end_date - start_date), 0)) * 100, 2) AS occupancy_rate
-    FROM 
-        room r
-    LEFT JOIN reservation res ON r.room_id = res.room_id 
-    AND res.check_in_date BETWEEN start_date AND end_date
-    WHERE r.hotel_id = hotel_id_input
-    GROUP BY r.room_id;
-END;
-$function$
-;
 
--- DROP FUNCTION hoteldb.get_reservation_distribution(int4);
-
-CREATE OR REPLACE FUNCTION hoteldb.get_reservation_distribution(hotel_id_input integer)
- RETURNS TABLE(month_year text, reservation_count integer)
- LANGUAGE plpgsql
-AS $function$
-BEGIN
-    RETURN QUERY
+    RETURN QUERY(
     SELECT 
-        TO_CHAR(res.checkin, 'YYYY-MM-DD') AS month_year,
-        COUNT(*)::integer AS reservation_count
-    FROM 
-        hoteldb.reservation res
-    JOIN hoteldb.room r ON res.reservation_room_fk = r.id
-    WHERE r.room_hotel_fk = hotel_id_input
-    GROUP BY month_year
-    ORDER BY month_year;
+        CAST(COUNT(id) AS integer) AS total_rooms, -- Total number of rooms in the hotel
+        CAST(COUNT(id) FILTER (WHERE occupied) AS integer) AS occupied_rooms, -- Number of occupied rooms
+        ROUND(
+            (COUNT(*) FILTER (WHERE occupied)::NUMERIC / NULLIF(COUNT(*), 0)) * 100, 
+            2
+        ) AS occupancy_rate -- Percentage of occupied rooms
+    FROM hoteldb.room
+    WHERE room_hotel_fk = hotel_id_input);
+
 END;
 $function$
 ;
@@ -287,22 +266,43 @@ END;
 $function$
 ;
 
--- DROP FUNCTION hoteldb.get_total_revenue(int4, date, date);
+-- DROP FUNCTION hoteldb.get_reservation_distribution(int4);
 
-CREATE OR REPLACE FUNCTION hoteldb.get_total_revenue(hotel_id_input integer, start_date date, end_date date)
- RETURNS numeric
+CREATE OR REPLACE FUNCTION hoteldb.get_reservation_distribution(hotel_id_input integer)
+ RETURNS TABLE(month_year text, reservation_count integer)
+ LANGUAGE plpgsql
+AS $function$
+    BEGIN
+return query(
+    SELECT 
+        TO_CHAR(res.checkin, 'YYYY-MM-DD') AS month_year,
+        COUNT(*)::integer AS reservation_count
+    FROM 
+        hoteldb.reservation res
+    JOIN hoteldb.room r ON res.reservation_room_fk = r.id
+    WHERE r.room_hotel_fk = hotel_id_input
+    GROUP BY month_year
+    ORDER BY month_year);
+END;
+$function$
+;
+
+-- DROP FUNCTION hoteldb.get_total_revenue(int4, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION hoteldb.get_total_revenue(hotel_id_input integer, start_date character varying, end_date character varying)
+ RETURNS real
  LANGUAGE plpgsql
 AS $function$
 DECLARE
-    total_revenue NUMERIC;
+    total_revenue float4;
 BEGIN
     SELECT 
         SUM(res.cost) INTO total_revenue
     FROM 
-        reservation res
-    JOIN room r ON res.room_id = r.room_id
-    WHERE r.hotel_id = hotel_id_input
-    AND res.check_in_date BETWEEN start_date AND end_date;
+        hoteldb.reservation res
+    JOIN hoteldb.room r ON res.reservation_room_fk = r.id
+    WHERE r.room_hotel_fk = hotel_id_input
+    AND res.checkin BETWEEN to_date(start_date, 'YYYY-MM-DD') AND to_date(end_date, 'YYYY-MM-DD');
 
     RETURN total_revenue;
 END;
@@ -542,6 +542,59 @@ end;
 $function$
 ;
 
+-- DROP FUNCTION hoteldb.select_reservations_by_check_in_check_out(int4, varchar, varchar);
+
+CREATE OR REPLACE FUNCTION hoteldb.select_reservations_by_check_in_check_out(_reservation_room_fk integer, reservation_check_in character varying, reservation_check_out character varying)
+ RETURNS SETOF hoteldb.reservation
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+	RETURN query (
+		SELECT * FROM hoteldb.reservation 
+		WHERE reservation_room_fk = _reservation_room_fk AND checkin = to_date(reservation_check_in, 'YYYY-MM-DD') AND checkout = to_date(reservation_check_out, 'YYYY-MM-DD')
+	);
+END;
+$function$
+;
+
+-- DROP FUNCTION hoteldb.select_reservations_by_hotel(int4);
+
+CREATE OR REPLACE FUNCTION hoteldb.select_reservations_by_hotel(hotel_fk integer)
+ RETURNS SETOF hoteldb.reservation
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+	RETURN query (
+		SELECT 
+			r.id,
+			r.reservation_customer_fk,
+			r.reservation_room_fk,
+			r.checkin,
+			r.checkout,
+			r.cost,
+			r.status 
+		FROM hoteldb.reservation r INNER JOIN hoteldb.room rm ON r.reservation_room_fk = rm.id
+		WHERE rm.room_hotel_fk = hotel_fk
+	);
+END;
+$function$
+;
+
+-- DROP FUNCTION hoteldb.select_reservations_by_room_id(int4);
+
+CREATE OR REPLACE FUNCTION hoteldb.select_reservations_by_room_id(room_id integer)
+ RETURNS SETOF hoteldb.reservation
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+	RETURN query (
+		SELECT * FROM hoteldb.reservation 
+		WHERE reservation_room_fk = room_id
+	);
+END;
+$function$
+;
+
 -- DROP FUNCTION hoteldb.select_reservations_by_status(int4);
 
 CREATE OR REPLACE FUNCTION hoteldb.select_reservations_by_status(reservation_status integer)
@@ -557,14 +610,26 @@ END;
 $function$
 ;
 
--- DROP FUNCTION hoteldb.select_rooms_by_floor(int4);
+-- DROP FUNCTION hoteldb.select_reserved_rooms(int4);
 
-CREATE OR REPLACE FUNCTION hoteldb.select_rooms_by_floor(room_floor integer)
+CREATE OR REPLACE FUNCTION hoteldb.select_reserved_rooms(hotel_fk integer)
  RETURNS SETOF hoteldb.room
- LANGUAGE sql
+ LANGUAGE plpgsql
 AS $function$
-SELECT * FROM hoteldb.room 
-WHERE floor = room_floor;
+BEGIN
+	RETURN query (
+		SELECT 
+			rm.id,
+			rm.number,
+			rm.type,
+			rm.price,
+			rm.floor,
+			rm.occupied,
+			rm.room_hotel_fk 
+		FROM hoteldb.room rm INNER JOIN hoteldb.reservation r ON rm.id = r.reservation_room_fk
+		WHERE rm.room_hotel_fk = hotel_fk
+	);
+END;
 $function$
 ;
 
@@ -579,15 +644,36 @@ WHERE floor = room_floor AND room_hotel_fk = hotel_fk;
 $function$
 ;
 
--- DROP FUNCTION hoteldb.select_rooms_by_id(int4, int4);
+-- DROP FUNCTION hoteldb.select_rooms_by_floor(int4);
 
-CREATE OR REPLACE FUNCTION hoteldb.select_rooms_by_id(room_id integer, hotel_fk integer)
+CREATE OR REPLACE FUNCTION hoteldb.select_rooms_by_floor(room_floor integer)
  RETURNS SETOF hoteldb.room
  LANGUAGE sql
 AS $function$
 SELECT * FROM hoteldb.room 
-WHERE "id" = room_id
-AND room_hotel_fk = hotel_fk;
+WHERE floor = room_floor;
+$function$
+;
+
+-- DROP FUNCTION hoteldb.select_rooms_by_hotel_id(int4);
+
+CREATE OR REPLACE FUNCTION hoteldb.select_rooms_by_hotel_id(hotel_fk integer)
+ RETURNS SETOF hoteldb.room
+ LANGUAGE sql
+AS $function$
+SELECT * FROM hoteldb.room 
+WHERE room_hotel_fk = hotel_fk;
+$function$
+;
+
+-- DROP FUNCTION hoteldb.select_rooms_by_id(int4);
+
+CREATE OR REPLACE FUNCTION hoteldb.select_rooms_by_id(room_id integer)
+ RETURNS SETOF hoteldb.room
+ LANGUAGE sql
+AS $function$
+SELECT * FROM hoteldb.room 
+WHERE "id" = room_id;
 $function$
 ;
 
@@ -606,18 +692,6 @@ END;
 $function$
 ;
 
--- DROP FUNCTION hoteldb.select_rooms_by_price_range(float4, float4);
-
-CREATE OR REPLACE FUNCTION hoteldb.select_rooms_by_price_range(floor_ real, ceil_ real)
- RETURNS SETOF hoteldb.room
- LANGUAGE sql
-AS $function$
-SELECT * FROM hoteldb.room 
-WHERE 
-	price >= floor_ AND price <= ceil_;
-$function$
-;
-
 -- DROP FUNCTION hoteldb.select_rooms_by_price_range(float4, float4, int4);
 
 CREATE OR REPLACE FUNCTION hoteldb.select_rooms_by_price_range(floor_ real, ceil_ real, hotel_fk integer)
@@ -628,6 +702,18 @@ SELECT * FROM hoteldb.room
 WHERE 
 	price >= floor_ AND price <= ceil_
 	AND room_hotel_fk = hotel_fk;
+$function$
+;
+
+-- DROP FUNCTION hoteldb.select_rooms_by_price_range(float4, float4);
+
+CREATE OR REPLACE FUNCTION hoteldb.select_rooms_by_price_range(floor_ real, ceil_ real)
+ RETURNS SETOF hoteldb.room
+ LANGUAGE sql
+AS $function$
+SELECT * FROM hoteldb.room 
+WHERE 
+	price >= floor_ AND price <= ceil_;
 $function$
 ;
 
@@ -664,19 +750,6 @@ AS $function$
 $function$
 ;
 
--- DROP FUNCTION hoteldb.select_user_with_username_password(varchar, varchar);
-
-CREATE OR REPLACE FUNCTION hoteldb.select_user_with_username_password(user_username character varying, user_password character varying)
- RETURNS SETOF hoteldb.account
- LANGUAGE plpgsql
-AS $function$
-	BEGIN
-return query(
-select * from hoteldb.account where "username"=user_username and "password"=user_password);
-	END;
-$function$
-;
-
 -- DROP FUNCTION hoteldb.select_user_with_username_password(varchar, varchar, numeric);
 
 CREATE OR REPLACE FUNCTION hoteldb.select_user_with_username_password(user_username character varying, user_password character varying, hotel_id numeric)
@@ -686,6 +759,19 @@ AS $function$
 	BEGIN
 return query(
 select * from hoteldb.account where "username"=user_username and "password"=user_password and "account_hotel_fk"=hotel_id);
+	END;
+$function$
+;
+
+-- DROP FUNCTION hoteldb.select_user_with_username_password(varchar, varchar);
+
+CREATE OR REPLACE FUNCTION hoteldb.select_user_with_username_password(user_username character varying, user_password character varying)
+ RETURNS SETOF hoteldb.account
+ LANGUAGE plpgsql
+AS $function$
+	BEGIN
+return query(
+select * from hoteldb.account where "username"=user_username and "password"=user_password);
 	END;
 $function$
 ;
