@@ -120,6 +120,8 @@ public class MainFrame extends javax.swing.JFrame {
                         editRoomMenuItem.setEnabled(false);
                         editCustomerMenuItem.setEnabled(false);
                         
+                        addRoomMenuItem.setEnabled(false);
+                        
 			this.tabbedPane.setEnabledAt(2, false);
 			this.tabbedPane.setEnabledAt(3, false);
 		} else if (user.isEmployee()) {
