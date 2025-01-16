@@ -1,37 +1,10 @@
+version: "1.0"
 linter: jetbrains/qodana-jvm:2024.3
 projectJDK: 23
-groups:
-  - groupId: IncludedPaths
-    groups:
-          - "category:Java"
-          - "GLOBAL"
-
 profile:
-  name: "All Java Inspections"
-  baseProfile: qodana.recommended
-  inspections:
-    - group: IncludedPaths
-    - group: "Java"
-      enabled: true
-    - group: "Code style issues"
-      enabled: true
-    - group: "Potential Bugs"
-      enabled: true
-    - group: "Performance"
-      enabled: true
-    - group: "Security"
-      enabled: true
-    - group: "Redundant Code"
-      enabled: true
-    - group: "Code smells"
-      enabled: true
-    - group: "Inheritance Issues"
-      enabled: true
-    - group: "Concurrency"
-      enabled: true
-    - group: "Tests"
-      enabled: true
-exclude:
-  - path: "**/generated/**"
-  - path: "**/build/**"
-
+  name: qodana.recommended
+include:
+  - name: CheckDependencyLicenses
+  - name: JvmTaintAnalysis
+  - name: CyclomaticComplexityInspection
+  - name: ClassInheritanceDepthInspection
