@@ -104,39 +104,39 @@ public class Reservation implements Dao {
 	}
 	
 	public int getCheckInYear() {
-		String checkInYear = checkIn.substring(0, 3);
+		String checkInYear = checkIn.substring(0, 4);
 		
 		return Integer.parseInt(checkInYear);
 	}
 	
 	public int getCheckInMonth() {
-		String checkInMonth = checkIn.substring(5, 6);
+		String checkInMonth = checkIn.substring(5, 7).replaceFirst("^0([1-9])$", "$1");
 		
 		return Integer.parseInt(checkInMonth);
 	}
 	
 	public int getCheckInDay() {
-		String checkInDay = checkIn.substring(8, 9);
+		String checkInDay = checkIn.substring(8, 10).replaceFirst("^0([1-9])$", "$1");
 		
 		return Integer.parseInt(checkInDay);
 	}
 	
 	public int getCheckOutYear() {
-		String checkOutYear = checkOut.substring(0, 3);
+		String checkOutYear = checkOut.substring(0, 4);
 		
 		return Integer.parseInt(checkOutYear);
 	}
 	
 	public int getCheckOutMonth() {
-		String checkOutMonth = checkOut.substring(5, 6).replaceAll("0", "");
+		String checkOutMonth = checkOut.substring(5, 7).replaceFirst("^0([1-9])$", "$1");
 		
 		return Integer.parseInt(checkOutMonth);
 	}
 	
 	public int getCheckOutDay() {
-		String checkoOutDay = checkOut.substring(8, 9).replaceAll("0", "");
+		String checkOutDay = checkOut.substring(8, 10).replaceFirst("^0([1-9])$", "$1");
 		
-		return Integer.parseInt(checkoOutDay);
+		return Integer.parseInt(checkOutDay);
 	}
 
 	@Override

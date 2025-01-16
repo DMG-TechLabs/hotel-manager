@@ -261,43 +261,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	private int isCheckInOutDateValid(int selectedRoomId, int[] checkInDate, int[] checkOutDate, String checkIn, String checkOut) {
-		Reservation reservedRoom;
-		LocalDate currentDate = LocalDate.now();
-		Date localDate = new Date(currentDate.getYear() - 1900, currentDate.getMonthValue() - 1, currentDate.getDayOfMonth());
-
-		if (this.checkInPicker.getDate().compareTo(localDate) < 0) {
-			GUIUtils.logUserError(this, "Can't pick past dates");
-			return -1;
-		}
-
-		if (checkInDate[0] > checkOutDate[0]) {
-			GUIUtils.logUserError(this, "Select a valid date combination");
-			return -1;
-		}
-
-		if (checkInDate[1] > checkOutDate[1]) {
-			GUIUtils.logUserError(this, "Select a valid date combination");
-			return -1;
-		}
-
-		if ((checkInDate[2] > checkOutDate[2]) && (checkInDate[1] >= checkOutDate[1])) {
-			GUIUtils.logUserError(this, "Select a valid date combination");
-			return -1;
-		}
-		
-		if (Reservation.selectByCheckInCheckOut(selectedRoomId, checkIn, checkOut) != null && !Reservation.selectByCheckInCheckOut(selectedRoomId, checkIn, checkOut).isEmpty()) {
-			reservedRoom = Reservation.selectByCheckInCheckOut(selectedRoomId, checkIn, checkOut).get(0);
-
-//			if (/*Check if the picked dates are the same with the exist ones*/) {
-//				GUIUtils.logUserError(this, "Can't pick these dates for that room");
-//				return -1;
-//			}
-		}
-
-		return 1;
-	}
-
 	private boolean isEmailValid() {
 		String email = this.emailFormattedTextField.getText();
 		if (email.isBlank()) {
@@ -320,9 +283,70 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		return integerValue;
 	}
 
-	private int validateDatesAndRoom(int selectedRoomId, int[] checkInDate, int[] checkOutDate, String checkIn, String checkOut) {
-		if (isCheckInOutDateValid(selectedRoomId, checkInDate, checkOutDate, checkIn, checkOut) < 0) {
+	private int validateDatesAndRoom(int[] checkInDate, int[] checkOutDate) {
+		List<Room> reservedRooms;
+		List<Reservation> reservationRooms;
+		LocalDate currentDate = LocalDate.now();
+		Date localDate = new Date(currentDate.getYear() - 1900, currentDate.getMonthValue() - 1, currentDate.getDayOfMonth());
+		LocalDate newCheckIn = LocalDate.of(checkInDate[0], checkInDate[1], checkInDate[2]);
+		LocalDate newCheckOut = LocalDate.of(checkOutDate[0], checkOutDate[1], checkOutDate[2]);
+		LocalDate existingCheckIn;
+		LocalDate existingCheckOut;
+		boolean isNotOverLapping;
+		boolean newIsSameWithExisting;
+		int found = 0;
+
+		if (this.checkInPicker.getDate().compareTo(localDate) < 0) {
+			GUIUtils.logUserError(this, "Can't pick past dates");
 			return -1;
+		}
+
+		if (checkInDate[0] > checkOutDate[0]) {
+			GUIUtils.logUserError(this, "Select a valid date combination");
+			return -1;
+		}
+
+		if (checkInDate[1] > checkOutDate[1]) {
+			GUIUtils.logUserError(this, "Select a valid date combination");
+			return -1;
+		}
+
+		if ((checkInDate[2] > checkOutDate[2]) && (checkInDate[1] >= checkOutDate[1])) {
+			GUIUtils.logUserError(this, "Select a valid date combination");
+			return -1;
+		}
+
+		this.reservations = Reservation.selectByHotel(activeHotelfk);
+		if (this.reservations.isEmpty() || this.reservations == null) {
+			return 1;
+		} else {
+			reservedRooms = Room.selectByReserved(activeHotelfk);
+			for (Room room : reservedRooms) {
+				if (this.roomComboBox.getSelectedItem().toString().equals(room.UIString())) {
+					reservationRooms = Reservation.selectByRoomId(room.getRoomId());
+					for (Reservation reservation : reservationRooms) {
+						existingCheckIn = LocalDate.of(reservation.getCheckInYear(), reservation.getCheckInMonth(), reservation.getCheckInDay());
+						existingCheckOut = LocalDate.of(reservation.getCheckOutYear(), reservation.getCheckOutMonth(), reservation.getCheckOutDay());
+
+						isNotOverLapping = newCheckOut.isBefore(existingCheckIn) || newCheckIn.isAfter(existingCheckOut);
+						newCheckOut.isEqual(newCheckIn);
+						existingCheckIn.isEqual(existingCheckOut);
+						newIsSameWithExisting = newCheckOut.isEqual(existingCheckOut) && newCheckIn.isEqual(existingCheckIn);
+
+						if (!newIsSameWithExisting && isNotOverLapping) {
+							continue;
+						}
+						found++;
+						break;
+					}
+				}
+				if (found > 0) {
+					GUIUtils.logUserError(this, "Can't pick these dates for that room");
+					return -1;
+				} else {
+					return 1;
+				}
+			}
 		}
 
 		return 1;
@@ -391,7 +415,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
 	private void createReservation(Customer customer, Room selectedRoom, String checkIn, String checkOut) {
 		new Reservation(customer.getId(), selectedRoom.getRoomId(), checkIn, checkOut, selectedRoom.getPrice(), Status.PENDING).insert();
-		selectedRoom.update(selectedRoom.getFloor(), selectedRoom.getNumber(), selectedRoom.getType(), selectedRoom.getPrice());
+//		selectedRoom.update(selectedRoom.getFloor(), selectedRoom.getNumber(), selectedRoom.getType(), selectedRoom.getPrice());
 	}
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
@@ -428,7 +452,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		Integer integerValue = validatePhone(phone);
 		BigInteger phoneNum;
 
-		if (validateDatesAndRoom(selectedRoom.getRoomId(), checkInDate, checkOutDate, checkIn, checkOut) < 0) {
+		if (validateDatesAndRoom(checkInDate, checkOutDate) < 0) {
 			return;
 		}
 
