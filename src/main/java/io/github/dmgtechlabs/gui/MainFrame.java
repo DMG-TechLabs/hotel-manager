@@ -977,7 +977,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_editRoomMenuItemActionPerformed
 
 	private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
-		this.userFrame = new UserFrame(this.state.LoggedInUser.getAccountHotelFk());
+		this.userFrame = new UserFrame(this.state.activeHotelId);
 		GUIUtils.showFrame(this.userFrame);
 	}
         
@@ -1226,9 +1226,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 
     private void tabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPaneStateChanged
-		if (tabbedPane.getSelectedIndex() == 2 && this.state.LoggedInUser.getType() == User.UserType.MANAGER.getValue()) {
 
-		}
     }//GEN-LAST:event_tabbedPaneStateChanged
 
     private void getStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getStatisticsActionPerformed
@@ -1237,7 +1235,7 @@ public class MainFrame extends javax.swing.JFrame {
 		String eDate = endDate.getText();
 		try {
 			Statistics statistics = new Statistics();
-			statistics.getStatistics(this.state.LoggedInUser.getAccountHotelFk(), sDate, eDate);
+			statistics.getStatistics(this.state.activeHotelId, sDate, eDate);
 			revenue.setText(statistics.totalRevenue + " $");
 			occupiedRooms.setText(String.valueOf(statistics.occupiedRooms));
 			occupancyRate.setText(String.valueOf(statistics.occupancyRate) + " %");

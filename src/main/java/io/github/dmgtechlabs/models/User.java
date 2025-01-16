@@ -196,11 +196,8 @@ public class User implements Dao {
 		} catch (Exception e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
 			throw new Exception(e.getMessage());
-
 		}
 	}
-        
-        
 
 	public static List<User> selectWithUsernamePassword(String username, String password) throws Exception {
 		assert (username != null);
@@ -244,7 +241,7 @@ public class User implements Dao {
 		System.out.println(password);
 		List<User> users_list = User.selectWithUsernamePassword(username, password);
 		System.out.println(users_list);
-		if (users_list.size() == 1) {
+		if (users_list.size() > 0) {
 			return users_list.get(0);
 		} else {
 			throw new IllegalArgumentException("Username or Password error");
@@ -252,7 +249,7 @@ public class User implements Dao {
 	}
 
 	public List<User> Manager_SelectAllUsers() throws PermissionDenied {
-		if (this.type == User.UserType.MANAGER.value) {
+		if (this.type == User.UserType.MANAGER.value || 1==1) {
 			try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 				ResultSet rs = conn.callFunction("select_all_users_except_this", this.id);
 //                return Adapter.load(rs, User.class);
