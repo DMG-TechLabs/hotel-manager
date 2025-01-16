@@ -33,6 +33,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private AboutFrame aboutFrame;
 	private HotelFrame hotelFrame;
 	private RoomFrame roomFrame;
+        private CustomerFrame customerFrame;
 	private UserFrame userFrame;
 	private ReservationFrame reservationFrame;
 	private CreateReservationFrame createReservationFrame;
@@ -196,7 +197,6 @@ public class MainFrame extends javax.swing.JFrame {
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
         addReservationMenuItem = new javax.swing.JMenuItem();
-        addCustomerMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         editRoomMenuItem = new javax.swing.JMenuItem();
         editUserMenuItem = new javax.swing.JMenuItem();
@@ -204,8 +204,6 @@ public class MainFrame extends javax.swing.JFrame {
         deleteMenu = new javax.swing.JMenu();
         deleteRoomMenuItem = new javax.swing.JMenuItem();
         deleteCustomerMenuItem = new javax.swing.JMenuItem();
-        viewMenu = new javax.swing.JMenu();
-        viewCustomerMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -816,14 +814,6 @@ public class MainFrame extends javax.swing.JFrame {
         });
         addMenu.add(addReservationMenuItem);
 
-        addCustomerMenuItem.setText("Customer");
-        addCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addCustomerMenuItemActionPerformed(evt);
-            }
-        });
-        addMenu.add(addCustomerMenuItem);
-
         jMenuBar1.add(addMenu);
 
         editMenu.setText("Edit");
@@ -875,18 +865,6 @@ public class MainFrame extends javax.swing.JFrame {
         deleteMenu.add(deleteCustomerMenuItem);
 
         jMenuBar1.add(deleteMenu);
-
-        viewMenu.setText("View");
-
-        viewCustomerMenuItem.setText("Customer");
-        viewCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewCustomerMenuItemActionPerformed(evt);
-            }
-        });
-        viewMenu.add(viewCustomerMenuItem);
-
-        jMenuBar1.add(viewMenu);
 
         helpMenu.setText("Help");
 
@@ -943,6 +921,9 @@ public class MainFrame extends javax.swing.JFrame {
 		customersList.setModel(model);
 	}
 
+        /*public Runnable refershCustomersRunnable(){
+            loadCustomers();
+        }*/
 
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
 		if (helpFrame.isShowing()) {
@@ -1042,6 +1023,37 @@ public class MainFrame extends javax.swing.JFrame {
 		Room room = rooms.get(this.resultFilterList.getSelectedIndex());
 		return room;
 	}
+        
+    public Customer getSelectedCustomer() {
+        // Get the selected index from the list
+        int selectedIndex = customersList.getSelectedIndex();
+        // Check if an item is selected
+        if (selectedIndex == -1) {
+            return null;
+        }
+
+        // Retrieve the selected item's text
+        String selectedValue = customersList.getModel().getElementAt(selectedIndex);
+
+        // Parse the customer ID from the selected item text
+        try {
+            String[] parts = selectedValue.split(" ");
+            int customerId = -1;
+            for (int i = 0; i < parts.length; i++) {
+                if (parts[i].equals("ID:")) {
+                    customerId = Integer.parseInt(parts[i + 1]);
+                    break;
+                }
+            }
+            return Customer.selectById(customerId).getFirst();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     private void resetFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersButtonActionPerformed
 		resetFilters();
@@ -1256,17 +1268,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
     private void editCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerMenuItemActionPerformed
-		// TODO add your handling code here:
+        CustomerFrame cF = new CustomerFrame(getSelectedCustomer());
+        cF.setVisible(true);
+        //this.customerFrame = new CustomerFrame(getSelectedCustomer());
+        //GUIUtils.showFrame(this.customerFrame);
     }//GEN-LAST:event_editCustomerMenuItemActionPerformed
-
-    private void addCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerMenuItemActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_addCustomerMenuItemActionPerformed
-
-    private void viewCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCustomerMenuItemActionPerformed
-		ViewCustomersFrame vCF = new ViewCustomersFrame();
-		vCF.setVisible(true);
-    }//GEN-LAST:event_viewCustomerMenuItemActionPerformed
 
     private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
 		// TODO add your handling code here:
@@ -1298,7 +1304,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton acceptButton;
     private javax.swing.JLabel acceptedLabel;
     private javax.swing.JList<String> acceptedList;
-    private javax.swing.JMenuItem addCustomerMenuItem;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addReservationMenuItem;
     private javax.swing.JMenuItem addRoomMenuItem;
@@ -1375,8 +1380,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox twinRoomFilterCheckbox;
     private javax.swing.JButton undoButton;
-    private javax.swing.JMenuItem viewCustomerMenuItem;
-    private javax.swing.JMenu viewMenu;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }
