@@ -144,7 +144,7 @@ CREATE TABLE hoteldb.reservation (
 	"cost" float4 NOT NULL,
 	status int4 NOT NULL,
 	CONSTRAINT reservation_pk PRIMARY KEY (id),
-	CONSTRAINT reservation_customer_fk FOREIGN KEY (reservation_customer_fk) REFERENCES hoteldb.customer(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT reservation_customer_fk FOREIGN KEY (reservation_customer_fk) REFERENCES hoteldb.customer(id) ON DELETE SET NULL ON UPDATE CASCADE,
 	CONSTRAINT reservation_room_fk FOREIGN KEY (reservation_room_fk) REFERENCES hoteldb.room(id)
 );
 
