@@ -249,7 +249,7 @@ public class User implements Dao {
 	}
 
 	public List<User> Manager_SelectAllUsers() throws PermissionDenied {
-		if (this.type == User.UserType.MANAGER.value || 1==1) {
+		if (this.isAdmin() || this.isManager()) {
 			try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 				ResultSet rs = conn.callFunction("select_all_users_except_this", this.id);
 //                return Adapter.load(rs, User.class);

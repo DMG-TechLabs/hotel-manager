@@ -15,69 +15,75 @@ import java.sql.Types;
 import java.util.*;
 
 public class Hotel implements Dao {
-    public enum Amenity implements Comparable<Amenity> {
-        POOL(1),
-        GYM(2),
-        BAR(3),
-        SPA(4),
-        SAUNA(5),
-        WIFI(6),
-        PARKING(7);
 
-        private final int value;
+	public enum Amenity implements Comparable<Amenity> {
+		POOL(1),
+		GYM(2),
+		BAR(3),
+		SPA(4),
+		SAUNA(5),
+		WIFI(6),
+		PARKING(7);
 
-        Amenity(int value) {
-            this.value = value;
-        }
+		private final int value;
 
-        public int getValue() {
-            return value;
-        }
+		Amenity(int value) {
+			this.value = value;
+		}
 
-        public static Amenity fromValue(int value) {
-            for (Amenity amenity : Amenity.values()) {
-                if (amenity.value == value) {
-                    return amenity;
-                }
-            }
-            throw new IllegalArgumentException("Invalid value for Amenity: " + value);
-        }
+		public int getValue() {
+			return value;
+		}
 
-        @Override
-        public String toString() {
-            return this.name() + "(" + value + ")";
-        }
-    }
+		public static Amenity fromValue(int value) {
+			for (Amenity amenity : Amenity.values()) {
+				if (amenity.value == value) {
+					return amenity;
+				}
+			}
+			throw new IllegalArgumentException("Invalid value for Amenity: " + value);
+		}
 
-    private String name;
-    private String address;
-    private BigInteger phone;
+		@Override
+		public String toString() {
+			return this.name() + "(" + value + ")";
+		}
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	private String name;
+	private String address;
+	private BigInteger phone;
 
-    private int id;
-    private List<Amenity> amenities;
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public Hotel(){}
-    public Hotel(int id){ this.id = id; }
+	private int id;
+	private List<Amenity> amenities;
 
-    // For writing
-    public Hotel(String name, String address, BigInteger phoneNumber){
-        this.name = name;
-        this.address = address;
-        this.phone = phoneNumber;
-    }
-    // For loading
-    public Hotel(int id, String name, String address, BigInteger phoneNumber){
-        this.id = id;
-        this.name = name;
-        
-        this.address = address;
+	public Hotel() {
+	}
+
+	public Hotel(int id) {
+		this.id = id;
+	}
+
+	// For writing
+	public Hotel(String name, String address, BigInteger phoneNumber) {
+		this.name = name;
+		this.address = address;
 		this.phone = phoneNumber;
-        this.amenities = selectAmenities();
-    }
+	}
+	// For loading
+
+	public Hotel(int id, String name, String address, BigInteger phoneNumber) {
+		this.id = id;
+		this.name = name;
+
+		this.address = address;
+		this.phone = phoneNumber;
+		this.amenities = selectAmenities();
+	}
 
 	public String getName() {
 		return name;
@@ -95,201 +101,241 @@ public class Hotel implements Dao {
 		return id;
 	}
 
-    public List<Amenity> getAmenities() {
-        return amenities;
-    }
+	public List<Amenity> getAmenities() {
+		return amenities;
+	}
 
-    @Override
-    public boolean insert() {
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callProcedure("insert_hotel", name, address, phone);
-        } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Hotel failed", e);
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean insert() {
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("insert_hotel", name, address, phone);
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Hotel failed", e);
+			return false;
+		}
+		return true;
+	}
 
-    public BigInteger insertWithReturn() {
-        BigInteger id;
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            id = (BigInteger) conn.callFunctionValue("fun_insert_hotel", Types.BIGINT, name, address, phone);
-        } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Hotel failed", e);
-            return BigInteger.valueOf(-1);
-        }
-        return id;
-    }
+	public BigInteger insertWithReturn() {
+		BigInteger id;
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			id = BigInteger.valueOf((long) conn.callFunctionValue("fun_insert_hotel", Types.BIGINT, name, address, phone));
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Insert Hotel failed", e);
+			return BigInteger.valueOf(-1);
+		}
+		return id;
+	}
 
 	/**
-	 * Accepts exactly 3 values
-	 * name (string), address (string), phone (BigInteger)
-	 * 
+	 * Accepts exactly 3 values name (string), address (string), phone
+	 * (BigInteger)
+	 *
 	 * update_hotel procedure should include the id (int) as the first parameter
-	 * 
+	 *
 	 * @param values
-	 * @return success or not 
+	 * @return success or not
 	 */
-    @Override
-    public boolean update(Object... values) {
-        final int expectedParams = 3;
-		if(values.length != expectedParams)
-            throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
+	@Override
+	public boolean update(Object... values) {
+		final int expectedParams = 3;
+		if (values.length != expectedParams) {
+			throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
+		}
 
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.callProcedure("update_hotel", Utils.appendFront(id, values));
-        } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
-            return false;
-        }
-        return true;
-    }
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("update_hotel", Utils.appendFront(id, values));
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update hotel failed", e);
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public boolean delete() {
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()){
-            conn.callProcedure("delete_hotel", id);
-        } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Hotel failed", e);
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean delete() {
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.callProcedure("delete_hotel", id);
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Delete Hotel failed", e);
+			return false;
+		}
+		return true;
+	}
 
-    private static List<Hotel> select(String function, Object... values){
-        assert(function != null);
-        assert(!function.isBlank());
+	private static List<Hotel> select(String function, Object... values) {
+		assert (function != null);
+		assert (!function.isBlank());
 
-        List<Hotel> result = new ArrayList<>();
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            ResultSet rs = conn.callFunction(function, values);
-            while (rs.next()){
-                Hotel h = new Hotel(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("address"),
-                        BigInteger.valueOf(rs.getBigDecimal("phone").longValue())
-                );
-                result.add(h);
-            }
-            rs.close();
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select " + function + " failed", e);
-            return null;
-        }
-        return result;
-    }
+		List<Hotel> result = new ArrayList<>();
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			ResultSet rs = conn.callFunction(function, values);
+			while (rs.next()) {
+				Hotel h = new Hotel(
+					rs.getInt("id"),
+					rs.getString("name"),
+					rs.getString("address"),
+					BigInteger.valueOf(rs.getBigDecimal("phone").longValue())
+				);
+				result.add(h);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			System.err.println(e.getMessage());
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select " + function + " failed", e);
+			return null;
+		}
+		return result;
+	}
 
-    public static List<Hotel> selectAll(){
-        return select("select_all_hotels");
-    }
-    public static List<Hotel> selectById(int id){
-        return select("select_hotels_by_id", id);
-    }
+	public static List<Hotel> selectAll() {
+		return select("select_all_hotels");
+	}
 
-    public static List<Hotel> selectByName(String name) {
-        return select("select_hotels_by_name", name);
-    }
+	public static List<Hotel> selectById(int id) {
+		return select("select_hotels_by_id", id);
+	}
 
-    public List<Amenity> selectAmenities() {
-        List<Amenity> result = new ArrayList<>();
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            ResultSet rs = conn.callFunction("select_amenities_by_hotel", id);
-            while(rs.next()){
-                result.add(Amenity.fromValue(rs.getInt("amenity")));
-            }
-            rs.close();
-        } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select amenities failed", e);
-            return null;
-        }
-        this.amenities = result;
-        return result;
-    }
+	public static List<Hotel> selectByName(String name) {
+		return select("select_hotels_by_name", name);
+	}
 
-    public boolean insertAmenities(Amenity... amenities) {
-        if(amenities.length == 0) return false;
-        for(Amenity a : amenities) {
-            if(a == null) continue;
-            try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-                String query = new QueryBuilder().insertInto("amenities").columns("amenity", "hotel_id").values(a.value, this.id).build();
-                conn.executeUpdate(query);
-            } catch (Exception e) {
-                SQLogger.getLogger().log(SQLogger.LogLevel.INFO, "Insert Amenities failed", e);
-                return false;
-            }
-        }
-        return true;
-    }
+	public List<Amenity> selectAmenities() {
+		List<Amenity> result = new ArrayList<>();
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			ResultSet rs = conn.callFunction("select_amenities_by_hotel", id);
+			while (rs.next()) {
+				result.add(Amenity.fromValue(rs.getInt("amenity")));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select amenities failed", e);
+			return null;
+		}
+		this.amenities = result;
+		return result;
+	}
 
-    public boolean deleteAmenity(Amenity amenity) {
-        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-            conn.executeUpdate(new QueryBuilder().deleteFrom("amenities").where("hotel_id = " + id + " AND amenity = " + amenity.value).build());
-        } catch (SQLException e) {
-            return false;
-        }
-        return true;
-    }
+	public boolean insertAmenities(Amenity... amenities) {
+		if (amenities.length == 0) {
+			return false;
+		}
+		for (Amenity a : amenities) {
+			if (a == null) {
+				continue;
+			}
+			try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+				String query = new QueryBuilder().insertInto("amenities").columns("amenity", "hotel_id").values(a.value, this.id).build();
+				conn.executeUpdate(query);
+			} catch (Exception e) {
+				SQLogger.getLogger().log(SQLogger.LogLevel.INFO, "Insert Amenities failed", e);
+				return false;
+			}
+		}
+		return true;
+	}
 
-    public boolean updateAmenities(Amenity... amenities) {
-        List<Amenity> current = selectAmenities();
-        if(current == null || current.isEmpty()) {
-            insertAmenities(amenities);
-            return true;
-        }
+	public boolean deleteAmenity(Amenity amenity) {
+		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+			conn.executeUpdate(new QueryBuilder().deleteFrom("amenities").where("hotel_id = " + id + " AND amenity = " + amenity.value).build());
+		} catch (SQLException e) {
+			return false;
+		}
+		return true;
+	}
 
-        Set<Amenity> newAmenities = new HashSet<>(Arrays.asList(amenities));
-        Set<Amenity> currentAmenities = new HashSet<>(current);
+	public boolean updateAmenities(Amenity... amenities) {
+		List<Amenity> current = selectAmenities();
+		if (current == null || current.isEmpty()) {
+			insertAmenities(amenities);
+			return true;
+		}
 
-        PostgresConnection conn;
-        try {
-             conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection();
-        } catch (SQLException e) {
-            return false;
-        }
+		Set<Amenity> newAmenities = new HashSet<>(Arrays.asList(amenities));
+		Set<Amenity> currentAmenities = new HashSet<>(current);
 
-        for (Amenity amenity : current) {
-            if(amenity == null) continue;
-            if (!newAmenities.contains(amenity)) {
-                System.out.println("Deleting " + amenity);
-                if(!deleteAmenity(amenity)) {
-                    System.err.println("Could not delete amenity: " + amenity);
-                }
-            }
-        }
+		PostgresConnection conn;
+		try {
+			conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection();
+		} catch (SQLException e) {
+			return false;
+		}
 
-        for (Amenity amenity : amenities) {
-            if(amenity == null) continue;
-            if (!currentAmenities.contains(amenity)) {
-                System.out.println("Adding " + amenity);
-                if(!insertAmenities(amenity)) {
-                    System.err.println("Could not insert amenity " + amenity);
-                }
-            }
-        }
+		for (Amenity amenity : current) {
+			if (amenity == null) {
+				continue;
+			}
+			if (!newAmenities.contains(amenity)) {
+				System.out.println("Deleting " + amenity);
+				if (!deleteAmenity(amenity)) {
+					System.err.println("Could not delete amenity: " + amenity);
+				}
+			}
+		}
 
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Could not close connection after updating amenities", e);
-        }
+		for (Amenity amenity : amenities) {
+			if (amenity == null) {
+				continue;
+			}
+			if (!currentAmenities.contains(amenity)) {
+				System.out.println("Adding " + amenity);
+				if (!insertAmenities(amenity)) {
+					System.err.println("Could not insert amenity " + amenity);
+				}
+			}
+		}
 
-        return true;
-    }
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Could not close connection after updating amenities", e);
+		}
 
-    @Override
-    public String toString() {
-        return "Hotel{" +
-                "name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", phone=" + phone +
-                ", id=" + id +
-                ", amenities=" + amenities +
-                '}';
-    }
-	
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Hotel{"
+			+ "name='" + name + '\''
+			+ ", address='" + address + '\''
+			+ ", phone=" + phone
+			+ ", id=" + id
+			+ ", amenities=" + amenities
+			+ '}';
+	}
+
 	public String UIString() {
 		return name + " (" + address + ")";
+	}
+
+	public static String[] listToArray(List<Hotel> list) {
+		String[] result = new String[list.size()];
+
+		for (int i = 0; i < list.size(); i++) {
+			result[i] = list.get(i).UIString();
+		}
+
+		return result;
+	}
+
+	public String toHtml() {
+		StringBuilder htmlBuilder = new StringBuilder();
+		htmlBuilder.append("<div class=\"hotel\">")
+			.append("<h1>").append(name).append("</h1>")
+			.append("<p><strong>Address:</strong> ").append(address).append("</p>")
+			.append("<p><strong>Phone:</strong> ").append(phone).append("</p>");
+
+		if (amenities != null && !amenities.isEmpty()) {
+			htmlBuilder.append("<p><strong>Amenities:</strong></p>")
+				.append("<ul>");
+			for (Amenity amenity : amenities) {
+				htmlBuilder.append("<li>").append(amenity).append("</li>");
+			}
+			htmlBuilder.append("</ul>");
+		}
+
+		htmlBuilder.append("</div>");
+		return htmlBuilder.toString();
 	}
 }

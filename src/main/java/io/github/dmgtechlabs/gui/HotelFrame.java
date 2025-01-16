@@ -33,6 +33,7 @@ public class HotelFrame extends javax.swing.JFrame {
 	
 	public HotelFrame(Hotel hotel){
 		this();
+		this.hotel = hotel;
 		this.actionButton.setText("Apply");
 		this.setTitle("Edit " + hotel.getName());
 			
@@ -95,11 +96,6 @@ public class HotelFrame extends javax.swing.JFrame {
         jLabel1.setText("Amenities");
 
         spaCheckbox.setText("Spa");
-        spaCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                spaCheckboxActionPerformed(evt);
-            }
-        });
 
         gymCheckbox.setText("Gym");
 
@@ -242,8 +238,6 @@ public class HotelFrame extends javax.swing.JFrame {
 	}
 	
 	private void editHotel(){
-		if(hotel == null) return;
-		
 		String name = this.nameTextField.getText();
 		String address = this.addressTextField.getText();
 		BigInteger phone = new BigInteger(this.phoneNumberFormattedTextField.getText());
@@ -255,22 +249,18 @@ public class HotelFrame extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(null, "Hotel " + name + " updated successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
 			this.dispose();
 		} else {
-			GUIUtils.logUserError(this, "Could not add Hotel");
+			GUIUtils.logUserError(this, "Could not update Hotel");
 		}
 	}
 	
     private void actionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionButtonActionPerformed
-		if(hotel != null) addHotel();
+		if(hotel == null) addHotel();
 		else editHotel();
     }//GEN-LAST:event_actionButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
 		this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void spaCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spaCheckboxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_spaCheckboxActionPerformed
 
 	/**
 	 * @param args the command line arguments
