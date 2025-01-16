@@ -192,4 +192,20 @@ public class Customer implements Dao {
                 ", email='" + email + '\'' +
                 '}';
     }
+
+    /*
+	public String UIString() {
+		return "Customer ID: " + id + "First Name: " + fName + "Last Name: " + lName + "Phone: " + phone + "Email: " + email;
+	}
+        
+	public static String[] listToArray(List<Customer> list) {
+		String[] result = new String[list.size()];
+
+		for (int i = 0; i < list.size(); i++) {
+			result[i] = list.get(i).UIString();
+		}
+
+		return result;
+	}
+*/
 }
