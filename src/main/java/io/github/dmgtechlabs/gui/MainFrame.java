@@ -1176,9 +1176,11 @@ public class MainFrame extends javax.swing.JFrame {
 //                    false);  // no URLs
                 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                
+                System.out.println(statistics.reservationDistribution.size());
                 for (Map.Entry<String, Integer> entry :
                     statistics.reservationDistribution.entrySet()) {
+                    System.out.println(entry.getValue());
+                    System.out.println(entry.getKey());
                     dataset.addValue(entry.getValue(), "Reservations", entry.getKey());
                }
 

@@ -32,7 +32,7 @@ public class Statistics {
 				ResultSet rs = conn.callFunction("get_reservation_distribution", accountHotelFk);
 //				SQLogger.getLogger().logResultSet(rs);
                                 while (rs.next()){
-                                    reservationDistribution.put(rs.getString(0), rs.getInt(1));
+                                    this.reservationDistribution.put(rs.getString("month_year"), rs.getInt("reservation_count"));
                                 }
 				rs.close();
 			} catch (SQLException ex) {
@@ -60,6 +60,7 @@ public class Statistics {
 				SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_occupancy_rate failed", ex);
 			} catch (Exception e) {System.out.println(e.getMessage());}
                         
+                        System.out.println(this.reservationDistribution);
                         System.out.println(this.totalRooms);
                         System.out.println(this.occupiedRooms);
                         System.out.println(this.occupancyRate);
