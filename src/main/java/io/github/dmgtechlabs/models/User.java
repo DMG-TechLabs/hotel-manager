@@ -178,11 +178,9 @@ public class User implements Dao {
 	public static List<User> selectWithUsernamePassword(String username, String password, int hotelId) throws Exception {
 		assert (username != null);
 		assert (!username.isBlank());
-		assert (!"".equals(username));
 
 		assert (password != null);
 		assert (!password.isBlank());
-		assert (!"".equals(password));
 
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 			ResultSet rs = conn.callFunction("select_user_with_username_password", username, password, hotelId);
@@ -207,7 +205,6 @@ public class User implements Dao {
 	public static User selectUserByName(String username) {
 		assert (username != null);
 		assert (!username.isBlank());
-		assert (!"".equals(username));
 
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 			ResultSet rs = conn.callFunction("select_user_with_username", username);

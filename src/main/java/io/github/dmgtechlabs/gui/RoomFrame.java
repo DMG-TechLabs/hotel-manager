@@ -175,6 +175,7 @@ public class RoomFrame extends javax.swing.JFrame {
 		int number = (int) this.numberSpinner.getValue();
 		float price = Float.parseFloat(this.priceFormattedTextField.getText());
 		String type = (String) this.typeComboBox.getSelectedItem();
+		if(type == null) return;
 		type = type.toUpperCase();
 		
 		if(!validate(price)) return;
@@ -193,6 +194,7 @@ public class RoomFrame extends javax.swing.JFrame {
 		int number = (int) this.numberSpinner.getValue();
 		float price = Float.parseFloat(this.priceFormattedTextField.getText());
 		String type = (String) this.typeComboBox.getSelectedItem();
+		if(type == null) return;
 		type = type.toUpperCase();
 		
 		if(!validate(price)) return;

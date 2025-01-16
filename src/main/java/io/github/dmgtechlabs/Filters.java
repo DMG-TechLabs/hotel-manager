@@ -75,7 +75,7 @@ public class Filters {
 		return result;
 	}
 
-	private static class Range {
+	public static class Range {
 
 		public float min;
 		public float max;
