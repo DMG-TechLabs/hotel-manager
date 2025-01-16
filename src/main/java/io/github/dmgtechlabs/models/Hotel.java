@@ -165,7 +165,7 @@ public class Hotel implements Dao {
             ResultSet rs = conn.callFunction(function, values);
             while (rs.next()){
                 Hotel h = new Hotel(
-                        rs.getInt("hotelid"),
+                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("address"),
                         BigInteger.valueOf(rs.getBigDecimal("phone").longValue())
@@ -242,7 +242,7 @@ public class Hotel implements Dao {
         Set<Amenity> newAmenities = new HashSet<>(Arrays.asList(amenities));
         Set<Amenity> currentAmenities = new HashSet<>(current);
 
-        PostgresConnection conn = null;
+        PostgresConnection conn;
         try {
              conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection();
         } catch (SQLException e) {
@@ -288,4 +288,8 @@ public class Hotel implements Dao {
                 ", amenities=" + amenities +
                 '}';
     }
+	
+	public String UIString() {
+		return name + " (" + address + ")";
+	}
 }

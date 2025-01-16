@@ -226,7 +226,7 @@ public class HotelFrame extends javax.swing.JFrame {
 	private void addHotel(){
 		String name = this.nameTextField.getText();
 		String address = this.addressTextField.getText();
-		BigInteger phone = BigInteger.valueOf(Integer.parseInt(this.phoneNumberFormattedTextField.getText()));
+		BigInteger phone = new BigInteger(this.phoneNumberFormattedTextField.getText());
 		
 		if(!validate(name, address, phone)) return;
 		
@@ -246,7 +246,7 @@ public class HotelFrame extends javax.swing.JFrame {
 		
 		String name = this.nameTextField.getText();
 		String address = this.addressTextField.getText();
-		BigInteger phone = BigInteger.valueOf(Integer.parseInt(this.phoneNumberFormattedTextField.getText()));
+		BigInteger phone = new BigInteger(this.phoneNumberFormattedTextField.getText());
 		
 		if(!validate(name, address, phone)) return;
 		

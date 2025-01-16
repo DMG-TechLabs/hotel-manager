@@ -183,7 +183,7 @@ public class UserFrame extends javax.swing.JFrame {
     private void jButton3ActionPerformedUpdate(java.awt.event.ActionEvent evt) {  
         System.out.println("Update account");
         try{
-            if(this.users == null || usernameField.getText() == "" || passwordField.getText() == "") throw new IllegalArgumentException("Empty username or password");
+            if(this.users == null || usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) throw new IllegalArgumentException("Empty username or password");
 //            User newUser = new User(0, usernameField.getText(), passwordField.getPassword().toString(), this.user.getType(), this.hotelid);
             this.users.get(this.selectedUser).update(usernameField.getText(), passwordField.getText(), this.users.get(this.selectedUser).getType());
         } catch (Exception e){
@@ -198,7 +198,7 @@ public class UserFrame extends javax.swing.JFrame {
 
     private void accountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accountButtonActionPerformed
         try{
-            if(usernameField.getText() == "" || passwordField.getText() == "") throw new IllegalArgumentException("Empty username or password");
+            if(usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) throw new IllegalArgumentException("Empty username or password");
             User newUser = new User(0, usernameField.getText(), passwordField.getText(), userType.getSelectedIndex()+2, this.hotelid);
             newUser.insert();
         } catch (Exception e){

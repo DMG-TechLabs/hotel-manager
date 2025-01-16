@@ -46,9 +46,10 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="actionButton" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="nameTextField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="addressTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="fNameTextField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lNameTextField" alignment="0" max="32767" attributes="0"/>
                       <Component id="phoneNumberFormattedTextField" alignment="0" pref="297" max="32767" attributes="0"/>
+                      <Component id="emailFormattedTextField" alignment="0" pref="297" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="33" max="32767" attributes="0"/>
               </Group>
@@ -58,12 +59,14 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                  <Component id="nameTextField" min="-2" max="-2" attributes="0"/>
+                  <Component id="fNameTextField" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="addressTextField" min="-2" max="-2" attributes="0"/>
+                  <Component id="lNameTextField" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="phoneNumberFormattedTextField" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="155" max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="emailFormattedTextField" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="115" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="actionButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -90,11 +93,18 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="nameTextField">
+        <Component class="javax.swing.JTextField" name="fNameTextField">
         </Component>
-        <Component class="javax.swing.JTextField" name="addressTextField">
+        <Component class="javax.swing.JTextField" name="lNameTextField">
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="phoneNumberFormattedTextField">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="#0" subtype="-1" type="0"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="emailFormattedTextField">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
               <Format format="#0" subtype="-1" type="0"/>

@@ -26,7 +26,7 @@ public class Utils {
 		return params;
 	}
 
-	public class HTML {
+	public static class HTML {
 
 		public static String header(int i, String str) {
 			if (i > 6) {
@@ -127,6 +127,10 @@ public class Utils {
 
 		public static String preformatted(String text) {
 			return "<pre>" + text + "</pre>";
+		}
+		
+		public static String br() {
+			return "<br>";
 		}
 	}
 

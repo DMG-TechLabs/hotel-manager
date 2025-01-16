@@ -1,0 +1,99 @@
+@startuml models
+
+package db {
+    interface Dao {
+        + insert() : boolean
+        + update(values: Object...) : boolean
+        + delete() : boolean
+    }
+}
+
+package models {
+    class Hotel {
+        - name : String
+        - address : String
+        - phone : BigInteger
+        - id : int
+        - amenities : List<Amenity>
+    }
+    class Room {
+        - id : int
+        - floor : int
+        - number : int
+        - roomId : int
+        - number : int
+        - floor : int
+        - type : Type
+        - hotelId : int
+        - price : float
+        - occupied : boolean
+    }
+    class Reservation {
+        - id : int
+        - reservationRoomFk : int
+        - reservationCustomerFk : int
+        - checkIn : String
+        - checkOut : String
+        - cost : float
+        - status : Status
+    }
+    class User {
+        - id : int
+        - username : String
+        - password : String
+        - type : int
+        - accountHotelFk : int
+    }
+    class Customer {
+        - id : int
+        - fName : String
+        - lName : String
+        - phone : BigInteger
+        - email : String
+    }
+
+    enum Amenity {
+        POOL
+        GYM
+        BAR
+        SPA
+        SAUNA
+        WIFI
+        PARKING
+    }
+    enum Status {
+        PENDING
+        ACCEPTED
+    }
+    enum Type {
+        SINGLE
+        DOUBLE
+        TWIN
+        SUITE
+        DELUXE
+        FAMILY
+        STUDIO
+        KING
+        QUEEN
+    }
+    enum UserType {
+        ADMIN
+        GUEST
+        EMPLOYEE
+        MANAGER
+    }
+}
+
+Hotel --> Amenity : uses
+Reservation -> Status : uses
+Room -> Type : uses
+User -> UserType : uses
+
+Hotel --> Dao : implements
+Room --> Dao : implements
+Reservation --> Dao : implements
+User --> Dao : implements
+Customer --> Dao : implements
+
+
+@enduml

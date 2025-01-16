@@ -4,40 +4,38 @@
  */
 package io.github.dmgtechlabs.gui;
 
-import io.github.dmgtechlabs.models.Hotel;
+import io.github.dmgtechlabs.models.Customer;
 import javax.swing.JOptionPane;
 import java.math.BigInteger;
 
-/**
- *
- * @author kdesp73
- */
 public class CustomerFrame extends javax.swing.JFrame {
-	private Hotel hotel = null;
+	private Customer customer = null;
 	
 	/**
-	 * Creates new form HotelFrame
+	 * Creates new form CustomerFrame
 	 */
 	public CustomerFrame() {
 		initComponents();
 		GUIUtils.commonSetup(null, this);
 	
-		GUIUtils.setPlaceholder(this.nameTextField, "Name");
-		GUIUtils.setPlaceholder(this.addressTextField, "Address");
+		GUIUtils.setPlaceholder(this.fNameTextField, "First Name");
+		GUIUtils.setPlaceholder(this.lNameTextField, "Last Name");
 		GUIUtils.setPlaceholder(this.phoneNumberFormattedTextField, "Phone");
+                GUIUtils.setPlaceholder(this.emailFormattedTextField, "Email");
 		
 		this.actionButton.setText("Add");
-		this.setTitle("Add a Hotel");
+		this.setTitle("Add a Customer");
 	}
 	
-	public CustomerFrame(Hotel hotel){
+	public CustomerFrame(Customer customer){
 		this();
 		this.actionButton.setText("Apply");
-		this.setTitle("Edit " + hotel.getName());
+		this.setTitle("Edit " +customer.getFirstName() + customer.getLastName());
 			
-		this.nameTextField.setText(hotel.getName());
-		this.addressTextField.setText(hotel.getAddress());
-		this.phoneNumberFormattedTextField.setText(String.valueOf(hotel.getPhone()));
+		this.fNameTextField.setText(customer.getFirstName());
+		this.lNameTextField.setText(customer.getLastName());
+		this.phoneNumberFormattedTextField.setText(String.valueOf(customer.getPhone()));
+                this.emailFormattedTextField.setText(customer.getEmail());
 	}
 
 	/**
@@ -52,9 +50,10 @@ public class CustomerFrame extends javax.swing.JFrame {
         bg = new javax.swing.JPanel();
         actionButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        nameTextField = new javax.swing.JTextField();
-        addressTextField = new javax.swing.JTextField();
+        fNameTextField = new javax.swing.JTextField();
+        lNameTextField = new javax.swing.JTextField();
         phoneNumberFormattedTextField = new javax.swing.JFormattedTextField();
+        emailFormattedTextField = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,6 +73,8 @@ public class CustomerFrame extends javax.swing.JFrame {
 
         phoneNumberFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
+        emailFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
         javax.swing.GroupLayout bgLayout = new javax.swing.GroupLayout(bg);
         bg.setLayout(bgLayout);
         bgLayout.setHorizontalGroup(
@@ -85,21 +86,24 @@ public class CustomerFrame extends javax.swing.JFrame {
                         .addComponent(cancelButton)
                         .addGap(18, 18, 18)
                         .addComponent(actionButton))
-                    .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addressTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(phoneNumberFormattedTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
+                    .addComponent(fNameTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lNameTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(phoneNumberFormattedTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                    .addComponent(emailFormattedTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
         bgLayout.setVerticalGroup(
             bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bgLayout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(addressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(phoneNumberFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 155, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(emailFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, Short.MAX_VALUE)
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(actionButton)
                     .addComponent(cancelButton))
@@ -121,58 +125,65 @@ public class CustomerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 	
-	private boolean validate(String name, String address, BigInteger phone){
-		if(name.isBlank() || name.equals("Name")) {
-			GUIUtils.logUserError(this, "Name is empty");
+	private boolean validate(String fName, String lName, BigInteger phone, String email){
+		if(fName.isBlank() || fName.equals("First Name")) {
+			GUIUtils.logUserError(this, "First Name is empty");
 			return false;
 		}
-		
-		if(address.isBlank() || address.equals("Address")) {
-			GUIUtils.logUserError(this, "Address is empty");
+                
+		if(lName.isBlank() || lName.equals("Last Name")) {
+			GUIUtils.logUserError(this, "Last Name is empty");
 			return false;
-		}
+                }
 		
 		if(phone.longValue() < 1000000000L || phone.longValue() > 9999999999L){
 			GUIUtils.logUserError(this, "Invalid phone number");
 			return false;
 		}
+                
+		if(email.isBlank() || email.equals("Email")) {
+			GUIUtils.logUserError(this, "Email is empty");
+			return false;
+                }
 		return true;
 	}
-	
-	private void addHotel(){
-		String name = this.nameTextField.getText();
-		String address = this.addressTextField.getText();
+        
+	private void addCustomer(){
+
+                String fName = this.fNameTextField.getText();
+		String lName = this.lNameTextField.getText();
 		BigInteger phone = BigInteger.valueOf(Integer.parseInt(this.phoneNumberFormattedTextField.getText()));
+                String email = this.emailFormattedTextField.getText();
 		
-		if(!validate(name, address, phone)) return;
+		if(!validate(fName, lName, phone, email)) return;
 		
-		//if(new Hotel(name, address, phone).insert()){
-			//JOptionPane.showMessageDialog(this, "Hotel " + name + " added successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
-		//} else {
-			//GUIUtils.logUserError(this, "Could not add Hotel");
-		//}
-	}
-	
-	private void editHotel(){
-		if(hotel == null) return;
-		
-		String name = this.nameTextField.getText();
-		String address = this.addressTextField.getText();
-		BigInteger phone = BigInteger.valueOf(Integer.parseInt(this.phoneNumberFormattedTextField.getText()));
-		
-		if(!validate(name, address, phone)) return;
-		
-		if(hotel.update(name, address, phone)){
-			JOptionPane.showMessageDialog(null, "Hotel " + name + " updated successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
-			this.dispose();
+		if(new Customer(fName, lName, phone, email).insert()){
+			JOptionPane.showMessageDialog(this, "Customer " + fName + lName + " added successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			GUIUtils.logUserError(this, "Could not add Hotel");
+			GUIUtils.logUserError(this, "Could not add Customer");
 		}
 	}
 	
+	private void editCustomer(){
+		if(customer == null) return;
+
+		String fName = this.fNameTextField.getText();
+		String lName = this.lNameTextField.getText();
+		BigInteger phone = BigInteger.valueOf(Integer.parseInt(this.phoneNumberFormattedTextField.getText()));
+                String email = this.emailFormattedTextField.getText();
+		
+		if(!validate(fName, lName, phone, email)) return;
+		
+		if(customer.update(fName, lName, phone, email)){
+			JOptionPane.showMessageDialog(null, "Customer " + fName + lName + " updated successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
+			this.dispose();
+		} else {
+			GUIUtils.logUserError(this, "Could not update Customer");
+		}
+	}
     private void actionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionButtonActionPerformed
-		if(hotel != null) addHotel();
-		else editHotel();
+		if(customer != null) addCustomer();
+		else editCustomer();
     }//GEN-LAST:event_actionButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -217,10 +228,11 @@ public class CustomerFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actionButton;
-    private javax.swing.JTextField addressTextField;
     private javax.swing.JPanel bg;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JTextField nameTextField;
+    private javax.swing.JFormattedTextField emailFormattedTextField;
+    private javax.swing.JTextField fNameTextField;
+    private javax.swing.JTextField lNameTextField;
     private javax.swing.JFormattedTextField phoneNumberFormattedTextField;
     // End of variables declaration//GEN-END:variables
 }

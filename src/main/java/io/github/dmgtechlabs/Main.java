@@ -1,19 +1,18 @@
 package io.github.dmgtechlabs;
 
 import io.github.dmgtechlabs.gui.LoginFrame;
-import io.github.dmgtechlabs.gui.MainFrame;
-import io.github.dmgtechlabs.models.Hotel;
-import io.github.dmgtechlabs.models.Room;
+import io.github.dmgtechlabs.gui.StartingFrame;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
-import io.github.kdesp73.databridge.helpers.QueryBuilder;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import java.math.BigInteger;
-import java.sql.SQLException;
-
-import io.github.dmgtechlabs.models.Customer;
+import io.github.kdesp73.databridge.helpers.SQLogger;
 
 /**
  *
@@ -29,7 +28,7 @@ public class Main {
 			System.err.println("Failed to initialize LaF");
 		}
 		java.awt.EventQueue.invokeLater(() -> {
-			new LoginFrame(1).setVisible(true);
+			new StartingFrame().setVisible(true);
 		});
 	}
 
