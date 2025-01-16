@@ -385,6 +385,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		int checkOutDay = this.checkOutPicker.getDate().getDate();
 		String checkIn = formatCheckInDate(checkInYear, checkInMonth, checkInDay);
 		String checkOut = formatCheckOutDate(checkOutYear, checkOutMonth, checkOutDay);
+		BigInteger phone = null;
 
 		int[] checkInDate = {
 			checkInYear,
@@ -410,7 +411,12 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		String phoneString = this.phoneTextField.getText();
 		System.out.println(phoneString);
 		if(phoneString.isBlank()) return;
-		BigInteger phone = new BigInteger(phoneString);
+		try {
+			phone = new BigInteger(phoneString);
+		} catch (NumberFormatException n) {
+			JOptionPane.showMessageDialog(this, "Provide a valid phone number", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 
 		if (Customer.exists(email)) {
 			customer = Customer.selectByEmail(email).get(0);
