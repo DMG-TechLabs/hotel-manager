@@ -1314,13 +1314,13 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 
 		Customer customer = getSelectedCustomer();
-                System.out.println(customer);
 		if (customer == null) {
 			JOptionPane.showMessageDialog(this, "Please select a customer first", "Failure", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
 		if (customer.delete()) {
+                        loadCustomers();
 			JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(this, "Could not delete Customer", "Failure", JOptionPane.ERROR_MESSAGE);
