@@ -166,8 +166,8 @@ public class CustomerFrame extends javax.swing.JFrame {
 	
 	private void editCustomer(){
 		if(customer == null) return;
-		
-                String fName = this.fNameTextField.getText();
+
+		String fName = this.fNameTextField.getText();
 		String lName = this.lNameTextField.getText();
 		BigInteger phone = BigInteger.valueOf(Integer.parseInt(this.phoneNumberFormattedTextField.getText()));
                 String email = this.emailFormattedTextField.getText();

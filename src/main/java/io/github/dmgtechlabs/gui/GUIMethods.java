@@ -39,7 +39,7 @@ public class GUIMethods {
 
 	public static BufferedImage imageFromURL(String imageUrl) {
 		try {
-			URL url = null;
+			URL url;
 			try {
 				url = new URL(imageUrl);
 			} catch (java.net.MalformedURLException e) {
@@ -50,7 +50,7 @@ public class GUIMethods {
 				return null;
 			}
 
-			BufferedImage image = null;
+			BufferedImage image;
 			try {
 				image = ImageIO.read(url);
 
@@ -156,6 +156,7 @@ public class GUIMethods {
 		try {
 			return openWebpage(url.toURI());
 		} catch (URISyntaxException e) {
+			System.err.println(e.getMessage());
 		}
 		return false;
 	}

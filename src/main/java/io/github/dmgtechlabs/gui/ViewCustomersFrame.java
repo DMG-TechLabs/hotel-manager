@@ -32,7 +32,7 @@ public class ViewCustomersFrame extends javax.swing.JFrame {
     DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
     List<Customer> customerList = Customer.selectAll();
-    Customer customerRow = null;
+    Customer customerRow;
 
     for(int i = 0; i < customerList.size(); i++){
         customerRow = customerList.get(i);

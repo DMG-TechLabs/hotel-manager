@@ -1121,7 +1121,7 @@ public class MainFrame extends javax.swing.JFrame {
 			&& (newPassword == null
 				? this.confirmNewPasswordField.getText() == null
 				: newPassword.equals(this.confirmNewPasswordField.getText()))
-			&& !newPassword.isBlank()) {
+			&& newPassword != null && !newPassword.isBlank()) {
 			this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
 		}
 
