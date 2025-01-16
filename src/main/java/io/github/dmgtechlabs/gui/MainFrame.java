@@ -184,6 +184,7 @@ public class MainFrame extends javax.swing.JFrame {
         customerPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         customersList = new javax.swing.JList<>();
+        customerRefreshButton = new javax.swing.JButton();
         statisticsPanel = new javax.swing.JPanel();
         getStatistics = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -528,19 +529,33 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(customersList);
 
+        customerRefreshButton.setText("Refresh");
+        customerRefreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerRefreshButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout customerPanelLayout = new javax.swing.GroupLayout(customerPanel);
         customerPanel.setLayout(customerPanelLayout);
         customerPanelLayout.setHorizontalGroup(
             customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(customerPanelLayout.createSequentialGroup()
-                .addGap(75, 75, 75)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 889, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(customerPanelLayout.createSequentialGroup()
+                        .addGap(75, 75, 75)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 889, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(customerPanelLayout.createSequentialGroup()
+                        .addGap(442, 442, 442)
+                        .addComponent(customerRefreshButton)))
                 .addContainerGap(57, Short.MAX_VALUE))
         );
         customerPanelLayout.setVerticalGroup(
             customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(customerPanelLayout.createSequentialGroup()
-                .addGap(89, 89, 89)
+                .addGap(33, 33, 33)
+                .addComponent(customerRefreshButton)
+                .addGap(33, 33, 33)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(66, Short.MAX_VALUE))
         );
@@ -687,7 +702,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(478, Short.MAX_VALUE))
+                .addContainerGap(495, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Statistics", statisticsPanel);
@@ -1377,6 +1392,10 @@ public class MainFrame extends javax.swing.JFrame {
         GUIUtils.showFrame(this.hotelFrame);
     }//GEN-LAST:event_editHotelMenuItemActionPerformed
 
+    private void customerRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerRefreshButtonActionPerformed
+        loadCustomers();
+    }//GEN-LAST:event_customerRefreshButtonActionPerformed
+
 //	private javax.swing.JMenuItem addUserMenuItem;
 //        private javax.swing.JMenuItem addHotelMenuItem;
 //        private javax.swing.JMenuItem editHotelMenuItem;
@@ -1397,6 +1416,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPasswordField confirmNewPasswordField;
     private javax.swing.JPasswordField currentPasswordField;
     private javax.swing.JPanel customerPanel;
+    private javax.swing.JButton customerRefreshButton;
     private javax.swing.JList<String> customersList;
     private javax.swing.JButton declineButton;
     private javax.swing.JMenuItem deleteCustomerMenuItem;
