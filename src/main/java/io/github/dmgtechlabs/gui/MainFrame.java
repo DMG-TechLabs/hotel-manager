@@ -1302,6 +1302,10 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
     private void editCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerMenuItemActionPerformed
+        if (getSelectedCustomer() == null) {
+                JOptionPane.showMessageDialog(this, "Please select a customer first", "Failure", JOptionPane.ERROR_MESSAGE);
+                return;
+        }
         this.customerFrame = new CustomerFrame(getSelectedCustomer());
         GUIUtils.addWindowClosedListener(this.customerFrame, () -> { this.loadCustomers();});
         GUIUtils.showFrame(this.customerFrame);
