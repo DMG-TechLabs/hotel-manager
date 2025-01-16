@@ -9,14 +9,16 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
-import kdesp73.databridge.helpers.SQLogger;
+import io.github.kdesp73.databridge.helpers.SQLogger;
 
 public class Filters {
+	public State state;
 
 	public List<Room.Type> types = new ArrayList<>();
 	public Range priceRange;
 
-	public Filters() {
+	public Filters(State state) {
+		this.state = state;
 	}
 
 	public void setRange(float min, float max) {
@@ -31,11 +33,10 @@ public class Filters {
 	}
 
 	public String toQuery() {
-		String query = new QueryBuilder()
-			.select()
-			.from("room").build() + " WHERE (";
+		StringBuilder query = new StringBuilder(new QueryBuilder()
+                .select()
+                .from("room").build()).append(" WHERE (");
 
-		// TODO: add filters
 		for (int i = 0; i < this.types.size(); i++) {
 			Room.Type type = this.types.get(i);
 			if (type == null) {
@@ -43,24 +44,24 @@ public class Filters {
 			}
 
 			if (i == this.types.size() - 1) {
-				query += "type = " + type.getValue();
+				query.append("type = ").append(type.getValue());
 			} else {
-				query += "type = " + type.getValue() + " OR ";
+				query.append("type = ").append(type.getValue()).append(" OR ");
 			}
 		}
-		query += ")";
+		query.append(")");
 		
-		query += " AND price >= " + this.priceRange.min;
-		query += " AND price <= " + this.priceRange.max;
+		query.append(" AND price >= ").append(this.priceRange.min);
+		query.append(" AND price <= ").append(this.priceRange.max);
 		
-		query += " AND occupied = false;";
+		query.append(" AND occupied = false");
+		query.append(" AND room_hotel_fk = ").append(this.state.activeHotelId).append(";");
 		
-		return query;
+		return query.toString();
 	}
 
 	public List<Room> search() {
 		String query = toQuery();
-		System.out.println(query);
 		List<Room> result = new ArrayList<>();
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 			ResultSet rs = conn.executeQuery(query);
@@ -69,12 +70,12 @@ public class Filters {
 			}
 			rs.close();
 		} catch (Exception e) {
-			SQLogger.getLogger().log("Failed running filter query", e);
+//			SQLogger.getLogger().log("Failed running filter query", e);
 		}
 		return result;
 	}
 
-	private static class Range {
+	public static class Range {
 
 		public float min;
 		public float max;

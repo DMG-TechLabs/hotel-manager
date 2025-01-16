@@ -128,6 +128,10 @@ public class Utils {
 		public static String preformatted(String text) {
 			return "<pre>" + text + "</pre>";
 		}
+		
+		public static String br() {
+			return "<br>";
+		}
 	}
 
 }
