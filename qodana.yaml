@@ -6,10 +6,6 @@ profile:
   name: qodana.recommended
 include:
   - name: CheckDependencyLicenses
-inspections:
-  - group: InspectionsToInclude
-    enabled: true
-  - inspection: CyclomaticComplexityInspection
-    enabled: true
-  - inspection: ClassInheritanceDepthInspection
-    enabled: true
+  - name: JvmTaintAnalysis
+  - name: CyclomaticComplexityInspection
+  - name: ClassInheritanceDepthInspection
