@@ -3,29 +3,87 @@ linter: jetbrains/qodana-jvm:2024.3
 projectJDK: 23
 profile:
   name: qodana.recommended
-  inspections:
-    - group: "Java"
-      enabled: true
-    - group: "Code style issues"
-      enabled: true
-    - group: "Potential Bugs"
-      enabled: true
-    - group: "Performance"
-      enabled: true
-    - group: "Security"
-      enabled: true
-    - group: "Redundant Code"
-      enabled: true
-    - group: "Code smells"
-      enabled: true
-    - group: "Inheritance Issues"
-      enabled: true
-    - group: "Concurrency"
-      enabled: true
-    - group: "Tests"
-      enabled: true
 include:
   - name: CheckDependencyLicenses
   - name: JvmTaintAnalysis
   - name: CyclomaticComplexityInspection
   - name: ClassInheritanceDepthInspection
+  - name: AccessCanBeTightened
+  - name: Annotation
+  - name: AssignmentIssues
+  - name: BinaryExpressionIssues
+  - name: BooleanMethodNameMustStartWithQuestion
+  - name: BoxingAndUnboxing
+  - name: BreakStatementIssues
+  - name: CatchMayIgnoreException
+  - name: ChainedMethodCallLength
+  - name: ClassCanBeStatic
+  - name: ClassNamingConvention
+  - name: CloneIssues
+  - name: CodeBlockIssues
+  - name: ConstantConditions
+  - name: ControlFlow
+  - name: DataFlow
+  - name: DeprecatedDeclaration
+  - name: DuplicateBranchesInSwitch
+  - name: EmptyBlock
+  - name: EqualsAndHashcode
+  - name: ExplicitTypeCanBeDiamond
+  - name: FinalizeIssues
+  - name: ForLoopIssues
+  - name: FunctionalExpressionCanBeFolded
+  - name: GenericIssues
+  - name: HardcodedStringLiteral
+  - name: IfStatementIssues
+  - name: ImmutableCollectionProblems
+  - name: InnerClassMayBeStatic
+  - name: InstanceofIssues
+  - name: JavaDoc
+  - name: JavaPerformance
+  - name: LambdaCanBeReplacedWithMethodReference
+  - name: MethodNamingConvention
+  - name: MissingBreakInSwitch
+  - name: ModifierIssues
+  - name: NestedClassMayBeStatic
+  - name: NullabilityAnnotations
+  - name: NullableProblems
+  - name: OverloadedMethods
+  - name: OverridingIssues
+  - name: ParameterNamingConvention
+  - name: PropertyCanBeStatic
+  - name: RedundantCode
+  - name: ReturnStatementIssues
+  - name: SerializationIssues
+  - name: StaticVariableNamingConvention
+  - name: SwitchStatementIssues
+  - name: ThreadingIssues
+  - name: TryWithResources
+  - name: UnnecessaryParentheses
+  - name: UnreachableCode
+  - name: UnusedDeclaration
+  - name: UnusedImports
+  - name: VariableNamingConvention
+  - name: PerformanceIssues
+  - name: RedundantStringOperation
+  - name: StringBuilderIssues
+  - name: UnnecessaryBoxing
+  - name: SQLInjection
+  - name: SerializableClassWithoutSerialVersionUID
+  - name: WeakHashCodeEquals
+  - name: XPathInjection
+  - name: XSS
+  - name: ComplexMethod
+  - name: ExcessiveParameterList
+  - name: LongMethod
+  - name: LongParameterList
+  - name: TooManyReturnStatements
+  - name: UnusedPrivateField
+  - name: JUnit4Tests
+  - name: JUnit5Tests
+  - name: RedundantTestCode
+  - name: TestClassIssues
+  - name: ClassInheritanceDepth
+  - name: CouplingBetweenObjects
+  - name: DepthOfInheritanceTree
+  - name: LiskovSubstitutionPrincipleViolation
+  - name: OpenClosedPrincipleViolation
