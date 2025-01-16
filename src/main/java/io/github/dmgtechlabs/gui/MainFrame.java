@@ -65,45 +65,6 @@ public class MainFrame extends javax.swing.JFrame {
 		this.hotels = Hotel.selectById(hotelId);
 		this.hotelNameLabel.setText(this.hotels.get(0).getName());
 
-//		if (user.isManager() || user.isAdmin()) {
-//			addUserMenuItem = new javax.swing.JMenuItem();
-//			addUserMenuItem.setText("User");
-//			addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
-//				public void actionPerformed(java.awt.event.ActionEvent evt) {
-//					addUserMenuItemActionPerformed(evt);
-//				}
-//			});
-//			addMenu.add(addUserMenuItem);
-//		} else if (user.isAdmin()){
-//                      addUserMenuItem = new javax.swing.JMenuItem();
-//			addUserMenuItem.setText("User");
-//			addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
-//				public void actionPerformed(java.awt.event.ActionEvent evt) {
-//					addUserMenuItemActionPerformed(evt);
-//				}
-//			});
-//			addMenu.add(addUserMenuItem);
-//                    
-//                } else if (user.isAdmin()){
-//                      addHotelMenuItem = new javax.swing.JMenuItem();
-//			addHotelMenuItem.setText("Hotel");
-//			addHotelMenuItem.addActionListener(new java.awt.event.ActionListener() {
-//				public void actionPerformed(java.awt.event.ActionEvent evt) {
-//					addHotelMenuItemActionPerformed(evt);
-//				}
-//			});
-//			addMenu.add(addHotelMenuItem);
-//                        
-//                        editHotelMenuItem = new javax.swing.JMenuItem();
-//			editHotelMenuItem.setText("Hotel");
-//			editHotelMenuItem.addActionListener(new java.awt.event.ActionListener() {
-//				public void actionPerformed(java.awt.event.ActionEvent evt) {
-//					editHotelMenuItemActionPerformed(evt);
-//				}
-//			});
-//			editMenu.add(editHotelMenuItem);
-//                }
-
 		setupFilters();
 		applyFilters();
 

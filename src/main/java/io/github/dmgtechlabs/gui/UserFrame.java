@@ -62,13 +62,17 @@ public class UserFrame extends javax.swing.JFrame {
             accountButton.setEnabled(false);
             userSelect.setEnabled(false);
             deleteUserButton.setEnabled(false);
-        }else if(user.getType() == User.UserType.MANAGER.getValue()){
+        }else if(user.isAdmin() || user.isManager() ){
             try{
                 
                 for (User u : user.Manager_SelectAllUsers()) {
                     System.out.println(u);
-                    users.add(u);
-                    userSelect.addItem(u.getUsername());
+                    if (this.users.get(0).isAdmin() || !u.isAdmin()){
+                        users.add(u);
+                        userSelect.addItem(u.getUsername());
+                    }
+                    
+                    
                 }
                 
             } catch (PermissionDenied e){
