@@ -8,6 +8,7 @@ import io.github.dmgtechlabs.models.Customer;
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Reservation.Status;
 import io.github.dmgtechlabs.models.Room;
+import java.awt.FlowLayout;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -45,12 +47,12 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	 */
 	public CreateReservationFrame(int activeHotelfk) {
 		initComponents();
-		GUIUtils.commonSetup(null, this);
 		this.setLayout(null);
+		this.reservationPanel.setLayout(null);
+		initDatePanel();
+		GUIUtils.commonSetup(null, this);
 		this.setResizable(false);
 		this.activeHotelfk = activeHotelfk;
-
-		initDatePanel();
 
 		this.emailFormattedTextField.setInputVerifier(new EmailVerifier());
 
@@ -65,33 +67,53 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	}
 
 	private void initDatePanel() {
-		this.datePanel = new JPanel(null);
-		this.datePanel.setBounds(5, 50, 475, 100);
-
 		this.checkInPicker = new JXDatePicker();
 		this.checkInPicker.setDate(Calendar.getInstance().getTime());
 		this.checkInPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
-		this.checkInPicker.setBounds(5, 50, 200, 30);
+		this.checkInPicker.setBounds(5, 100, 200, 30);
 
 		this.checkOutPicker = new JXDatePicker();
 		this.checkOutPicker.setDate(Calendar.getInstance().getTime());
 		this.checkOutPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
-		this.checkOutPicker.setBounds(260, 50, 200, 30);
+		this.checkOutPicker.setBounds(260, 100, 200, 30);
 
-		this.datePanel.add(this.checkInPicker);
-		this.datePanel.add(this.checkOutPicker);
+		this.reservationPanel.add(this.checkInPicker);
+		this.reservationPanel.add(this.checkOutPicker);
 
 		SwingUtilities.invokeLater(() -> {
-			this.datePanel.revalidate();
-			this.datePanel.repaint();
-			this.add(this.datePanel);
+			this.reservationPanel.revalidate();
+			this.add(this.reservationPanel);
+			this.revalidate();
+			this.repaint();
 		});
 	}
 
-	public CreateReservationFrame() {
-		initComponents();
-		GUIUtils.commonSetup(null, this);
-	}
+//	private void initDatePanel() {
+//		SwingUtilities.invokeLater(() -> {
+//			this.datePanel = new JPanel(null);
+//			this.datePanel.setBounds(5, 50, 475, 100);
+//
+//			this.checkInPicker = new JXDatePicker();
+//			this.checkInPicker.setDate(Calendar.getInstance().getTime());
+//			this.checkInPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
+//			this.checkInPicker.setBounds(5, 50, 200, 30);
+//
+//			this.checkOutPicker = new JXDatePicker();
+//			this.checkOutPicker.setDate(Calendar.getInstance().getTime());
+//			this.checkOutPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
+//			this.checkOutPicker.setBounds(260, 50, 200, 30);
+//
+//			this.datePanel.add(this.checkInPicker);
+//			this.datePanel.add(this.checkOutPicker);
+//
+//			this.datePanel.revalidate();
+//			this.datePanel.repaint();
+//			
+//			this.add(this.datePanel);
+//			
+//			this.revalidate();
+//		});
+//	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -108,9 +130,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         roomComboBox = new javax.swing.JComboBox<>();
         okBtn = new javax.swing.JButton();
         cancelBtn = new javax.swing.JButton();
-        datePanel = new javax.swing.JPanel();
-        checkInLabel = new javax.swing.JLabel();
-        checkOutLabel = new javax.swing.JLabel();
         personalInfoLabel = new javax.swing.JLabel();
         fNameIndicator = new javax.swing.JLabel();
         fNameTextField = new javax.swing.JTextField();
@@ -120,6 +139,8 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         emailIndicator = new javax.swing.JLabel();
         phoneIndicator = new javax.swing.JLabel();
         phoneTextField = new javax.swing.JTextField();
+        checkInLabel = new javax.swing.JLabel();
+        checkOutLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -142,29 +163,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
             }
         });
 
-        checkInLabel.setText("Select a check-In date");
-
-        checkOutLabel.setText("Select a check-out date");
-
-        javax.swing.GroupLayout datePanelLayout = new javax.swing.GroupLayout(datePanel);
-        datePanel.setLayout(datePanelLayout);
-        datePanelLayout.setHorizontalGroup(
-            datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(datePanelLayout.createSequentialGroup()
-                .addComponent(checkInLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(checkOutLabel)
-                .addGap(62, 62, 62))
-        );
-        datePanelLayout.setVerticalGroup(
-            datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, datePanelLayout.createSequentialGroup()
-                .addGroup(datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(checkInLabel)
-                    .addComponent(checkOutLabel))
-                .addContainerGap(62, Short.MAX_VALUE))
-        );
-
         personalInfoLabel.setFont(new java.awt.Font("URW Gothic", 0, 24)); // NOI18N
         personalInfoLabel.setText("Personal information");
 
@@ -176,14 +174,23 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
         phoneIndicator.setText("Phone");
 
+        checkInLabel.setText("Select a check-In date");
+
+        checkOutLabel.setText("Select a check-out date");
+
         javax.swing.GroupLayout reservationPanelLayout = new javax.swing.GroupLayout(reservationPanel);
         reservationPanel.setLayout(reservationPanelLayout);
         reservationPanelLayout.setHorizontalGroup(
             reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservationPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cancelBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(okBtn)
+                .addGap(12, 12, 12))
             .addGroup(reservationPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(datePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(reservationPanelLayout.createSequentialGroup()
                         .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(roomLabel)
@@ -202,14 +209,12 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                                     .addComponent(lnameTextField)
                                     .addComponent(emailFormattedTextField)
                                     .addComponent(phoneTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))))
-                        .addGap(0, 35, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservationPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cancelBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(okBtn)
-                .addGap(12, 12, 12))
+                        .addContainerGap(41, Short.MAX_VALUE))
+                    .addGroup(reservationPanelLayout.createSequentialGroup()
+                        .addComponent(checkInLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(checkOutLabel)
+                        .addGap(44, 44, 44))))
         );
         reservationPanelLayout.setVerticalGroup(
             reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,8 +222,10 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkInLabel)
+                    .addComponent(checkOutLabel))
+                .addGap(80, 80, 80)
                 .addComponent(roomLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -486,47 +493,10 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		JOptionPane.showMessageDialog(this, "You have successfully booked a reservation\nWe will keep you informed about the acceptance of your reservation", "Mesasge", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_okBtnActionPerformed
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
-		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-		 */
-		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(CreateReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(CreateReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(CreateReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(CreateReservationFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		}
-		//</editor-fold>
-		//</editor-fold>
-
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new CreateReservationFrame().setVisible(true);
-			}
-		});
-	}
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelBtn;
     private javax.swing.JLabel checkInLabel;
     private javax.swing.JLabel checkOutLabel;
-    private javax.swing.JPanel datePanel;
     private javax.swing.JFormattedTextField emailFormattedTextField;
     private javax.swing.JLabel emailIndicator;
     private javax.swing.JLabel fNameIndicator;
