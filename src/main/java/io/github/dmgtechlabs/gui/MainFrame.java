@@ -9,25 +9,16 @@ import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Room;
 import io.github.dmgtechlabs.models.Statistics;
 import io.github.dmgtechlabs.models.Customer;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -44,7 +35,6 @@ public class MainFrame extends javax.swing.JFrame {
 	private RoomFrame roomFrame;
         private CustomerFrame customerFrame;
 	private UserFrame userFrame;
-	private RoomActionsFrame roomActionsFrame;
 	private ReservationFrame reservationFrame;
 	private CreateReservationFrame createReservationFrame;
 
@@ -114,7 +104,7 @@ public class MainFrame extends javax.swing.JFrame {
 		applyFilters();
 
 		loadReservations();
-                loadCustomers();
+        loadCustomers();
 	}
 
 	private void setupFilters() {
@@ -224,6 +214,11 @@ public class MainFrame extends javax.swing.JFrame {
         tabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tabbedPaneStateChanged(evt);
+            }
+        });
+        tabbedPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabbedPaneMouseClicked(evt);
             }
         });
 
@@ -1143,7 +1138,7 @@ public class MainFrame extends javax.swing.JFrame {
 			&& (newPassword == null
 				? this.confirmNewPasswordField.getText() == null
 				: newPassword.equals(this.confirmNewPasswordField.getText()))
-			&& !newPassword.isBlank()) {
+			&& newPassword != null && !newPassword.isBlank()) {
 			this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
 		}
 
@@ -1316,13 +1311,9 @@ public class MainFrame extends javax.swing.JFrame {
 		this.acceptedList.clearSelection();
     }//GEN-LAST:event_undoButtonActionPerformed
 
-    private void addMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMenuActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addMenuActionPerformed
-
-    private void editMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_editMenuActionPerformed
+    private void tabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabbedPaneMouseClicked
+		loadReservations();
+    }//GEN-LAST:event_tabbedPaneMouseClicked
 
 	private javax.swing.JMenuItem addUserMenuItem;
 

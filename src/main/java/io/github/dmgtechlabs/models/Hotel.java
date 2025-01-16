@@ -242,7 +242,7 @@ public class Hotel implements Dao {
         Set<Amenity> newAmenities = new HashSet<>(Arrays.asList(amenities));
         Set<Amenity> currentAmenities = new HashSet<>(current);
 
-        PostgresConnection conn = null;
+        PostgresConnection conn;
         try {
              conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection();
         } catch (SQLException e) {

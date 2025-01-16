@@ -36,7 +36,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	private JXDatePicker checkInPicker;
 	private JXDatePicker checkOutPicker;
 
-	private List<Room> rooms;
 	private List<Reservation> reservations;
 
 	private Room room;
@@ -44,7 +43,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	/**
 	 * Creates new form ReservationFrame
 	 *
-	 * @param activeHotelfk
+	 * @param room
 	 */
 	public CreateReservationFrame(Room room) {
 		this.room = room;
@@ -235,18 +234,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		return matcher.matches();
 	}
 
-	private BigInteger validatePhone(String phone) {
-		BigInteger integerValue;
-
-		try {
-			integerValue = BigInteger.valueOf(Integer.parseInt(phone));
-		} catch (NumberFormatException e) {
-			return null;
-		}
-
-		return integerValue;
-	}
-
 	private int validateDatesAndRoom(int[] checkInDate, int[] checkOutDate) {
 		List<Room> reservedRooms;
 		List<Reservation> reservationRooms;
@@ -284,7 +271,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		}
 
 		this.reservations = Reservation.selectByHotel(room.getHotelId());
-		if (this.reservations.isEmpty() || this.reservations == null) {
+		if (this.reservations == null || this.reservations.isEmpty()) {
 			return 1;
 		} else {
 			reservedRooms = Room.selectByReserved(room.getHotelId());
@@ -297,7 +284,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
 						isNotOverLapping = newCheckOut.isBefore(existingCheckIn) || newCheckIn.isAfter(existingCheckOut);
 						newIsSame = newCheckIn.isEqual(newCheckOut);
-						existingCheckIn.isEqual(existingCheckOut);
 						newIsSameWithExisting = newCheckOut.isEqual(existingCheckOut) && newCheckIn.isEqual(existingCheckIn);
 						newCheckInSameWithExistingCheckOut = newCheckIn.isEqual(existingCheckOut);
 						newCheckOutSameWithExistingCheckIn = newCheckOut.isEqual(existingCheckIn);
