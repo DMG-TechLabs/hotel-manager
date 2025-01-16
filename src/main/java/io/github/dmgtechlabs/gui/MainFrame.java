@@ -65,7 +65,7 @@ public class MainFrame extends javax.swing.JFrame {
 		this.hotels = Hotel.selectById(hotelId);
 		this.hotelNameLabel.setText(this.hotels.get(0).getName());
 
-		if (user.isManager()) {
+		if (user.isManager() || user.isAdmin()) {
 			addUserMenuItem = new javax.swing.JMenuItem();
 			addUserMenuItem.setText("User");
 			addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
