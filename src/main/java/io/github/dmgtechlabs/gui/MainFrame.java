@@ -1211,6 +1211,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_switchUserButtonActionPerformed
 
     private void addReservationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReservationMenuItemActionPerformed
+		if (this.resultFilterList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Choose an available room from the search tab first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
 		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed

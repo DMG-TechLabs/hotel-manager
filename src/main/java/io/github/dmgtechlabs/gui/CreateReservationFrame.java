@@ -258,6 +258,9 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		LocalDate existingCheckOut;
 		boolean isNotOverLapping;
 		boolean newIsSameWithExisting;
+		boolean newIsSame;
+		boolean newCheckInSameWithExistingCheckOut;
+		boolean newCheckOutSameWithExistingCheckIn;
 		int found = 0;
 
 		if (this.checkInPicker.getDate().compareTo(localDate) < 0) {
@@ -293,11 +296,13 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 						existingCheckOut = LocalDate.of(reservation.getCheckOutYear(), reservation.getCheckOutMonth(), reservation.getCheckOutDay());
 
 						isNotOverLapping = newCheckOut.isBefore(existingCheckIn) || newCheckIn.isAfter(existingCheckOut);
-						newCheckOut.isEqual(newCheckIn);
+						newIsSame = newCheckIn.isEqual(newCheckOut);
 						existingCheckIn.isEqual(existingCheckOut);
 						newIsSameWithExisting = newCheckOut.isEqual(existingCheckOut) && newCheckIn.isEqual(existingCheckIn);
+						newCheckInSameWithExistingCheckOut = newCheckIn.isEqual(existingCheckOut);
+						newCheckOutSameWithExistingCheckIn = newCheckOut.isEqual(existingCheckIn);
 
-						if (!newIsSameWithExisting && isNotOverLapping) {
+						if ((!newIsSameWithExisting && !newIsSame && isNotOverLapping) || (newCheckInSameWithExistingCheckOut || newCheckOutSameWithExistingCheckIn)) {
 							continue;
 						}
 						found++;
