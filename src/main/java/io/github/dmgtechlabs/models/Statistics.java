@@ -49,14 +49,21 @@ public class Statistics {
                         
                         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 				ResultSet rs = conn.callFunction("get_occupancy_rate", accountHotelFk);
-				SQLogger.getLogger().logResultSet(rs);
-                                this.totalRooms = rs.getInt(0);
-                                this.occupiedRooms = rs.getInt(1);
-                                this.occupancyRate = rs.getFloat(2);
+//				SQLogger.getLogger().logResultSet(rs);
+                                while (rs.next()){
+                                    this.totalRooms = rs.getInt("total_rooms");
+                                    this.occupiedRooms = rs.getInt("occupied_rooms");
+                                    this.occupancyRate = rs.getFloat("occupancy_rate");
+                                }
 				rs.close();
 			} catch (SQLException ex) {
 				SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_occupancy_rate failed", ex);
 			} catch (Exception e) {System.out.println(e.getMessage());}
+                        
+                        System.out.println(this.totalRooms);
+                        System.out.println(this.occupiedRooms);
+                        System.out.println(this.occupancyRate);
+                                
 		
 	}
 }
