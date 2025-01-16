@@ -33,6 +33,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private AboutFrame aboutFrame;
 	private HotelFrame hotelFrame;
 	private RoomFrame roomFrame;
+        private CustomerFrame customerFrame;
 	private UserFrame userFrame;
 	private ReservationFrame reservationFrame;
 	private CreateReservationFrame createReservationFrame;
@@ -40,7 +41,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
 	private List<Reservation> pendingReservations;
 	private List<Reservation> acceptedReservations;
-        private List<Customer> customers;
+	private List<Customer> customers;
 	private List<Hotel> hotels;
 
 	/**
@@ -64,7 +65,7 @@ public class MainFrame extends javax.swing.JFrame {
 		this.hotels = Hotel.selectById(hotelId);
 		this.hotelNameLabel.setText(this.hotels.get(0).getName());
 
-		if (user.isManager()) {
+		if (user.isManager() || user.isAdmin()) {
 			addUserMenuItem = new javax.swing.JMenuItem();
 			addUserMenuItem.setText("User");
 			addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -73,7 +74,35 @@ public class MainFrame extends javax.swing.JFrame {
 				}
 			});
 			addMenu.add(addUserMenuItem);
-		}
+		} else if (user.isAdmin()){
+                    addUserMenuItem = new javax.swing.JMenuItem();
+			addUserMenuItem.setText("User");
+			addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent evt) {
+					addUserMenuItemActionPerformed(evt);
+				}
+			});
+			addMenu.add(addUserMenuItem);
+                    
+                } else if (user.isAdmin()){
+                    addHotelMenuItem = new javax.swing.JMenuItem();
+			addHotelMenuItem.setText("User");
+			addHotelMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent evt) {
+					addHotelMenuItemActionPerformed(evt);
+				}
+			});
+			addMenu.add(addHotelMenuItem);
+                        
+                        editHotelMenuItem = new javax.swing.JMenuItem();
+			editHotelMenuItem.setText("User");
+			editHotelMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent evt) {
+					editHotelMenuItemActionPerformed(evt);
+				}
+			});
+			editMenu.add(addHotelMenuItem);
+                }
 
 		setupFilters();
 		applyFilters();
@@ -85,10 +114,10 @@ public class MainFrame extends javax.swing.JFrame {
 		} else if (user.isEmployee()) {
 			// Hide statistics from employees
 			this.tabbedPane.setEnabledAt(3, false);
-		}
+		} 
 
 		loadReservations();
-                loadCustomers();
+		loadCustomers();
 	}
 
 	public MainFrame() {
@@ -103,7 +132,7 @@ public class MainFrame extends javax.swing.JFrame {
 		applyFilters();
 
 		loadReservations();
-                loadCustomers();
+		loadCustomers();
 	}
 
 	private void setupFilters() {
@@ -196,7 +225,6 @@ public class MainFrame extends javax.swing.JFrame {
         addMenu = new javax.swing.JMenu();
         addRoomMenuItem = new javax.swing.JMenuItem();
         addReservationMenuItem = new javax.swing.JMenuItem();
-        addCustomerMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         editRoomMenuItem = new javax.swing.JMenuItem();
         editUserMenuItem = new javax.swing.JMenuItem();
@@ -204,8 +232,6 @@ public class MainFrame extends javax.swing.JFrame {
         deleteMenu = new javax.swing.JMenu();
         deleteRoomMenuItem = new javax.swing.JMenuItem();
         deleteCustomerMenuItem = new javax.swing.JMenuItem();
-        viewMenu = new javax.swing.JMenu();
-        viewCustomerMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -816,14 +842,6 @@ public class MainFrame extends javax.swing.JFrame {
         });
         addMenu.add(addReservationMenuItem);
 
-        addCustomerMenuItem.setText("Customer");
-        addCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addCustomerMenuItemActionPerformed(evt);
-            }
-        });
-        addMenu.add(addCustomerMenuItem);
-
         jMenuBar1.add(addMenu);
 
         editMenu.setText("Edit");
@@ -876,18 +894,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(deleteMenu);
 
-        viewMenu.setText("View");
-
-        viewCustomerMenuItem.setText("Customer");
-        viewCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewCustomerMenuItemActionPerformed(evt);
-            }
-        });
-        viewMenu.add(viewCustomerMenuItem);
-
-        jMenuBar1.add(viewMenu);
-
         helpMenu.setText("Help");
 
         helpMenuItem.setText("Help");
@@ -931,17 +937,17 @@ public class MainFrame extends javax.swing.JFrame {
 		this.acceptedReservations = Reservation.selectByReservationStatus(Reservation.Status.ACCEPTED.getValue());
 		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 	}
-        private void loadCustomers() {
-            DefaultListModel<String> model = new DefaultListModel<>();
-            List<Customer> customerList = Customer.selectAll();
-            for (Customer customer : customerList) {
-                String row = "Customer ID: " + customer.getId() + " " + customer.getFirstName() + " " + customer.getLastName() +
-                             " " + customer.getPhone() + " " + customer.getEmail();
-                model.addElement(row);
-            }
-            customersList.setModel(model);
-        }
 
+	private void loadCustomers() {
+		DefaultListModel<String> model = new DefaultListModel<>();
+		List<Customer> customerList = Customer.selectAll();
+		for (Customer customer : customerList) {
+			String row = "Customer ID: " + customer.getId() + " " + customer.getFirstName() + " " + customer.getLastName()
+				+ " " + customer.getPhone() + " " + customer.getEmail();
+			model.addElement(row);
+		}
+		customersList.setModel(model);
+	}
 
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
 		if (helpFrame.isShowing()) {
@@ -961,6 +967,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomMenuItemActionPerformed
 		this.roomFrame = new RoomFrame(this.state.activeHotelId);
+		GUIUtils.addWindowClosedListener(this.roomFrame, () -> { this.applyFilters(); });
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
@@ -972,6 +979,16 @@ public class MainFrame extends javax.swing.JFrame {
 	private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
 		this.userFrame = new UserFrame(this.state.LoggedInUser.getAccountHotelFk());
 		GUIUtils.showFrame(this.userFrame);
+	}
+        
+        private void addHotelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+		this.hotelFrame = new HotelFrame();
+		GUIUtils.showFrame(this.hotelFrame);
+	}
+        
+        private void editHotelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+		this.hotelFrame = new HotelFrame(new Hotel(this.state.activeHotelId));
+		GUIUtils.showFrame(this.hotelFrame);
 	}
 
     private void editUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserMenuItemActionPerformed
@@ -1040,6 +1057,37 @@ public class MainFrame extends javax.swing.JFrame {
 		Room room = rooms.get(this.resultFilterList.getSelectedIndex());
 		return room;
 	}
+        
+    public Customer getSelectedCustomer() {
+        // Get the selected index from the list
+        int selectedIndex = customersList.getSelectedIndex();
+        // Check if an item is selected
+        if (selectedIndex == -1) {
+            return null;
+        }
+
+        // Retrieve the selected item's text
+        String selectedValue = customersList.getModel().getElementAt(selectedIndex);
+
+        // Parse the customer ID from the selected item text
+        try {
+            String[] parts = selectedValue.split(" ");
+            int customerId = -1;
+            for (int i = 0; i < parts.length; i++) {
+                if (parts[i].equals("ID:")) {
+                    customerId = Integer.parseInt(parts[i + 1]);
+                    break;
+                }
+            }
+            return Customer.selectById(customerId).getFirst();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     private void resetFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersButtonActionPerformed
 		resetFilters();
@@ -1051,8 +1099,8 @@ public class MainFrame extends javax.swing.JFrame {
 			model.addElement(room.toString());
 		}
 		this.resultFilterList.setModel(model);
-	} 
-        
+	}
+
 	private void applyFilters() {
 		Filters filters = getFilters();
 		List<Room> rooms = filters.search();
@@ -1185,15 +1233,15 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void getStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getStatisticsActionPerformed
 
-        String sDate = startDate.getText();
-        String eDate = endDate.getText();
-            try {
-                Statistics statistics = new Statistics();
-                statistics.getStatistics(this.state.LoggedInUser.getAccountHotelFk() , sDate, eDate);
-                revenue.setText(statistics.totalRevenue + " $");
-                occupiedRooms.setText(String.valueOf(statistics.occupiedRooms));
-                occupancyRate.setText(String.valueOf(statistics.occupancyRate) + " %");
-                
+		String sDate = startDate.getText();
+		String eDate = endDate.getText();
+		try {
+			Statistics statistics = new Statistics();
+			statistics.getStatistics(this.state.LoggedInUser.getAccountHotelFk(), sDate, eDate);
+			revenue.setText(statistics.totalRevenue + " $");
+			occupiedRooms.setText(String.valueOf(statistics.occupiedRooms));
+			occupancyRate.setText(String.valueOf(statistics.occupancyRate) + " %");
+
 //                TimeSeries series = new TimeSeries("Monthly Sales");
 //                series.add(new Month(1, 2024), 200);
 //                series.add(new Month(2, 2024), 150);
@@ -1210,32 +1258,30 @@ public class MainFrame extends javax.swing.JFrame {
 //                    true,    // legend
 //                    false,   // tooltips
 //                    false);  // no URLs
-                
-                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                System.out.println(statistics.reservationDistribution.size());
-                for (Map.Entry<String, Integer> entry :
-                    statistics.reservationDistribution.entrySet()) {
-                    System.out.println(entry.getValue());
-                    System.out.println(entry.getKey());
-                    dataset.addValue(entry.getValue(), "Reservations", entry.getKey());
-               }
+			DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+			System.out.println(statistics.reservationDistribution.size());
+			for (Map.Entry<String, Integer> entry
+				: statistics.reservationDistribution.entrySet()) {
+				System.out.println(entry.getValue());
+				System.out.println(entry.getKey());
+				dataset.addValue(entry.getValue(), "Reservations", entry.getKey());
+			}
 
-                JFreeChart chart = ChartFactory.createBarChart("Reservation Distribution", "month", "Reservations", dataset);
-                ChartPanel jFreeChartPanel = new ChartPanel(chart);
-                jFreeChartPanel.setVisible(true);
-                jFreeChartPanel.setBounds(5, 240, 1009, 470);
-                SwingUtilities.invokeLater(() -> {
-                    statisticsPanel.add(jFreeChartPanel);
-                    statisticsPanel.revalidate();
-                    statisticsPanel.repaint();
-                });
-                
-            } catch (Exception ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            
-            
+			JFreeChart chart = ChartFactory.createBarChart("Reservation Distribution", "month", "Reservations", dataset);
+			ChartPanel jFreeChartPanel = new ChartPanel(chart);
+			jFreeChartPanel.setVisible(true);
+			jFreeChartPanel.setBounds(5, 240, 1009, 470);
+			SwingUtilities.invokeLater(() -> {
+				statisticsPanel.add(jFreeChartPanel);
+				statisticsPanel.revalidate();
+				statisticsPanel.repaint();
+			});
+
+		} catch (Exception ex) {
+			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+
     }//GEN-LAST:event_getStatisticsActionPerformed
 
     private void switchUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchUserButtonActionPerformed
@@ -1249,26 +1295,36 @@ public class MainFrame extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Choose an available room from the search tab first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		
+
 		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
+		GUIUtils.addWindowClosedListener(this.createReservationFrame, () -> { loadReservations(); });
 		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
     private void editCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerMenuItemActionPerformed
-		// TODO add your handling code here:
+        this.customerFrame = new CustomerFrame(getSelectedCustomer());
+        GUIUtils.addWindowClosedListener(this.customerFrame, () -> { this.loadCustomers();});
+        GUIUtils.showFrame(this.customerFrame);
     }//GEN-LAST:event_editCustomerMenuItemActionPerformed
 
-    private void addCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerMenuItemActionPerformed
-		// TODO add your handling code here:
-    }//GEN-LAST:event_addCustomerMenuItemActionPerformed
-
-    private void viewCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCustomerMenuItemActionPerformed
-		ViewCustomersFrame vCF = new ViewCustomersFrame();
-		vCF.setVisible(true);
-    }//GEN-LAST:event_viewCustomerMenuItemActionPerformed
-
     private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
-		// TODO add your handling code here:
+		int option = JOptionPane.showConfirmDialog(this, "This action cannot be reversed", "Delete Customer?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (option != 0) {
+			return;
+		}
+
+		Customer customer = getSelectedCustomer();
+		if (customer == null) {
+			JOptionPane.showMessageDialog(this, "Please select a customer first", "Failure", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		if (customer.delete()) {
+                        loadCustomers();
+			JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(this, "Could not delete Customer", "Failure", JOptionPane.ERROR_MESSAGE);
+		}
     }//GEN-LAST:event_deleteCustomerMenuItemActionPerformed
 
     private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
@@ -1291,13 +1347,14 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_undoButtonActionPerformed
 
 	private javax.swing.JMenuItem addUserMenuItem;
+        private javax.swing.JMenuItem addHotelMenuItem;
+        private javax.swing.JMenuItem editHotelMenuItem;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JButton acceptButton;
     private javax.swing.JLabel acceptedLabel;
     private javax.swing.JList<String> acceptedList;
-    private javax.swing.JMenuItem addCustomerMenuItem;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addReservationMenuItem;
     private javax.swing.JMenuItem addRoomMenuItem;
@@ -1374,8 +1431,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox twinRoomFilterCheckbox;
     private javax.swing.JButton undoButton;
-    private javax.swing.JMenuItem viewCustomerMenuItem;
-    private javax.swing.JMenu viewMenu;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }
