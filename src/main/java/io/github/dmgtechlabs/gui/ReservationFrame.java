@@ -45,7 +45,7 @@ public class ReservationFrame extends javax.swing.JFrame {
 			}
 		}
 		this.hotels = Hotel.selectById(activeHotelId);
-		this.rooms = Room.selectById(this.reservation.getReservationRoomFk(), activeHotelId);
+		this.rooms = Room.selectById(this.reservation.getReservationRoomFk());
 		this.customers = Customer.selectById(this.reservation.getReservationCustomerFk());
 		
 		loadInfo();

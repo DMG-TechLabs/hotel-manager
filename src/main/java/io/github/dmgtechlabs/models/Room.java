@@ -198,8 +198,8 @@ public class Room implements Dao {
 		return select("select_all_rooms");
 	}
 
-	public static List<Room> selectById(int id, int hotelFk) {
-		return select("select_rooms_by_id", id, hotelFk);
+	public static List<Room> selectById(int id) {
+		return select("select_rooms_by_id", id);
 	}
 	
 	public static List<Room> selectByHotelId(int hotelFk) {
