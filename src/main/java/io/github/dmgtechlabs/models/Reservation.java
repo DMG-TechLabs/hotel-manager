@@ -241,14 +241,19 @@ public class Reservation implements Dao {
 		return "Reservation ID: " + id + " (" + checkIn + " -- " + checkOut + ")";
 	}
 	
+	public String UIString(Room room) {
+		return "Room " + room.getNumber() + " / " + "Floor " + room.getFloor() + " (" + checkIn + " -- " + checkOut + ")";
+	}
+	
 	public static String[] listToArray(List<Reservation> list) {
 		String[] result = new String[list.size()];
+		Room room;
 
 		for (int i = 0; i < list.size(); i++) {
-			result[i] = list.get(i).UIString();
+			room = Room.selectById(list.get(i).reservationRoomFk).get(0);
+			result[i] = list.get(i).UIString(room);
 		}
 
 		return result;
 	}
-
 }
