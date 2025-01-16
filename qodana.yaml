@@ -5,3 +5,6 @@ profile:
   name: qodana.recommended
 include:
   - name: CheckDependencyLicenses
+inspections:
+  CyclomaticComplexityInspection: true
+  ClassInheritanceDepthInspection: true
