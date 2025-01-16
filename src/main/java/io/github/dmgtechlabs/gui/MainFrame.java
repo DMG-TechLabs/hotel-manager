@@ -40,7 +40,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
 	private List<Reservation> pendingReservations;
 	private List<Reservation> acceptedReservations;
-        private List<Customer> customers;
+	private List<Customer> customers;
 	private List<Hotel> hotels;
 
 	/**
@@ -88,7 +88,7 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 
 		loadReservations();
-                loadCustomers();
+		loadCustomers();
 	}
 
 	public MainFrame() {
@@ -103,7 +103,7 @@ public class MainFrame extends javax.swing.JFrame {
 		applyFilters();
 
 		loadReservations();
-        loadCustomers();
+		loadCustomers();
 	}
 
 	private void setupFilters() {
@@ -216,11 +216,6 @@ public class MainFrame extends javax.swing.JFrame {
         tabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tabbedPaneStateChanged(evt);
-            }
-        });
-        tabbedPane.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabbedPaneMouseClicked(evt);
             }
         });
 
@@ -936,16 +931,17 @@ public class MainFrame extends javax.swing.JFrame {
 		this.acceptedReservations = Reservation.selectByReservationStatus(Reservation.Status.ACCEPTED.getValue());
 		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 	}
-        private void loadCustomers() {
-            DefaultListModel<String> model = new DefaultListModel<>();
-            List<Customer> customerList = Customer.selectAll();
-            for (Customer customer : customerList) {
-                String row = "Customer ID: " + customer.getId() + " " + customer.getFirstName() + " " + customer.getLastName() +
-                             " " + customer.getPhone() + " " + customer.getEmail();
-                model.addElement(row);
-            }
-            customersList.setModel(model);
-        }
+
+	private void loadCustomers() {
+		DefaultListModel<String> model = new DefaultListModel<>();
+		List<Customer> customerList = Customer.selectAll();
+		for (Customer customer : customerList) {
+			String row = "Customer ID: " + customer.getId() + " " + customer.getFirstName() + " " + customer.getLastName()
+				+ " " + customer.getPhone() + " " + customer.getEmail();
+			model.addElement(row);
+		}
+		customersList.setModel(model);
+	}
 
 
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
@@ -966,6 +962,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomMenuItemActionPerformed
 		this.roomFrame = new RoomFrame(this.state.activeHotelId);
+		GUIUtils.addWindowClosedListener(this.roomFrame, () -> { this.applyFilters(); });
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
@@ -1056,8 +1053,8 @@ public class MainFrame extends javax.swing.JFrame {
 			model.addElement(room.toString());
 		}
 		this.resultFilterList.setModel(model);
-	} 
-        
+	}
+
 	private void applyFilters() {
 		Filters filters = getFilters();
 		List<Room> rooms = filters.search();
@@ -1190,15 +1187,15 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void getStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getStatisticsActionPerformed
 
-        String sDate = startDate.getText();
-        String eDate = endDate.getText();
-            try {
-                Statistics statistics = new Statistics();
-                statistics.getStatistics(this.state.LoggedInUser.getAccountHotelFk() , sDate, eDate);
-                revenue.setText(statistics.totalRevenue + " $");
-                occupiedRooms.setText(String.valueOf(statistics.occupiedRooms));
-                occupancyRate.setText(String.valueOf(statistics.occupancyRate) + " %");
-                
+		String sDate = startDate.getText();
+		String eDate = endDate.getText();
+		try {
+			Statistics statistics = new Statistics();
+			statistics.getStatistics(this.state.LoggedInUser.getAccountHotelFk(), sDate, eDate);
+			revenue.setText(statistics.totalRevenue + " $");
+			occupiedRooms.setText(String.valueOf(statistics.occupiedRooms));
+			occupancyRate.setText(String.valueOf(statistics.occupancyRate) + " %");
+
 //                TimeSeries series = new TimeSeries("Monthly Sales");
 //                series.add(new Month(1, 2024), 200);
 //                series.add(new Month(2, 2024), 150);
@@ -1215,32 +1212,30 @@ public class MainFrame extends javax.swing.JFrame {
 //                    true,    // legend
 //                    false,   // tooltips
 //                    false);  // no URLs
-                
-                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                System.out.println(statistics.reservationDistribution.size());
-                for (Map.Entry<String, Integer> entry :
-                    statistics.reservationDistribution.entrySet()) {
-                    System.out.println(entry.getValue());
-                    System.out.println(entry.getKey());
-                    dataset.addValue(entry.getValue(), "Reservations", entry.getKey());
-               }
+			DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+			System.out.println(statistics.reservationDistribution.size());
+			for (Map.Entry<String, Integer> entry
+				: statistics.reservationDistribution.entrySet()) {
+				System.out.println(entry.getValue());
+				System.out.println(entry.getKey());
+				dataset.addValue(entry.getValue(), "Reservations", entry.getKey());
+			}
 
-                JFreeChart chart = ChartFactory.createBarChart("Reservation Distribution", "month", "Reservations", dataset);
-                ChartPanel jFreeChartPanel = new ChartPanel(chart);
-                jFreeChartPanel.setVisible(true);
-                jFreeChartPanel.setBounds(5, 240, 1009, 470);
-                SwingUtilities.invokeLater(() -> {
-                    statisticsPanel.add(jFreeChartPanel);
-                    statisticsPanel.revalidate();
-                    statisticsPanel.repaint();
-                });
-                
-            } catch (Exception ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            
-            
+			JFreeChart chart = ChartFactory.createBarChart("Reservation Distribution", "month", "Reservations", dataset);
+			ChartPanel jFreeChartPanel = new ChartPanel(chart);
+			jFreeChartPanel.setVisible(true);
+			jFreeChartPanel.setBounds(5, 240, 1009, 470);
+			SwingUtilities.invokeLater(() -> {
+				statisticsPanel.add(jFreeChartPanel);
+				statisticsPanel.revalidate();
+				statisticsPanel.repaint();
+			});
+
+		} catch (Exception ex) {
+			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+
     }//GEN-LAST:event_getStatisticsActionPerformed
 
     private void switchUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchUserButtonActionPerformed
@@ -1254,8 +1249,9 @@ public class MainFrame extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Choose an available room from the search tab first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		
+
 		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
+		GUIUtils.addWindowClosedListener(this.createReservationFrame, () -> { loadReservations(); });
 		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
@@ -1294,10 +1290,6 @@ public class MainFrame extends javax.swing.JFrame {
 		this.pendingList.clearSelection();
 		this.acceptedList.clearSelection();
     }//GEN-LAST:event_undoButtonActionPerformed
-
-    private void tabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabbedPaneMouseClicked
-		loadReservations();
-    }//GEN-LAST:event_tabbedPaneMouseClicked
 
 	private javax.swing.JMenuItem addUserMenuItem;
 
