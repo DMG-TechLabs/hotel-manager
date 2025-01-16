@@ -111,12 +111,12 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteCustomerMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="hotelMenuItem">
+            <MenuItem class="javax.swing.JMenuItem" name="deleteHotelMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Hotel"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="hotelMenuItemActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteHotelMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -1116,7 +1116,7 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="resetPasswordsButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="confirmChangePassword" min="-2" max="-2" attributes="0"/>
+                                  <Component id="confirmChangePasswordButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -1141,7 +1141,7 @@
                           <Component id="confirmNewPasswordField" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="confirmChangePassword" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="confirmChangePasswordButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="resetPasswordsButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -1187,12 +1187,12 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetPasswordsButtonActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="confirmChangePassword">
+                <Component class="javax.swing.JButton" name="confirmChangePasswordButton">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Confirm"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="confirmChangePasswordActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="confirmChangePasswordButtonActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -1202,11 +1202,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="exitButton" max="32767" attributes="0"/>
                               <Component id="switchUserButton" pref="161" max="32767" attributes="0"/>
+                              <Component id="signedInAsLabel" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -1219,7 +1220,9 @@
                           <Component id="exitButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="switchUserButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="98" max="32767" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="signedInAsLabel" min="-2" pref="26" max="-2" attributes="0"/>
+                          <EmptySpace pref="35" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1240,6 +1243,8 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="switchUserButtonActionPerformed"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="signedInAsLabel">
                 </Component>
               </SubComponents>
             </Container>
