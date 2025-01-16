@@ -58,7 +58,7 @@ public class LoginFrame extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         usernameTextField.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        usernameTextField.setText("test4");
+        usernameTextField.setText("guest");
         usernameTextField.setName("username_textfield"); // NOI18N
         usernameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -76,7 +76,7 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel2.setText("Password:");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 100, 30));
 
-        passwordPasswordField.setText("test");
+        passwordPasswordField.setText("guest");
         passwordPasswordField.setName("password_textfield"); // NOI18N
         passwordPasswordField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -87,6 +87,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         loginButton.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
         loginButton.setText("Log In");
+        loginButton.setToolTipText("If you are a quest please use the default credentials");
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginButtonActionPerformed(evt);

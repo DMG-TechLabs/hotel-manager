@@ -117,6 +117,9 @@ public class MainFrame extends javax.swing.JFrame {
                         addHotelMenuItem.setEnabled(false);
                         editHotelMenuItem.setEnabled(false);
                         
+                        editRoomMenuItem.setEnabled(false);
+                        editCustomerMenuItem.setEnabled(false);
+                        
 			this.tabbedPane.setEnabledAt(2, false);
 			this.tabbedPane.setEnabledAt(3, false);
 		} else if (user.isEmployee()) {
