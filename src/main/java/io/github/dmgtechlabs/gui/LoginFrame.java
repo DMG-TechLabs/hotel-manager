@@ -48,6 +48,7 @@ public class LoginFrame extends javax.swing.JFrame {
         passwordPasswordField = new javax.swing.JPasswordField();
         loginButton = new javax.swing.JButton();
         jTextField2 = new javax.swing.JTextField();
+        loginButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -103,6 +104,15 @@ public class LoginFrame extends javax.swing.JFrame {
         });
         getContentPane().add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 210, 30));
 
+        loginButton2.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+        loginButton2.setText("Cancel");
+        loginButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(loginButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, 310, 40));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -157,6 +167,11 @@ public class LoginFrame extends javax.swing.JFrame {
 		// TODO add your handling code here:
     }//GEN-LAST:event_passwordPasswordFieldActionPerformed
 
+    private void loginButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButton2ActionPerformed
+        this.dispose();
+        new StartingFrame().setVisible(true);
+    }//GEN-LAST:event_loginButton2ActionPerformed
+
 	/**
 	 * @param args the command line arguments
 	 */
@@ -197,6 +212,7 @@ public class LoginFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JButton loginButton;
+    private javax.swing.JButton loginButton2;
     private javax.swing.JPasswordField passwordPasswordField;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
