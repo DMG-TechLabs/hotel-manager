@@ -1,9 +1,16 @@
 linter: jetbrains/qodana-jvm:2024.3
 projectJDK: 23
+groups:
+  - groupId: IncludedPaths
+    groups:
+          - "category:Java"
+          - "GLOBAL"
+
 profile:
   name: "All Java Inspections"
   baseProfile: qodana.recommended
   inspections:
+    - group: IncludedPaths
     - group: "Java"
       enabled: true
     - group: "Code style issues"
@@ -27,3 +34,4 @@ profile:
 exclude:
   - path: "**/generated/**"
   - path: "**/build/**"
+
