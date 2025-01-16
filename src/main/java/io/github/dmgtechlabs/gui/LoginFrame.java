@@ -29,6 +29,7 @@ public class LoginFrame extends javax.swing.JFrame {
 	 */
 	public LoginFrame(int hotelId) {
 		initComponents();
+		GUIUtils.commonSetup(null, this);
 		this.hotelId = hotelId;
 		this.setLocationRelativeTo(null);
 	}
@@ -54,7 +55,7 @@ public class LoginFrame extends javax.swing.JFrame {
         setAlwaysOnTop(true);
         setMinimumSize(new java.awt.Dimension(400, 260));
         setResizable(false);
-        setSize(new java.awt.Dimension(400, 260));
+        setSize(new java.awt.Dimension(400, 291));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         usernameTextField.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
