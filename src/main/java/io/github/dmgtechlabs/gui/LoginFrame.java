@@ -104,7 +104,12 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            User user = User.login(jTextField1.getText().toString(), jPasswordField1.getText(), this.hotelId);
+            User user;
+            if (jTextField1.getText().toString() == "admin" && jPasswordField1.getText() == "admin" ){
+                user = User.login(jTextField1.getText().toString(), jPasswordField1.getText());
+            }else{
+                user = User.login(jTextField1.getText().toString(), jPasswordField1.getText(), this.hotelId);
+            }
             this.dispose();
             new MainFrame(user, this.hotelId).setVisible(true);
         } catch (Exception e){
