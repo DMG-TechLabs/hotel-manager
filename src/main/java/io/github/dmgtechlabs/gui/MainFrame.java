@@ -801,11 +801,6 @@ public class MainFrame extends javax.swing.JFrame {
         tabbedPane.addTab("Options", optionsPanel);
 
         addMenu.setText("Add");
-        addMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addMenuActionPerformed(evt);
-            }
-        });
 
         addRoomMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         addRoomMenuItem.setText("Room");
@@ -827,11 +822,6 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1.add(addMenu);
 
         editMenu.setText("Edit");
-        editMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editMenuActionPerformed(evt);
-            }
-        });
 
         editRoomMenuItem.setText("Room");
         editRoomMenuItem.addActionListener(new java.awt.event.ActionListener() {
