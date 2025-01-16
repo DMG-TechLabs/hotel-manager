@@ -2,10 +2,17 @@ package io.github.dmgtechlabs;
 
 import io.github.dmgtechlabs.gui.LoginFrame;
 import io.github.dmgtechlabs.gui.StartingFrame;
+import io.github.kdesp73.databridge.connections.AvailableConnections;
+import io.github.kdesp73.databridge.connections.PostgresConnection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import io.github.kdesp73.databridge.helpers.SQLogger;
 
 /**
  *

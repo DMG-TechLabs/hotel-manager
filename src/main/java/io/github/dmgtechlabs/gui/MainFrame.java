@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -1027,14 +1027,14 @@ public class MainFrame extends javax.swing.JFrame {
         
         String sDate = startDate.getText();
         String eDate = endDate.getText();
-            try {
-                Date sdate = formatter.parse(sDate);
-                Date edate = formatter.parse(eDate);
-                System.out.println("bbbbb");
-                this.state.LoggedInUser.getStatistics(sdate, edate);
-            } catch (ParseException ex) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            try {
+//                Date sdate = formatter.parse(sDate);
+//                Date edate = formatter.parse(eDate);
+//                System.out.println("bbbbb");
+//                this.state.LoggedInUser.getStatistics(sdate, edate);
+//            } catch (ParseException ex) {
+//                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+//            }
     }//GEN-LAST:event_getStatisticsActionPerformed
 
     private void switchUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchUserButtonActionPerformed

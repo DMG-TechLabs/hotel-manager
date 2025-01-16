@@ -8,7 +8,8 @@ import io.github.dmgtechlabs.models.Customer;
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Reservation.Status;
 import io.github.dmgtechlabs.models.Room;
-import java.awt.FlowLayout;
+
+
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -17,9 +18,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JLabel;
+
+
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import org.jdesktop.swingx.JXDatePicker;
 
@@ -47,6 +48,9 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	 */
 	public CreateReservationFrame(int activeHotelfk) {
 		initComponents();
+		initDatePanel();
+		GUIUtils.commonSetup(null, this);
+
 		this.setLayout(null);
 		this.reservationPanel.setLayout(null);
 		initDatePanel();
@@ -65,7 +69,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 			this.roomComboBox.addItem(r.UIString());
 		}
 	}
-
+	
 	private void initDatePanel() {
 		this.checkInPicker = new JXDatePicker();
 		this.checkInPicker.setDate(Calendar.getInstance().getTime());
@@ -87,33 +91,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 			this.repaint();
 		});
 	}
-
-//	private void initDatePanel() {
-//		SwingUtilities.invokeLater(() -> {
-//			this.datePanel = new JPanel(null);
-//			this.datePanel.setBounds(5, 50, 475, 100);
-//
-//			this.checkInPicker = new JXDatePicker();
-//			this.checkInPicker.setDate(Calendar.getInstance().getTime());
-//			this.checkInPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
-//			this.checkInPicker.setBounds(5, 50, 200, 30);
-//
-//			this.checkOutPicker = new JXDatePicker();
-//			this.checkOutPicker.setDate(Calendar.getInstance().getTime());
-//			this.checkOutPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
-//			this.checkOutPicker.setBounds(260, 50, 200, 30);
-//
-//			this.datePanel.add(this.checkInPicker);
-//			this.datePanel.add(this.checkOutPicker);
-//
-//			this.datePanel.revalidate();
-//			this.datePanel.repaint();
-//			
-//			this.add(this.datePanel);
-//			
-//			this.revalidate();
-//		});
-//	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
