@@ -116,6 +116,11 @@ public class CustomerFrame extends javax.swing.JFrame {
         });
 
         cancleButton.setText("Cancel");
+        cancleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancleButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -178,6 +183,10 @@ public class CustomerFrame extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_phoneTextFieldKeyTyped
+
+    private void cancleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancleButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancleButtonActionPerformed
 
     /**
      * @param args the command line arguments
