@@ -36,7 +36,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	private JXDatePicker checkInPicker;
 	private JXDatePicker checkOutPicker;
 
-	private List<Room> rooms;
 	private List<Reservation> reservations;
 
 	private Room room;
@@ -233,18 +232,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
 		Matcher matcher = EMAIL_PATTERN.matcher(email);
 		return matcher.matches();
-	}
-
-	private BigInteger validatePhone(String phone) {
-		BigInteger integerValue;
-
-		try {
-			integerValue = BigInteger.valueOf(Integer.parseInt(phone));
-		} catch (NumberFormatException e) {
-			return null;
-		}
-
-		return integerValue;
 	}
 
 	private int validateDatesAndRoom(int[] checkInDate, int[] checkOutDate) {

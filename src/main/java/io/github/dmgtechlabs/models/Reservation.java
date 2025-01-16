@@ -4,7 +4,6 @@ import io.github.dmgtechlabs.Utils;
 import io.github.dmgtechlabs.db.Dao;
 import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
-import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
