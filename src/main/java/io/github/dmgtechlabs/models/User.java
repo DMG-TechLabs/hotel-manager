@@ -178,9 +178,10 @@ public class User implements Dao {
            System.out.println("fffff");
             try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
                 System.out.println("1");
-                ResultSet rs = conn.callFunction("get_reservation_distribution", 1);
-                System.out.println("1");
+                ResultSet rs = conn.callFunction("get_reservation_distribution", this.accountHotelFk);
                 System.out.println(rs.getFetchSize());
+                System.out.println("1");
+                
                 while(rs.next()){
     //                int id, String username, String password, int type, int account_hotel_fk
                     System.out.println(
@@ -191,23 +192,27 @@ public class User implements Dao {
                 }
             } catch (SQLException e) {
                 SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_reservation_distribution failed", e);
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
             }
 
             try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
                 System.out.println("2");
                 ResultSet rs = conn.callFunction("get_total_revenue", this.accountHotelFk, start_date, end_date);
-//                System.out.println();
+
+                System.out.println(rs.getFetchSize());
                 System.out.println("2");
                 
                 while(rs.next()){
     //                int id, String username, String password, int type, int account_hotel_fk
-                    System.out.println(
-                            rs.getInt(0)
-                    );
+                    System.out.println(rs.getFloat(0));
+                    System.out.println(rs.getFloat(1));
                     
                 }
             } catch (SQLException e) {
                 SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_total_revenue failed", e);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
 
             try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
