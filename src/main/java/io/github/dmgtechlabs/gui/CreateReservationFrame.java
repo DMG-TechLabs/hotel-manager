@@ -49,12 +49,11 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	public CreateReservationFrame(int activeHotelfk) {
 		initComponents();
 		initDatePanel();
-		GUIUtils.commonSetup(null, this);
-
 		this.setLayout(null);
 		this.reservationPanel.setLayout(null);
-		initDatePanel();
+
 		GUIUtils.commonSetup(null, this);
+		
 		this.setResizable(false);
 		this.activeHotelfk = activeHotelfk;
 
