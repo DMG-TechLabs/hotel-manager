@@ -6,6 +6,7 @@ import io.github.kdesp73.databridge.connections.AvailableConnections;
 import io.github.kdesp73.databridge.connections.PostgresConnection;
 import io.github.kdesp73.databridge.helpers.Adapter;
 import io.github.kdesp73.databridge.helpers.SQLogger;
+import java.math.BigInteger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,15 +19,22 @@ public class Customer implements Dao {
     private int id;
     private String fName;
     private String lName;
-    private long phone; //Must become biginteger
+    private BigInteger phone;
     private String email;
 
     // Default constructor
     public Customer() {}
 
     // Parameterized constructor
-    public Customer(int id, String firstName, String lastName, long phone, String email) {
+    public Customer(int id, String firstName, String lastName, BigInteger phone, String email) {
         this.id = id;
+        this.fName = firstName;
+        this.lName = lastName;
+        this.phone = phone;
+        this.email = email;
+    }
+
+    public Customer(String firstName, String lastName, BigInteger phone, String email) {
         this.fName = firstName;
         this.lName = lastName;
         this.phone = phone;
@@ -58,11 +66,11 @@ public class Customer implements Dao {
         this.lName = lastName;
     }
 
-    public long getPhone() {
+    public BigInteger getPhone() {
         return phone;
     }
 
-    public void setPhone(long phone) {
+    public void setPhone(BigInteger phone) {
         this.phone = phone;
     }
 
@@ -73,6 +81,10 @@ public class Customer implements Dao {
     public void setEmail(String email) {
         this.email = email;
     }
+	
+	public static boolean exists(String email) {
+		return !Customer.selectByEmail(email).isEmpty();
+	}
 
     // Insert a new customer
 	@Override
@@ -87,19 +99,19 @@ public class Customer implements Dao {
     }
 
     // Update an existing customer
-	@Override
+    @Override
     public boolean update(Object... values) {
-        final int expectedParams = 4; // Including all fields
-        if (values.length != expectedParams)
+        final int expectedParams = 4;
+		if(values.length != expectedParams)
             throw new IllegalArgumentException(String.format("Invalid number of values (%s). Expected %d", values.length, expectedParams));
 
-        try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
+        try(PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
             conn.callProcedure("update_customer", Utils.appendFront(id, values));
-            return true;
         } catch (SQLException e) {
             SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Update Customer failed", e);
             return false;
         }
+        return true;
     }
 
     // Delete an existing customer
@@ -134,7 +146,8 @@ public class Customer implements Dao {
                 customer.setId(rs.getInt("id"));
                 customer.setFirstName(rs.getString("fname"));
                 customer.setLastName(rs.getString("lname"));
-                customer.setPhone(rs.getLong("phone"));
+                BigInteger dbphone = BigInteger.valueOf(rs.getBigDecimal("phone").longValue());
+                customer.setPhone(dbphone);
                 customer.setEmail(rs.getString("email"));
                 customers.add(customer);
             }
@@ -146,6 +159,7 @@ public class Customer implements Dao {
     }
 
     // Select all customers
+    //Not tested yet
     public static List<Customer> selectAll() {
         List<Customer> customers = new ArrayList<>();
         try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
@@ -155,7 +169,8 @@ public class Customer implements Dao {
                 customer.setId(rs.getInt("id"));
                 customer.setFirstName(rs.getString("fname"));
                 customer.setLastName(rs.getString("lname"));
-                customer.setPhone(rs.getLong("phone"));
+                BigInteger dbphone = BigInteger.valueOf(rs.getBigDecimal("phone").longValue());
+                customer.setPhone(dbphone);
                 customer.setEmail(rs.getString("email"));
                 customers.add(customer);
             }
