@@ -8,6 +8,7 @@ import io.github.dmgtechlabs.models.Hotel;
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Room;
 import io.github.dmgtechlabs.models.Statistics;
+import io.github.dmgtechlabs.models.Customer;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
@@ -49,6 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
 	private List<Reservation> pendingReservations;
 	private List<Reservation> acceptedReservations;
+        private List<Customer> customers;
 	private List<Hotel> hotels;
 
 	/**
@@ -96,6 +98,7 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 
 		loadReservations();
+                loadCustomers();
 	}
 
 	public MainFrame() {
@@ -110,6 +113,7 @@ public class MainFrame extends javax.swing.JFrame {
 		applyFilters();
 
 		loadReservations();
+                loadCustomers();
 	}
 
 	private void setupFilters() {
@@ -167,6 +171,9 @@ public class MainFrame extends javax.swing.JFrame {
         acceptButton = new javax.swing.JButton();
         showInfoButton = new javax.swing.JButton();
         undoButton = new javax.swing.JButton();
+        customersPanel = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        customersList = new javax.swing.JList<>();
         statisticsPanel = new javax.swing.JPanel();
         getStatistics = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -401,7 +408,7 @@ public class MainFrame extends javax.swing.JFrame {
         searchPanelLayout.setVerticalGroup(
             searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(filtersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 731, Short.MAX_VALUE)
         );
 
         tabbedPane.addTab("Search", searchPanel);
@@ -499,7 +506,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane3))
                 .addGap(18, 18, 18)
                 .addComponent(declineButton)
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Reservations", reservationsPanel);
@@ -769,7 +776,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(changePasswordPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(miscButtonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(432, Short.MAX_VALUE))
+                .addContainerGap(459, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Options", optionsPanel);
@@ -908,6 +915,17 @@ public class MainFrame extends javax.swing.JFrame {
 		this.acceptedReservations = Reservation.selectByReservationStatus(Reservation.Status.ACCEPTED.getValue());
 		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 	}
+        private void loadCustomers() {
+            DefaultListModel<String> model = new DefaultListModel<>();
+            List<Customer> customerList = Customer.selectAll();
+            for (Customer customer : customerList) {
+                String row = "Customer ID: " + customer.getId() + "First Name: " + customer.getFirstName() + "Last Name: " + customer.getLastName() +
+                             "Phone: " + customer.getPhone() + "Email: " + customer.getEmail();
+                model.addElement(row);
+            }
+            customersList.setModel(model);
+        }
+
 
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
 		if (helpFrame.isShowing()) {
@@ -1017,8 +1035,8 @@ public class MainFrame extends javax.swing.JFrame {
 			model.addElement(room.toString());
 		}
 		this.resultFilterList.setModel(model);
-	}
-
+	} 
+        
 	private void applyFilters() {
 		Filters filters = getFilters();
 		List<Room> rooms = filters.search();
@@ -1211,6 +1229,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_switchUserButtonActionPerformed
 
     private void addReservationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReservationMenuItemActionPerformed
+		if (this.resultFilterList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Choose an available room from the search tab first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
 		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
@@ -1266,6 +1289,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel changePasswordPanel;
     private javax.swing.JPasswordField confirmNewPasswordField;
     private javax.swing.JPasswordField currentPasswordField;
+    private javax.swing.JList<String> customersList;
+    private javax.swing.JPanel customersPanel;
     private javax.swing.JButton declineButton;
     private javax.swing.JMenuItem deleteCustomerMenuItem;
     private javax.swing.JMenu deleteMenu;
@@ -1303,6 +1328,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JCheckBox kingRoomFilterCheckbox;
