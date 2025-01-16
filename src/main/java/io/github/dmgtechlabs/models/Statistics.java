@@ -30,7 +30,7 @@ public class Statistics {
     public void getStatistics(int accountHotelFk, String start_date, String end_date) {
 			try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 				ResultSet rs = conn.callFunction("get_reservation_distribution", accountHotelFk);
-				SQLogger.getLogger().logResultSet(rs);
+//				SQLogger.getLogger().logResultSet(rs);
                                 while (rs.next()){
                                     reservationDistribution.put(rs.getString(0), rs.getInt(1));
                                 }

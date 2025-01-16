@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -25,6 +26,11 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -611,7 +617,7 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(20, 20, 20))
-                    .addGroup(statisticsPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticsPanelLayout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
@@ -1152,9 +1158,46 @@ public class MainFrame extends javax.swing.JFrame {
                 occupiedRooms.setText(String.valueOf(statistics.occupiedRooms));
                 occupancyRate.setText(String.valueOf(statistics.occupancyRate) + " %");
                 
+//                TimeSeries series = new TimeSeries("Monthly Sales");
+//                series.add(new Month(1, 2024), 200);
+//                series.add(new Month(2, 2024), 150);
+//                series.add(new Month(3, 2024), 180);
+//
+//                TimeSeriesCollection dataset = new TimeSeriesCollection();
+//                dataset.addSeries(series);
+//
+//                JFreeChart chart = ChartFactory.createTimeSeriesChart(
+//                    "Monthly Sales",
+//                    "Date",
+//                    "Sales",
+//                    dataset,
+//                    true,    // legend
+//                    false,   // tooltips
+//                    false);  // no URLs
+                
+                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+                
+                for (Map.Entry<String, Integer> entry :
+                    statistics.reservationDistribution.entrySet()) {
+                    dataset.addValue(entry.getValue(), "Reservations", entry.getKey());
+               }
+
+                JFreeChart chart = ChartFactory.createBarChart("Reservation Distribution", "month", "Reservations", dataset);
+                ChartPanel jFreeChartPanel = new ChartPanel(chart);
+                jFreeChartPanel.setVisible(true);
+                jFreeChartPanel.setBounds(5, 240, 1009, 470);
+                SwingUtilities.invokeLater(() -> {
+                    statisticsPanel.add(jFreeChartPanel);
+                    statisticsPanel.revalidate();
+                    statisticsPanel.repaint();
+                });
+                
             } catch (Exception ex) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            
+            
     }//GEN-LAST:event_getStatisticsActionPerformed
 
     private void switchUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchUserButtonActionPerformed
