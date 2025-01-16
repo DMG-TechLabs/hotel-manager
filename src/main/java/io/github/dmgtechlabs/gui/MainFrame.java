@@ -171,7 +171,7 @@ public class MainFrame extends javax.swing.JFrame {
         acceptButton = new javax.swing.JButton();
         showInfoButton = new javax.swing.JButton();
         undoButton = new javax.swing.JButton();
-        customersPanel = new javax.swing.JPanel();
+        customerPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         customersList = new javax.swing.JList<>();
         statisticsPanel = new javax.swing.JPanel();
@@ -510,6 +510,32 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         tabbedPane.addTab("Reservations", reservationsPanel);
+
+        customersList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(customersList);
+
+        javax.swing.GroupLayout customerPanelLayout = new javax.swing.GroupLayout(customerPanel);
+        customerPanel.setLayout(customerPanelLayout);
+        customerPanelLayout.setHorizontalGroup(
+            customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(customerPanelLayout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 889, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(57, Short.MAX_VALUE))
+        );
+        customerPanelLayout.setVerticalGroup(
+            customerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(customerPanelLayout.createSequentialGroup()
+                .addGap(89, 89, 89)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(66, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Customers", customerPanel);
 
         getStatistics.setText("Load Statistics");
         getStatistics.addActionListener(new java.awt.event.ActionListener() {
@@ -919,8 +945,8 @@ public class MainFrame extends javax.swing.JFrame {
             DefaultListModel<String> model = new DefaultListModel<>();
             List<Customer> customerList = Customer.selectAll();
             for (Customer customer : customerList) {
-                String row = "Customer ID: " + customer.getId() + "First Name: " + customer.getFirstName() + "Last Name: " + customer.getLastName() +
-                             "Phone: " + customer.getPhone() + "Email: " + customer.getEmail();
+                String row = "Customer ID: " + customer.getId() + " " + customer.getFirstName() + " " + customer.getLastName() +
+                             " " + customer.getPhone() + " " + customer.getEmail();
                 model.addElement(row);
             }
             customersList.setModel(model);
@@ -1284,8 +1310,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel changePasswordPanel;
     private javax.swing.JPasswordField confirmNewPasswordField;
     private javax.swing.JPasswordField currentPasswordField;
+    private javax.swing.JPanel customerPanel;
     private javax.swing.JList<String> customersList;
-    private javax.swing.JPanel customersPanel;
     private javax.swing.JButton declineButton;
     private javax.swing.JMenuItem deleteCustomerMenuItem;
     private javax.swing.JMenu deleteMenu;
