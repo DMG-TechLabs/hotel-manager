@@ -7,6 +7,8 @@ profile:
 include:
   - name: CheckDependencyLicenses
 inspections:
+  - group: InspectionsToInclude
+    enabled: true
   - inspection: CyclomaticComplexityInspection
     enabled: true
   - inspection: ClassInheritanceDepthInspection
