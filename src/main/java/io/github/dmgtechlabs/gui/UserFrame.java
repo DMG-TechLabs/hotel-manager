@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -186,13 +187,9 @@ public class UserFrame extends javax.swing.JFrame {
             if(this.users == null || usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) throw new IllegalArgumentException("Empty username or password");
 //            User newUser = new User(0, usernameField.getText(), passwordField.getPassword().toString(), this.user.getType(), this.hotelid);
             this.users.get(this.selectedUser).update(usernameField.getText(), passwordField.getText(), this.users.get(this.selectedUser).getType());
+            this.dispose();
         } catch (Exception e){
-            JDialog j = new JDialog(this, "Error");
-            JLabel l = new JLabel(e.getMessage());
-            j.add(l);
-            j.setSize(100, 100);
-            j.setLocationRelativeTo(null);
-            j.setVisible(true);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -201,18 +198,17 @@ public class UserFrame extends javax.swing.JFrame {
             if(usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) throw new IllegalArgumentException("Empty username or password");
             User newUser = new User(0, usernameField.getText(), passwordField.getText(), userType.getSelectedIndex()+2, this.hotelid);
             newUser.insert();
+            this.dispose();
         } catch (Exception e){
-            JDialog j = new JDialog(this, "Error");
-            JLabel l = new JLabel(e.getMessage());
-            j.add(l);
-            j.setSize(100, 100);
-            j.setLocationRelativeTo(null);
-            j.setVisible(true);
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
+        
     }//GEN-LAST:event_accountButtonActionPerformed
 
     private void deleteUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUserButtonActionPerformed
         this.users.get(this.selectedUser).delete();
+        this.dispose();
     }//GEN-LAST:event_deleteUserButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
