@@ -7,6 +7,7 @@ import io.github.dmgtechlabs.Filters;
 import io.github.dmgtechlabs.models.Hotel;
 import io.github.dmgtechlabs.models.Reservation;
 import io.github.dmgtechlabs.models.Room;
+import io.github.dmgtechlabs.models.Statistics;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
@@ -1027,14 +1028,13 @@ public class MainFrame extends javax.swing.JFrame {
         
         String sDate = startDate.getText();
         String eDate = endDate.getText();
-//            try {
-//                Date sdate = formatter.parse(sDate);
-//                Date edate = formatter.parse(eDate);
-//                System.out.println("bbbbb");
-//                this.state.LoggedInUser.getStatistics(sdate, edate);
-//            } catch (ParseException ex) {
-//                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            try {
+                System.out.println("bbbbb");
+                new Statistics().getStatistics(this.state.LoggedInUser.getAccountHotelFk() , sDate, eDate);
+                
+            } catch (Exception ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//GEN-LAST:event_getStatisticsActionPerformed
 
     private void switchUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchUserButtonActionPerformed

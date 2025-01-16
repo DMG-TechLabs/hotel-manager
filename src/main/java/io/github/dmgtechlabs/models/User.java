@@ -174,29 +174,6 @@ public class User implements Dao {
 	}
 
 	;
-   
-   public void getStatistics(Date start_date, Date end_date) {
-		System.out.println("ccccc");
-		if (this.isManager() || this.isAdmin()) {
-			System.out.println("fffff");
-			try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-				ResultSet rs = conn.callFunction("get_reservation_distribution", 1);
-				SQLogger.getLogger().logResultSet(rs);
-				rs.close();
-			} catch (SQLException ex) {
-				SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_reservation_distribution failed", ex);
-			}
-
-			try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-				System.out.println("2");
-				var total_revenue = (float) conn.callFunctionValue("get_total_revenue", Types.FLOAT, this.accountHotelFk, start_date, end_date);
-				System.out.println("Total Revenue: " + total_revenue);
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-				SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "get_total_revenue failed", e);
-			}
-		}
-	}
 
 	public static List<User> selectWithUsernamePassword(String username, String password, int hotelId) throws Exception {
 		assert (username != null);
