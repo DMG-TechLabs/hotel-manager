@@ -103,7 +103,7 @@ public class MainFrame extends javax.swing.JFrame {
 		applyFilters();
 
 		loadReservations();
-                loadCustomers();
+        loadCustomers();
 	}
 
 	private void setupFilters() {
@@ -216,6 +216,11 @@ public class MainFrame extends javax.swing.JFrame {
         tabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tabbedPaneStateChanged(evt);
+            }
+        });
+        tabbedPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabbedPaneMouseClicked(evt);
             }
         });
 
@@ -1289,6 +1294,10 @@ public class MainFrame extends javax.swing.JFrame {
 		this.pendingList.clearSelection();
 		this.acceptedList.clearSelection();
     }//GEN-LAST:event_undoButtonActionPerformed
+
+    private void tabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabbedPaneMouseClicked
+		loadReservations();
+    }//GEN-LAST:event_tabbedPaneMouseClicked
 
 	private javax.swing.JMenuItem addUserMenuItem;
 
