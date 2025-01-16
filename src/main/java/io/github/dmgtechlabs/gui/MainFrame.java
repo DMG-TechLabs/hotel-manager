@@ -33,7 +33,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private AboutFrame aboutFrame;
 	private HotelFrame hotelFrame;
 	private RoomFrame roomFrame;
-        private CustomerFrame customerFrame;
+	private CustomerFrame customerFrame;
 	private UserFrame userFrame;
 	private ReservationFrame reservationFrame;
 	private CreateReservationFrame createReservationFrame;
@@ -103,41 +103,39 @@ public class MainFrame extends javax.swing.JFrame {
 //			});
 //			editMenu.add(editHotelMenuItem);
 //                }
-
 		setupFilters();
 		applyFilters();
 
-                
-                
 		if (user.isGuest()) {
 			// Allow only Searching for guest user
-                        addUserMenuItem.setEnabled(false);
-                        editUserMenuItem.setEnabled(false);
-                        
-                        addHotelMenuItem.setEnabled(false);
-                        editHotelMenuItem.setEnabled(false);
-                        
+			addUserMenuItem.setEnabled(false);
+			editUserMenuItem.setEnabled(false);
+
+			addHotelMenuItem.setEnabled(false);
+			editHotelMenuItem.setEnabled(false);
+
 			this.tabbedPane.setEnabledAt(2, false);
 			this.tabbedPane.setEnabledAt(3, false);
 		} else if (user.isEmployee()) {
 			// Hide statistics from employees
 			this.tabbedPane.setEnabledAt(3, false);
-                        
-                        addUserMenuItem.setEnabled(false);
-                        editUserMenuItem.setEnabled(false);
-                        
-                        addHotelMenuItem.setEnabled(false);
-                        editHotelMenuItem.setEnabled(false);
-		} else if (user.isManager()){
-                        addUserMenuItem.setEnabled(true);
-                        editUserMenuItem.setEnabled(true);
-                        
-                        addHotelMenuItem.setEnabled(false);
-                        editHotelMenuItem.setEnabled(false);
-                }
+
+			addUserMenuItem.setEnabled(false);
+			editUserMenuItem.setEnabled(false);
+
+			addHotelMenuItem.setEnabled(false);
+			editHotelMenuItem.setEnabled(false);
+		} else if (user.isManager()) {
+			addUserMenuItem.setEnabled(true);
+			editUserMenuItem.setEnabled(true);
+
+			addHotelMenuItem.setEnabled(false);
+			editHotelMenuItem.setEnabled(false);
+		}
 
 		loadReservations();
 		loadCustomers();
+		loadHotels();
 	}
 
 	public MainFrame() {
@@ -210,6 +208,11 @@ public class MainFrame extends javax.swing.JFrame {
         acceptButton = new javax.swing.JButton();
         showInfoButton = new javax.swing.JButton();
         undoButton = new javax.swing.JButton();
+        hotelPanel = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        hotelList = new javax.swing.JList<>();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        hotelInfoEditorPane = new javax.swing.JEditorPane();
         customerPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         customersList = new javax.swing.JList<>();
@@ -255,6 +258,7 @@ public class MainFrame extends javax.swing.JFrame {
         deleteMenu = new javax.swing.JMenu();
         deleteRoomMenuItem = new javax.swing.JMenuItem();
         deleteCustomerMenuItem = new javax.swing.JMenuItem();
+        hotelMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -549,6 +553,33 @@ public class MainFrame extends javax.swing.JFrame {
         );
 
         tabbedPane.addTab("Reservations", reservationsPanel);
+
+        hotelList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                hotelListMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(hotelList);
+
+        hotelInfoEditorPane.setContentType("text/html"); // NOI18N
+        jScrollPane6.setViewportView(hotelInfoEditorPane);
+
+        javax.swing.GroupLayout hotelPanelLayout = new javax.swing.GroupLayout(hotelPanel);
+        hotelPanel.setLayout(hotelPanelLayout);
+        hotelPanelLayout.setHorizontalGroup(
+            hotelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(hotelPanelLayout.createSequentialGroup()
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE))
+        );
+        hotelPanelLayout.setVerticalGroup(
+            hotelPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
+            .addComponent(jScrollPane6)
+        );
+
+        tabbedPane.addTab("Hotel", hotelPanel);
 
         customersList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -940,6 +971,14 @@ public class MainFrame extends javax.swing.JFrame {
         });
         deleteMenu.add(deleteCustomerMenuItem);
 
+        hotelMenuItem.setText("Hotel");
+        hotelMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hotelMenuItemActionPerformed(evt);
+            }
+        });
+        deleteMenu.add(hotelMenuItem);
+
         jMenuBar1.add(deleteMenu);
 
         helpMenu.setText("Help");
@@ -1015,7 +1054,9 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomMenuItemActionPerformed
 		this.roomFrame = new RoomFrame(this.state.activeHotelId);
-		GUIUtils.addWindowClosedListener(this.roomFrame, () -> { this.applyFilters(); });
+		GUIUtils.addWindowClosedListener(this.roomFrame, () -> {
+			this.applyFilters();
+		});
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
@@ -1091,36 +1132,35 @@ public class MainFrame extends javax.swing.JFrame {
 		Room room = rooms.get(this.resultFilterList.getSelectedIndex());
 		return room;
 	}
-        
-    public Customer getSelectedCustomer() {
-        // Get the selected index from the list
-        int selectedIndex = customersList.getSelectedIndex();
-        // Check if an item is selected
-        if (selectedIndex == -1) {
-            return null;
-        }
 
-        // Retrieve the selected item's text
-        String selectedValue = customersList.getModel().getElementAt(selectedIndex);
+	public Customer getSelectedCustomer() {
+		// Get the selected index from the list
+		int selectedIndex = customersList.getSelectedIndex();
+		// Check if an item is selected
+		if (selectedIndex == -1) {
+			return null;
+		}
 
-        // Parse the customer ID from the selected item text
-        try {
-            String[] parts = selectedValue.split(" ");
-            int customerId = -1;
-            for (int i = 0; i < parts.length; i++) {
-                if (parts[i].equals("ID:")) {
-                    customerId = Integer.parseInt(parts[i + 1]);
-                    break;
-                }
-            }
-            return Customer.selectById(customerId).getFirst();
+		// Retrieve the selected item's text
+		String selectedValue = customersList.getModel().getElementAt(selectedIndex);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+		// Parse the customer ID from the selected item text
+		try {
+			String[] parts = selectedValue.split(" ");
+			int customerId = -1;
+			for (int i = 0; i < parts.length; i++) {
+				if (parts[i].equals("ID:")) {
+					customerId = Integer.parseInt(parts[i + 1]);
+					break;
+				}
+			}
+			return Customer.selectById(customerId).getFirst();
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 
     private void resetFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetFiltersButtonActionPerformed
@@ -1329,14 +1369,18 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 
 		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
-		GUIUtils.addWindowClosedListener(this.createReservationFrame, () -> { loadReservations(); });
+		GUIUtils.addWindowClosedListener(this.createReservationFrame, () -> {
+			loadReservations();
+		});
 		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
     private void editCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerMenuItemActionPerformed
-        this.customerFrame = new CustomerFrame(getSelectedCustomer());
-        GUIUtils.addWindowClosedListener(this.customerFrame, () -> { this.loadCustomers();});
-        GUIUtils.showFrame(this.customerFrame);
+		this.customerFrame = new CustomerFrame(getSelectedCustomer());
+		GUIUtils.addWindowClosedListener(this.customerFrame, () -> {
+			this.loadCustomers();
+		});
+		GUIUtils.showFrame(this.customerFrame);
     }//GEN-LAST:event_editCustomerMenuItemActionPerformed
 
     private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
@@ -1352,7 +1396,7 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 
 		if (customer.delete()) {
-                        loadCustomers();
+			loadCustomers();
 			JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(this, "Could not delete Customer", "Failure", JOptionPane.ERROR_MESSAGE);
@@ -1378,24 +1422,63 @@ public class MainFrame extends javax.swing.JFrame {
 		this.acceptedList.clearSelection();
     }//GEN-LAST:event_undoButtonActionPerformed
 
-    
+	private void loadHotels() {
+		this.hotels = Hotel.selectAll();
+		this.hotelList.setListData(Hotel.listToArray(this.hotels.stream().map(hotel -> (Hotel) hotel).toList()));
+	}
 
-       
-    
+
     private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserMenuItemActionPerformed
-        this.userFrame = new UserFrame(this.state.activeHotelId);
+		this.userFrame = new UserFrame(this.state.activeHotelId);
 		GUIUtils.showFrame(this.userFrame);
     }//GEN-LAST:event_addUserMenuItemActionPerformed
 
     private void addHotelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addHotelMenuItemActionPerformed
-        this.hotelFrame = new HotelFrame();
-        GUIUtils.showFrame(this.hotelFrame);
+		this.hotelFrame = new HotelFrame();
+		GUIUtils.showFrame(this.hotelFrame);
     }//GEN-LAST:event_addHotelMenuItemActionPerformed
 
     private void editHotelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editHotelMenuItemActionPerformed
-        this.hotelFrame = new HotelFrame(new Hotel(this.state.activeHotelId));
-        GUIUtils.showFrame(this.hotelFrame);
+		var selected = getSelectedHotel();
+		if (selected == null) {
+			JOptionPane.showMessageDialog(this, "Please select a hotel", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		this.hotelFrame = new HotelFrame(selected);
+		GUIUtils.addWindowClosedListener(this.hotelFrame, () -> {
+			loadHotels();
+		});
+		GUIUtils.showFrame(this.hotelFrame);
     }//GEN-LAST:event_editHotelMenuItemActionPerformed
+
+	private Hotel getSelectedHotel() {
+		int index = this.hotelList.getSelectedIndex();
+		if (index < 0) {
+			return null;
+		}
+		return this.hotels.get(index);
+	}
+
+    private void hotelListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hotelListMouseClicked
+		this.hotelInfoEditorPane.setText(getSelectedHotel().toHtml());
+    }//GEN-LAST:event_hotelListMouseClicked
+
+    private void hotelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hotelMenuItemActionPerformed
+		var selected = getSelectedHotel();
+		if (selected == null) {
+			JOptionPane.showMessageDialog(this, "Please select a hotel", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		int option = JOptionPane.showConfirmDialog(this, "This action cannot be reversed");
+		if(option != 0) return;
+		if(selected.delete()){
+			JOptionPane.showMessageDialog(this, "Hotel " + selected.getName() + " deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			GUIUtils.logUserError(this, "Could not delete hotel " + selected.getName());
+		}
+		loadHotels();
+    }//GEN-LAST:event_hotelMenuItemActionPerformed
 
 //	private javax.swing.JMenuItem addUserMenuItem;
 //        private javax.swing.JMenuItem addHotelMenuItem;
@@ -1436,8 +1519,12 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem helpMenuItem;
     private javax.swing.JPanel homePanel;
+    private javax.swing.JEditorPane hotelInfoEditorPane;
     private javax.swing.JLabel hotelLabel;
+    private javax.swing.JList<String> hotelList;
+    private javax.swing.JMenuItem hotelMenuItem;
     private javax.swing.JLabel hotelNameLabel;
+    private javax.swing.JPanel hotelPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1457,7 +1544,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JCheckBox kingRoomFilterCheckbox;
     private javax.swing.JFormattedTextField maxPriceFormattedTextField;
     private javax.swing.JFormattedTextField minPriceFormattedTextField;
