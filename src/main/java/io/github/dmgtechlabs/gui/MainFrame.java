@@ -921,10 +921,6 @@ public class MainFrame extends javax.swing.JFrame {
 		customersList.setModel(model);
 	}
 
-        /*public Runnable refershCustomersRunnable(){
-            loadCustomers();
-        }*/
-
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
 		if (helpFrame.isShowing()) {
 			return;
@@ -1268,10 +1264,9 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
     private void editCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerMenuItemActionPerformed
-        CustomerFrame cF = new CustomerFrame(getSelectedCustomer());
-        cF.setVisible(true);
-        //this.customerFrame = new CustomerFrame(getSelectedCustomer());
-        //GUIUtils.showFrame(this.customerFrame);
+        this.customerFrame = new CustomerFrame(getSelectedCustomer());
+        GUIUtils.addWindowClosedListener(this.customerFrame, () -> { this.loadCustomers();});
+        GUIUtils.showFrame(this.customerFrame);
     }//GEN-LAST:event_editCustomerMenuItemActionPerformed
 
     private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
