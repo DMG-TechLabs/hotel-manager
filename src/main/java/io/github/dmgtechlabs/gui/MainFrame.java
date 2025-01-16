@@ -1375,10 +1375,6 @@ public class MainFrame extends javax.swing.JFrame {
 		this.acceptedList.clearSelection();
     }//GEN-LAST:event_undoButtonActionPerformed
 
-    
-
-       
-    
     private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserMenuItemActionPerformed
         this.userFrame = new UserFrame(this.state.activeHotelId);
 		GUIUtils.showFrame(this.userFrame);
