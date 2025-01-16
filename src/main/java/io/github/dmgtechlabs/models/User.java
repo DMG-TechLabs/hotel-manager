@@ -184,42 +184,46 @@ public class User implements Dao {
 
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
 			ResultSet rs = conn.callFunction("select_user_with_username_password", username, password, hotelId);
-//            while(rs.next()){
-//                System.out.println(rs.getString(0));
-//            }
+
 			List<User> users = new ArrayList<User>();
 			while (rs.next()) {
-//                int id, String username, String password, int type, int account_hotel_fk
+
 				System.out.println("aaaa");
 				users.add(new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getInt("type"), rs.getInt("account_hotel_fk")));
 			}
-//            return Adapter.load(rs, User.class);
+
 			return users;
 		} catch (Exception e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
 			throw new Exception(e.getMessage());
-//            return null;
+
 		}
 	}
+        
+        
 
-	public static User selectUserByName(String username) {
+	public static List<User> selectWithUsernamePassword(String username, String password) throws Exception {
 		assert (username != null);
 		assert (!username.isBlank());
 
+		assert (password != null);
+		assert (!password.isBlank());
+
 		try (PostgresConnection conn = (PostgresConnection) AvailableConnections.POSTGRES.getConnection()) {
-			ResultSet rs = conn.callFunction("select_user_with_username", username);
+			ResultSet rs = conn.callFunction("select_user_with_username_password", username, password);
 
 			List<User> users = new ArrayList<User>();
 			while (rs.next()) {
 
-				users.add(new User(rs.getInt("id"), rs.getString("username"), "", rs.getInt("type"), rs.getInt("account_hotel_fk")));
+				System.out.println("aaaa");
+				users.add(new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getInt("type"), rs.getInt("account_hotel_fk")));
 			}
 
-			return users.get(0);
+			return users;
 		} catch (Exception e) {
 			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Select user failed", e);
+			throw new Exception(e.getMessage());
 
-			return null;
 		}
 	}
 
@@ -227,6 +231,18 @@ public class User implements Dao {
 		System.out.println(username);
 		System.out.println(password);
 		List<User> users_list = User.selectWithUsernamePassword(username, password, hotelId);
+		System.out.println(users_list);
+		if (users_list.size() == 1) {
+			return users_list.get(0);
+		} else {
+			throw new IllegalArgumentException("Username or Password error");
+		}
+	}
+        
+        public static User login(String username, String password) throws IllegalArgumentException, Exception {
+		System.out.println(username);
+		System.out.println(password);
+		List<User> users_list = User.selectWithUsernamePassword(username, password);
 		System.out.println(users_list);
 		if (users_list.size() == 1) {
 			return users_list.get(0);

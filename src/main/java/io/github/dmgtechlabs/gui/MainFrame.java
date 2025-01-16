@@ -74,7 +74,35 @@ public class MainFrame extends javax.swing.JFrame {
 				}
 			});
 			addMenu.add(addUserMenuItem);
-		}
+		} else if (user.isAdmin()){
+                    addUserMenuItem = new javax.swing.JMenuItem();
+			addUserMenuItem.setText("User");
+			addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent evt) {
+					addUserMenuItemActionPerformed(evt);
+				}
+			});
+			addMenu.add(addUserMenuItem);
+                    
+                } else if (user.isAdmin()){
+                    addHotelMenuItem = new javax.swing.JMenuItem();
+			addHotelMenuItem.setText("User");
+			addHotelMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent evt) {
+					addHotelMenuItemActionPerformed(evt);
+				}
+			});
+			addMenu.add(addHotelMenuItem);
+                        
+                        editHotelMenuItem = new javax.swing.JMenuItem();
+			editHotelMenuItem.setText("User");
+			editHotelMenuItem.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent evt) {
+					editHotelMenuItemActionPerformed(evt);
+				}
+			});
+			editMenu.add(addHotelMenuItem);
+                }
 
 		setupFilters();
 		applyFilters();
@@ -86,7 +114,7 @@ public class MainFrame extends javax.swing.JFrame {
 		} else if (user.isEmployee()) {
 			// Hide statistics from employees
 			this.tabbedPane.setEnabledAt(3, false);
-		}
+		} 
 
 		loadReservations();
 		loadCustomers();
@@ -952,6 +980,16 @@ public class MainFrame extends javax.swing.JFrame {
 		this.userFrame = new UserFrame(this.state.LoggedInUser.getAccountHotelFk());
 		GUIUtils.showFrame(this.userFrame);
 	}
+        
+        private void addHotelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+		this.hotelFrame = new HotelFrame();
+		GUIUtils.showFrame(this.hotelFrame);
+	}
+        
+        private void editHotelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
+		this.hotelFrame = new HotelFrame(new Hotel(this.state.activeHotelId));
+		GUIUtils.showFrame(this.hotelFrame);
+	}
 
     private void editUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editUserMenuItemActionPerformed
 		this.userFrame = new UserFrame(this.state.LoggedInUser);
@@ -1293,6 +1331,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_undoButtonActionPerformed
 
 	private javax.swing.JMenuItem addUserMenuItem;
+        private javax.swing.JMenuItem addHotelMenuItem;
+        private javax.swing.JMenuItem editHotelMenuItem;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
