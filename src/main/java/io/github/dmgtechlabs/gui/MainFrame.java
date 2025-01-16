@@ -1020,6 +1020,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addRoomMenuItemActionPerformed
 
     private void editRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoomMenuItemActionPerformed
+		if (this.resultFilterList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Choose a room from the search tab first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		this.roomFrame = new RoomFrame(this.state.activeHotelId, getSelectedRoom());
 		GUIUtils.showFrame(this.roomFrame);
     }//GEN-LAST:event_editRoomMenuItemActionPerformed
@@ -1324,7 +1329,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addReservationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReservationMenuItemActionPerformed
 		if (this.resultFilterList.getSelectedIndex() < 0) {
-			JOptionPane.showMessageDialog(this, "Choose an available room from the search tab first", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Choose a room from the search tab first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
