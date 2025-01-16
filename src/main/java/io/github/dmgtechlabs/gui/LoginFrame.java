@@ -5,13 +5,9 @@
 package io.github.dmgtechlabs.gui;
 
 import io.github.dmgtechlabs.models.User;
-import io.github.kdesp73.databridge.connections.AvailableConnections;
-import io.github.kdesp73.databridge.connections.PostgresConnection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
