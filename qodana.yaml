@@ -1,0 +1,10 @@
+version: "1.0"
+linter: jetbrains/qodana-jvm:2024.3
+project-configurator: Maven
+profile:
+  name: qodana.recommended
+include:
+  - name: CheckDependencyLicenses
+inspections:
+  CyclomaticComplexityInspection: true
+  ClassInheritanceDepthInspection: true
