@@ -49,12 +49,11 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 	public CreateReservationFrame(int activeHotelfk) {
 		initComponents();
 		initDatePanel();
-		GUIUtils.commonSetup(null, this);
-
 		this.setLayout(null);
 		this.reservationPanel.setLayout(null);
-		initDatePanel();
+
 		GUIUtils.commonSetup(null, this);
+		
 		this.setResizable(false);
 		this.activeHotelfk = activeHotelfk;
 
@@ -115,9 +114,9 @@ public class CreateReservationFrame extends javax.swing.JFrame {
         lnameIndicator = new javax.swing.JLabel();
         emailIndicator = new javax.swing.JLabel();
         phoneIndicator = new javax.swing.JLabel();
-        phoneTextField = new javax.swing.JTextField();
         checkInLabel = new javax.swing.JLabel();
         checkOutLabel = new javax.swing.JLabel();
+        phoneTextField = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -182,10 +181,10 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                                     .addComponent(emailIndicator, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(fNameTextField)
+                                    .addComponent(fNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                                     .addComponent(lnameTextField)
                                     .addComponent(emailFormattedTextField)
-                                    .addComponent(phoneTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))))
+                                    .addComponent(phoneTextField))))
                         .addContainerGap(41, Short.MAX_VALUE))
                     .addGroup(reservationPanelLayout.createSequentialGroup()
                         .addComponent(checkInLabel)
@@ -255,13 +254,13 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		return matcher.matches();
 	}
 
-	private int validatePhone(String phone) {
-		Integer integerValue;
+	private BigInteger validatePhone(String phone) {
+		BigInteger integerValue;
 
 		try {
-			integerValue = Integer.valueOf(phone);
+			integerValue = BigInteger.valueOf(Integer.parseInt(phone));
 		} catch (NumberFormatException e) {
-			return -1;
+			return null;
 		}
 
 		return integerValue;
@@ -336,7 +335,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		return 1;
 	}
 
-	private int validatePersonalInfo(String fname, String lname, String email, String phone) {
+	private int validatePersonalInfo(String fname, String lname, String email) {
 		if (fname.isBlank()) {
 			GUIUtils.logUserError(this, "Provide First Name");
 			return -1;
@@ -355,10 +354,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		if (!isEmailValid()) {
 			GUIUtils.logUserError(this, "Invalid email");
 			return -1;
-		}
-
-		if (phone.isBlank()) {
-			GUIUtils.logUserError(this, "Provide phone number");
 		}
 
 		return 1;
@@ -410,7 +405,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		String fname = this.fNameTextField.getText();
 		String lname = this.lnameTextField.getText();
 		String email = this.emailFormattedTextField.getText();
-		String phone = this.phoneTextField.getText();
 		int checkInYear = this.checkInPicker.getDate().getYear() + 1900;
 		int checkInMonth = this.checkInPicker.getDate().getMonth() + 1;
 		int checkInDay = this.checkInPicker.getDate().getDate();
@@ -433,27 +427,23 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		Room selectedRoom = this.rooms.get(this.roomComboBox.getSelectedIndex());
 		Customer customer;
 
-		Integer integerValue = validatePhone(phone);
-		BigInteger phoneNum;
 
 		if (validateDatesAndRoom(checkInDate, checkOutDate) < 0) {
 			return;
 		}
 
-		if (validatePersonalInfo(fname, lname, email, phone) < 0) {
+		if (validatePersonalInfo(fname, lname, email) < 0) {
 			return;
 		}
 
-		if (integerValue < 0) {
-			GUIUtils.logUserError(this, "Invalid phone number");
-			return;
-		}
-
-		phoneNum = BigInteger.valueOf(integerValue);
+		String phoneString = this.phoneTextField.getText();
+		System.out.println(phoneString);
+		if(phoneString.isBlank()) return;
+		BigInteger phone = new BigInteger(phoneString);
 
 		if (Customer.exists(email)) {
 			customer = Customer.selectByEmail(email).get(0);
-			customer.update(fname, lname, phoneNum, email);
+			customer.update(fname, lname, phone, email);
 
 			createReservation(customer, selectedRoom, checkIn, checkOut);
 
@@ -462,7 +452,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 			return;
 		}
 
-		new Customer(fname, lname, phoneNum, email).insert();
+		new Customer(fname, lname, phone, email).insert();
 		customer = Customer.selectByEmail(email).get(0);
 
 		createReservation(customer, selectedRoom, checkIn, checkOut);
@@ -484,7 +474,7 @@ public class CreateReservationFrame extends javax.swing.JFrame {
     private javax.swing.JButton okBtn;
     private javax.swing.JLabel personalInfoLabel;
     private javax.swing.JLabel phoneIndicator;
-    private javax.swing.JTextField phoneTextField;
+    private javax.swing.JFormattedTextField phoneTextField;
     private javax.swing.JPanel reservationPanel;
     private javax.swing.JComboBox<String> roomComboBox;
     private javax.swing.JLabel roomLabel;

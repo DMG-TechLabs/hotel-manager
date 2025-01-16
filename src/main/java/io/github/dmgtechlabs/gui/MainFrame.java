@@ -50,7 +50,6 @@ public class MainFrame extends javax.swing.JFrame {
 	private List<Reservation> acceptedReservations;
 	private List<Hotel> hotels;
 
-
 	/**
 	 * Creates new form MainFrame
 	 *
@@ -66,7 +65,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 		this.helpFrame = new HelpFrame();
 		this.aboutFrame = new AboutFrame();
-		
+
 		this.hotels = Hotel.selectById(hotelId);
 		this.hotelNameLabel.setText(this.hotels.get(0).getName());
 
@@ -88,16 +87,12 @@ public class MainFrame extends javax.swing.JFrame {
 			// Allow only Searching for guest user
 			this.tabbedPane.setEnabledAt(2, false);
 			this.tabbedPane.setEnabledAt(3, false);
-		} else if(user.isEmployee()){
+		} else if (user.isEmployee()) {
 			// Hide statistics from employees
 			this.tabbedPane.setEnabledAt(3, false);
 		}
 
-		this.pendingReservations = Reservation.selectByReservationStatus(1);
-		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
-
-		this.acceptedReservations = Reservation.selectByReservationStatus(2);
-		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		loadReservations();
 	}
 
 	public MainFrame() {
@@ -111,11 +106,7 @@ public class MainFrame extends javax.swing.JFrame {
 		setupFilters();
 		applyFilters();
 
-		this.pendingReservations = Reservation.selectByReservationStatus(1);
-		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
-
-		this.acceptedReservations = Reservation.selectByReservationStatus(2);
-		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		loadReservations();
 	}
 
 	private void setupFilters() {
@@ -172,6 +163,7 @@ public class MainFrame extends javax.swing.JFrame {
         declineButton = new javax.swing.JButton();
         acceptButton = new javax.swing.JButton();
         showInfoButton = new javax.swing.JButton();
+        undoButton = new javax.swing.JButton();
         statisticsPanel = new javax.swing.JPanel();
         getStatistics = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -428,7 +420,8 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        acceptButton.setText("Accept");
+        acceptButton.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        acceptButton.setText("---->");
         acceptButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 acceptButtonActionPerformed(evt);
@@ -442,6 +435,14 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        undoButton.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        undoButton.setText("<----");
+        undoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout reservationsPanelLayout = new javax.swing.GroupLayout(reservationsPanel);
         reservationsPanel.setLayout(reservationsPanelLayout);
         reservationsPanelLayout.setHorizontalGroup(
@@ -452,18 +453,21 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(215, 215, 215)
                         .addComponent(pendingLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(reservationsPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, reservationsPanelLayout.createSequentialGroup()
                         .addContainerGap(118, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(declineButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(reservationsPanelLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(showInfoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(reservationsPanelLayout.createSequentialGroup()
-                                .addGap(30, 30, 30)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(acceptButton)
-                                    .addComponent(declineButton))))
+                                    .addGroup(reservationsPanelLayout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(showInfoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(reservationsPanelLayout.createSequentialGroup()
+                                        .addGap(34, 34, 34)
+                                        .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(acceptButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(undoButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                         .addGap(18, 18, 18)))
                 .addGroup(reservationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(reservationsPanelLayout.createSequentialGroup()
@@ -487,10 +491,12 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(showInfoButton)
                         .addGap(63, 63, 63)
                         .addComponent(acceptButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(declineButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(undoButton))
                     .addComponent(jScrollPane3))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(declineButton)
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Reservations", reservationsPanel);
@@ -892,6 +898,14 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+	private void loadReservations() {
+		this.pendingReservations = Reservation.selectByReservationStatus(Reservation.Status.PENDING.getValue());
+		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+
+		this.acceptedReservations = Reservation.selectByReservationStatus(Reservation.Status.ACCEPTED.getValue());
+		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+	}
+
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
 		if (helpFrame.isShowing()) {
 			return;
@@ -1051,46 +1065,35 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_resetPasswordsButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String newPassword = this.newPasswordField.getText();
-                
-        if(
-			!this.state.LoggedInUser.isGuest() && 
-            (this.currentPasswordField.getText() == null
-				? this.state.LoggedInUser.getPassword() == null
-				: this.currentPasswordField.getText().equals(this.state.LoggedInUser.getPassword())
-			) && 
-            (newPassword == null 
-				? this.confirmNewPasswordField.getText() == null 
-				: newPassword.equals(this.confirmNewPasswordField.getText())
-			) &&
-            !newPassword.isBlank()
-		){
-            this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
-        }
+		String newPassword = this.newPasswordField.getText();
+
+		if (!this.state.LoggedInUser.isGuest()
+			&& (this.currentPasswordField.getText() == null
+			? this.state.LoggedInUser.getPassword() == null
+			: this.currentPasswordField.getText().equals(this.state.LoggedInUser.getPassword()))
+			&& (newPassword == null
+				? this.confirmNewPasswordField.getText() == null
+				: newPassword.equals(this.confirmNewPasswordField.getText()))
+			&& !newPassword.isBlank()) {
+			this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
+		}
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
-		int selectedRoomId = this.pendingReservations.get(pendingList.getSelectedIndex()).getReservationRoomFk();
-		Room selectedRoom = Room.selectById(selectedRoomId, this.state.activeHotelId).get(0);
-		
 		if (pendingList.getSelectedIndex() < 0) {
 			JOptionPane.showMessageDialog(this, "Select a pending reservation first", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to accept this reservation?", "Accept", JOptionPane.OK_CANCEL_OPTION);
-		if (result == JOptionPane.OK_OPTION) {
-			this.pendingReservations.get(pendingList.getSelectedIndex()).update(2);
-			selectedRoom.markOccupiedAs(true);
+		int selectedRoomId = this.pendingReservations.get(pendingList.getSelectedIndex()).getReservationRoomFk();
+		Room selectedRoom = Room.selectById(selectedRoomId).get(0);
 
-			this.pendingReservations = Reservation.selectByReservationStatus(1);
-			this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		this.pendingReservations.get(pendingList.getSelectedIndex()).update(2);
+		selectedRoom.markOccupiedAs(true);
 
-			this.acceptedReservations = Reservation.selectByReservationStatus(2);
-			this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
-		}
-		
+		loadReservations();
+
 		pendingList.clearSelection();
 		acceptedList.clearSelection();
     }//GEN-LAST:event_acceptButtonActionPerformed
@@ -1104,14 +1107,10 @@ public class MainFrame extends javax.swing.JFrame {
 		int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to decline this reservation?\nThis means that this will be deleted!", "Accept", JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
 			this.pendingReservations.get(pendingList.getSelectedIndex()).delete();
-			
-			this.pendingReservations = Reservation.selectByReservationStatus(1);
-			this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
 
-			this.acceptedReservations = Reservation.selectByReservationStatus(2);
-			this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+			loadReservations();
 		}
-		
+
 		pendingList.clearSelection();
 		acceptedList.clearSelection();
     }//GEN-LAST:event_declineButtonActionPerformed
@@ -1142,9 +1141,9 @@ public class MainFrame extends javax.swing.JFrame {
 
 
     private void tabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabbedPaneStateChanged
-        if(tabbedPane.getSelectedIndex() == 2 && this.state.LoggedInUser.getType() == User.UserType.MANAGER.getValue()){
-            
-        }
+		if (tabbedPane.getSelectedIndex() == 2 && this.state.LoggedInUser.getType() == User.UserType.MANAGER.getValue()) {
+
+		}
     }//GEN-LAST:event_tabbedPaneStateChanged
 
     private void getStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getStatisticsActionPerformed
@@ -1203,33 +1202,53 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_getStatisticsActionPerformed
 
     private void switchUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchUserButtonActionPerformed
-        this.dispose();
-        this.state.LoggedInUser = null;
-        new LoginFrame(this.state.activeHotelId).setVisible(true);
+		this.dispose();
+		this.state.LoggedInUser = null;
+		new LoginFrame(this.state.activeHotelId).setVisible(true);
     }//GEN-LAST:event_switchUserButtonActionPerformed
 
     private void addReservationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addReservationMenuItemActionPerformed
-       this.createReservationFrame = new CreateReservationFrame(this.state.activeHotelId);
-	   GUIUtils.showFrame(this.createReservationFrame);
+		this.createReservationFrame = new CreateReservationFrame(this.state.activeHotelId);
+		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
     private void editCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCustomerMenuItemActionPerformed
-        // TODO add your handling code here:
+		// TODO add your handling code here:
     }//GEN-LAST:event_editCustomerMenuItemActionPerformed
 
     private void addCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerMenuItemActionPerformed
-        // TODO add your handling code here:
+		// TODO add your handling code here:
     }//GEN-LAST:event_addCustomerMenuItemActionPerformed
 
     private void viewCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewCustomerMenuItemActionPerformed
-        ViewCustomersFrame vCF = new ViewCustomersFrame();
-        vCF.setVisible(true);
+		ViewCustomersFrame vCF = new ViewCustomersFrame();
+		vCF.setVisible(true);
     }//GEN-LAST:event_viewCustomerMenuItemActionPerformed
 
     private void deleteCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCustomerMenuItemActionPerformed
-        // TODO add your handling code here:
+		// TODO add your handling code here:
     }//GEN-LAST:event_deleteCustomerMenuItemActionPerformed
 
+    private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
+		System.err.println("Selected Index: " + this.acceptedList.getSelectedIndex());
+		if (acceptedList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Select an accepted reservation first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		Reservation selectedAccepted = this.acceptedReservations.get(this.acceptedList.getSelectedIndex());
+		System.err.println("Room Fk: " + selectedAccepted.getReservationRoomFk());
+		Room room = Room.selectById(selectedAccepted.getReservationRoomFk()).get(0);
+		assert (room != null);
+
+		selectedAccepted.update(Reservation.Status.PENDING.getValue());
+		room.markOccupiedAs(false);
+
+		loadReservations();
+
+		this.pendingList.clearSelection();
+		this.acceptedList.clearSelection();
+    }//GEN-LAST:event_undoButtonActionPerformed
 
 	private javax.swing.JMenuItem addUserMenuItem;
 
@@ -1311,6 +1330,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton switchUserButton;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JCheckBox twinRoomFilterCheckbox;
+    private javax.swing.JButton undoButton;
     private javax.swing.JMenuItem viewCustomerMenuItem;
     private javax.swing.JMenu viewMenu;
     private javax.swing.JLabel welcomeLabel;

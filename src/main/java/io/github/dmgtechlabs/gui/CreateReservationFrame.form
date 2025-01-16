@@ -63,10 +63,10 @@
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="fNameTextField" max="32767" attributes="0"/>
+                                      <Component id="fNameTextField" pref="162" max="32767" attributes="0"/>
                                       <Component id="lnameTextField" max="32767" attributes="0"/>
                                       <Component id="emailFormattedTextField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="phoneTextField" alignment="0" pref="162" max="32767" attributes="0"/>
+                                      <Component id="phoneTextField" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -202,8 +202,6 @@
             <Property name="text" type="java.lang.String" value="Phone"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="phoneTextField">
-        </Component>
         <Component class="javax.swing.JLabel" name="checkInLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="Select a check-In date"/>
@@ -213,6 +211,8 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Select a check-out date"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="phoneTextField">
         </Component>
       </SubComponents>
     </Container>
