@@ -75,7 +75,7 @@ public class MainFrame extends javax.swing.JFrame {
 //			});
 //			addMenu.add(addUserMenuItem);
 //		} else if (user.isAdmin()){
-//                        addUserMenuItem = new javax.swing.JMenuItem();
+//                      addUserMenuItem = new javax.swing.JMenuItem();
 //			addUserMenuItem.setText("User");
 //			addUserMenuItem.addActionListener(new java.awt.event.ActionListener() {
 //				public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -85,7 +85,7 @@ public class MainFrame extends javax.swing.JFrame {
 //			addMenu.add(addUserMenuItem);
 //                    
 //                } else if (user.isAdmin()){
-//                        addHotelMenuItem = new javax.swing.JMenuItem();
+//                      addHotelMenuItem = new javax.swing.JMenuItem();
 //			addHotelMenuItem.setText("Hotel");
 //			addHotelMenuItem.addActionListener(new java.awt.event.ActionListener() {
 //				public void actionPerformed(java.awt.event.ActionEvent evt) {
