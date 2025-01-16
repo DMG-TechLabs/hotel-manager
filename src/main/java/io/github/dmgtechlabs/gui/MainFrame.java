@@ -1185,7 +1185,9 @@ public class MainFrame extends javax.swing.JFrame {
 				? this.confirmNewPasswordField.getText() == null
 				: newPassword.equals(this.confirmNewPasswordField.getText()))
 			&& newPassword != null && !newPassword.isBlank()) {
-			this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType(), this.state.LoggedInUser.getAccountHotelFk());
+//                   this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType());
+			this.state.LoggedInUser.update(this.state.LoggedInUser.getUsername(), newPassword, this.state.LoggedInUser.getType());
+                        JOptionPane.showMessageDialog(this, "Change password successfully", "Success", JOptionPane.ERROR_MESSAGE);
 		}
 
     }//GEN-LAST:event_confirmChangePasswordActionPerformed
