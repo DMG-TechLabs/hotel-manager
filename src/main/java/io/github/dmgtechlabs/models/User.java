@@ -180,6 +180,7 @@ public class User implements Dao {
                 System.out.println("1");
                 ResultSet rs = conn.callFunction("get_reservation_distribution", 1);
                 System.out.println("1");
+                System.out.println(rs.getFetchSize());
                 while(rs.next()){
     //                int id, String username, String password, int type, int account_hotel_fk
                     System.out.println(
