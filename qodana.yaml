@@ -86,4 +86,6 @@ include:
   - name: CouplingBetweenObjects
   - name: DepthOfInheritanceTree
   - name: LiskovSubstitutionPrincipleViolation
+  - name: JvmLinesOfCodeInspection
+  - name: PublicConstructor
   - name: OpenClosedPrincipleViolation

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
-import kdesp73.databridge.helpers.SQLogger;
+import io.github.kdesp73.databridge.helpers.SQLogger;
 
 public class Filters {
 
@@ -69,7 +69,7 @@ public class Filters {
 			}
 			rs.close();
 		} catch (Exception e) {
-			SQLogger.getLogger().log("Failed running filter query", e);
+			SQLogger.getLogger().log(SQLogger.LogLevel.ERRO, "Failed running filter query", e);
 		}
 		return result;
 	}
