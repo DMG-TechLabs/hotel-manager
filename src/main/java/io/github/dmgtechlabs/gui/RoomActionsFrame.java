@@ -4,6 +4,7 @@
  */
 package io.github.dmgtechlabs.gui;
 
+import io.github.dmgtechlabs.gui.MainFrame.Actions;
 import io.github.dmgtechlabs.models.Room;
 
 /**
@@ -13,15 +14,17 @@ import io.github.dmgtechlabs.models.Room;
 public class RoomActionsFrame extends javax.swing.JFrame {
 	private Room room = null;
 	
+	private CreateReservationFrame createReservationFrame;
+	
 	/**
 	 * Creates new form RoomActionsFrame
+	 * @param room
 	 */
 	public RoomActionsFrame(Room room) {
 		initComponents();
-		GUIUtils.commonSetup(null, this);
+		GUIUtils.commonSetup(null, RoomActionsFrame.this);
 		
-		this.room = room;
-		
+		this.room = room;		
 		this.infoEditorPane.setText(room.toHtml());
 	}
 
@@ -109,7 +112,9 @@ public class RoomActionsFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reserveButtonActionPerformed
-        GUIUtils.showFrame(new CreateReservationFrame(room));
+        this.createReservationFrame = new CreateReservationFrame(room);
+		GUIUtils.addWindowClosedListener(this.createReservationFrame, Actions.refreshReservationsRunnable());
+		GUIUtils.showFrame(this.createReservationFrame);
 		this.dispose();
     }//GEN-LAST:event_reserveButtonActionPerformed
 

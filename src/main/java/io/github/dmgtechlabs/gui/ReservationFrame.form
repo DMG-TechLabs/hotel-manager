@@ -82,12 +82,15 @@
                               </Group>
                               <Component id="jSeparator2" alignment="0" min="-2" pref="226" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="jSeparator1" min="-2" pref="14" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="customerInfoLabel" max="32767" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="customerInfoLabel" max="32767" attributes="0"/>
+                                  <Component id="jSeparator3" min="-2" pref="255" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="fnameIndicator" min="-2" max="-2" attributes="0"/>
                                       <Component id="lnameIndicator" alignment="0" max="32767" attributes="0"/>
@@ -95,18 +98,15 @@
                                       <Component id="phoneIndicator" alignment="1" min="-2" pref="83" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="phoneLabel" min="-2" pref="154" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="fnameLabel" pref="154" max="32767" attributes="0"/>
-                                          <Component id="lnameLabel" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="emailLabel" alignment="0" max="32767" attributes="0"/>
-                                      </Group>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="emailLabel" pref="229" max="32767" attributes="0"/>
+                                      <Component id="phoneLabel" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lnameLabel" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="fnameLabel" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="jSeparator3" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="titleLabel" min="-2" max="-2" attributes="0"/>
@@ -124,78 +124,52 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="customerInfoLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jSeparator3" min="-2" pref="10" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="serviceInfoLabel" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="hotelNameLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="hotelNameIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="fnameIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="fnameLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="hotelAddressLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="hotelAddressIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lnameIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lnameLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="hotelPhoneLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="hotelPhoneIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="emailIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="emailLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
+                          <Component id="serviceInfoLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="hotelNameLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="hotelNameIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="roomFloorLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="roomFloorIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="roomNumIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="roomNumLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="roomTypeLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="roomTypeIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="roomPriceLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="roomPriceIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="checkInLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="checkInIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="phoneLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="phoneIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="hotelAddressLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="hotelAddressIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="hotelPhoneLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="hotelPhoneIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="roomFloorLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="roomFloorIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="roomNumIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="roomNumLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="roomTypeLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="roomTypeIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="roomPriceLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="roomPriceIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="checkInLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="checkInIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -204,6 +178,31 @@
                           </Group>
                       </Group>
                       <Component id="jSeparator1" min="-2" pref="605" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="customerInfoLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jSeparator3" min="-2" pref="10" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="fnameIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="fnameLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lnameIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lnameLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="emailIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="emailLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="phoneLabel" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="phoneIndicator" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
                   <EmptySpace pref="33" max="32767" attributes="0"/>
               </Group>
