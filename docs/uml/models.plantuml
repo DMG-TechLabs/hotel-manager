@@ -84,16 +84,16 @@ package models {
     }
 }
 
-Hotel --> Amenity : uses
-Reservation -> Status : uses
-Room -> Type : uses
-User -> UserType : uses
+Hotel o-- Amenity
+Reservation o-- Status
+Room o-- Type
+User o-- UserType
 
-Hotel --> Dao : implements
-Room --> Dao : implements
-Reservation --> Dao : implements
-User --> Dao : implements
-Customer --> Dao : implements
+Hotel --|> Dao : implements
+Room --|> Dao : implements
+Reservation --|> Dao : implements
+User --|> Dao : implements
+Customer --|> Dao : implements
 
 
 @enduml
