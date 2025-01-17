@@ -1229,12 +1229,18 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_applyFiltersButtonActionPerformed
 
     private void resultFilterListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultFilterListMouseClicked
+		if (this.resultFilterList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Select a room first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		if (evt.getButton() != MouseEvent.BUTTON3) {
 			return;
 		}
 
 		Room room = getSelectedRoom();
 		GUIUtils.showFrame(new RoomActionsFrame(room));
+		this.resultFilterList.clearSelection();
     }//GEN-LAST:event_resultFilterListMouseClicked
 
     private void deleteRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRoomMenuItemActionPerformed
