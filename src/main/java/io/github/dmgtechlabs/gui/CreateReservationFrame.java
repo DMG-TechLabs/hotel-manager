@@ -63,12 +63,12 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 		this.checkInPicker = new JXDatePicker();
 		this.checkInPicker.setDate(Calendar.getInstance().getTime());
 		this.checkInPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
-		this.checkInPicker.setBounds(5, 100, 200, 30);
+		this.checkInPicker.setBounds(10, 100, 200, 30);
 
 		this.checkOutPicker = new JXDatePicker();
 		this.checkOutPicker.setDate(Calendar.getInstance().getTime());
 		this.checkOutPicker.setFormats(new SimpleDateFormat("yyyy.MM.dd"));
-		this.checkOutPicker.setBounds(260, 100, 200, 30);
+		this.checkOutPicker.setBounds(262, 100, 200, 30);
 
 		this.reservationPanel.add(this.checkInPicker);
 		this.reservationPanel.add(this.checkOutPicker);
@@ -130,6 +130,8 @@ public class CreateReservationFrame extends javax.swing.JFrame {
 
         fNameIndicator.setText("First name");
 
+        emailFormattedTextField.setPreferredSize(new java.awt.Dimension(64, 27));
+
         lnameIndicator.setText("Last name");
 
         emailIndicator.setText("Email");
@@ -156,7 +158,6 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                     .addGroup(reservationPanelLayout.createSequentialGroup()
                         .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(personalInfoLabel)
                             .addGroup(reservationPanelLayout.createSequentialGroup()
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lnameIndicator)
@@ -167,14 +168,15 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(fNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                                     .addComponent(lnameTextField)
-                                    .addComponent(emailFormattedTextField)
-                                    .addComponent(phoneTextField))))
+                                    .addComponent(emailFormattedTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(phoneTextField)))
+                            .addComponent(personalInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(186, Short.MAX_VALUE))
                     .addGroup(reservationPanelLayout.createSequentialGroup()
                         .addComponent(checkInLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(checkOutLabel)
-                        .addGap(44, 44, 44))))
+                        .addGap(67, 67, 67))))
         );
         reservationPanelLayout.setVerticalGroup(
             reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,19 +193,19 @@ public class CreateReservationFrame extends javax.swing.JFrame {
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fNameIndicator)
                     .addComponent(fNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lnameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lnameIndicator))
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(emailFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(emailIndicator))
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(phoneIndicator)
                     .addComponent(phoneTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addGroup(reservationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okBtn)
                     .addComponent(cancelBtn))
