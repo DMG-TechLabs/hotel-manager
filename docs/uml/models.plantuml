@@ -68,6 +68,21 @@ package models {
         - checkOut : String
         - cost : float
         - status : Status
+        + Reservation()
+        + Reservation(id : int)
+        + Reservation(id : int, reservationCustomerFk : int, reservationRoomFk, checkIn : String, checkOut : String, cost : float, status : Status)
+        + Reservation(reservationCustomerFk : int, reservationRoomFk, checkIn : String, checkOut : String, cost : float, status : Status)
+        - {static} List<Reservation> select(function : String, values : Object...)
+        + {static} List<Reservation> selectAll()
+        + {static} List<Reservation> selectByReservationId(id : int)
+        + {static} List<Reservation> selectByHotel(reservationRoomFk : int)
+        + {static} List<Reservation> selectByReservationStatus(status : int)
+        + {static} List<Reservation> selectByCustomerId(customerId : int)
+        + {static} List<Reservation> selectByRoomId(roomId : int)
+        + {static} List<Reservation> selectByCheckInCheckOut(reservationRoomFk : int, checkInDate : String, checkOutDate : String)
+        + {static} String UIString()
+        + {static} String UIString(room : Room)
+        + {static} String[] listToArray(list : List<Reservation>)
     }
     class User {
         - id : int
@@ -75,6 +90,15 @@ package models {
         - password : String
         - type : int
         - accountHotelFk : int
+        + User(id : int, username : String, password : String, type : int, account_hotel_fk : int)
+        + boolean isGuest()
+        + boolean isAdmin()
+        + boolean isManager()
+        + boolean isEmployee()
+        + {static} List<User> selectWithUsenamePassword(username : String, password : String, hotelId : int)
+        + {static} List<User> selectWithUsenamePassword(username : String, password : String)
+        + {static} User login(username : String, password : String, hotelId : int)
+        + List<User> Manager_SelectAllUsers()
     }
     class Customer {
         - id : int
@@ -82,6 +106,14 @@ package models {
         - lName : String
         - phone : BigInteger
         - email : String
+        + Customer()
+        + Customer(id : int, firstName : String, lastName : String, phone : BigInteger, email : String)
+        + Customer(firstName : String, lastName : String, phone : BigInteger, email : String)
+        + {static} boolean exists(email : String)
+        + {static} List<Customer> selectById(id : int)
+        + {static} List<Customer> selectByEmail(email : String)
+        - {static} List<Customer> select(function : String, values : Object...)
+        + {static} List<Customer> selectAll()
     }
 
     enum Amenity {
