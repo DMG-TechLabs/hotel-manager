@@ -2,9 +2,9 @@
 
 package db {
     interface Dao {
-        + insert() : boolean
-        + update(values: Object...) : boolean
-        + delete() : boolean
+        + boolean insert()
+        + boolean update(values: Object...)
+        + boolean delete()
     }
 }
 
@@ -15,6 +15,21 @@ package models {
         - phone : BigInteger
         - id : int
         - amenities : List<Amenity>
+        + Hotel()
+        + Hotel(id : int)
+        + Hotel(name : String, address : String, phoneNumber : BigInteger)
+        + Hotel(id : int, name : String, address : String, phoneNumber : BigInteger)
+        - {static} List<Hotel> select(function : String, values : Object...)
+        + {static} List<Hotel> selectAll()
+        + {static} List<Hotel> selectById(id : int)
+        + {static} List<Hotel> selectByName(name : String)
+        + List<Amenity> selectAmenities()
+        + boolean insertAmenities(amenities : Amenity...)
+        + boolean deleteAmenity(amenity : Amenity)
+        + boolean updateAmenities(amenities : Amenity...)
+        + String UIString()
+        + String toHtml()
+        + {static} String[] listToArray(list : List<Hotel>)
     }
     class Room {
         - id : int
@@ -27,6 +42,23 @@ package models {
         - hotelId : int
         - price : float
         - occupied : boolean
+
+        + Room()
+        + Room(id : int)
+        + Room(floor : int, number : int, type : Type, price : float, hotelFk : int)
+        + Room(id : int, floor : int, number : int, type : Type, price : float, hotelFk : int)
+        + {static} Room parseRs(ResultSet rs)
+        - {static} List<Room> select(function : String, values : Object...)
+        + {static} List<Room> selectAll()
+        + {static} List<Room> selectById(id : int)
+        + {static} List<Room> selectByHotelId(hotelFk : int)
+        + {static} List<Room> selectByReserved(hotelFk : int)
+        + {static} List<Room> selectByFloor(flood : int, hotelFk : int)
+        + {static} List<Room> selectByType(type : Type, hotelFk : int)
+        + {static} List<Room> selectByPriceRange(floor : float, ceil : float)
+        + boolean markOccupiedAs(occupied : boolean)
+        + String UIString()
+        + String toHtml()
     }
     class Reservation {
         - id : int
@@ -60,10 +92,20 @@ package models {
         SAUNA
         WIFI
         PARKING
+
+        - {final} value : int
+        + Amenity(value : int)
+        + int getValue()
+        + {static} Amenity fromValue(value : int)
     }
     enum Status {
         PENDING
         ACCEPTED
+
+        - {final} value : int
+        + Status(value : int)
+        + int getValue()
+        + {static} Status fromValue(value : int)
     }
     enum Type {
         SINGLE
@@ -75,12 +117,22 @@ package models {
         STUDIO
         KING
         QUEEN
+
+        - {final} value : int
+        + Type(value : int)
+        + int getValue()
+        + {static} Type fromValue(value : int)
     }
     enum UserType {
         ADMIN
         GUEST
         EMPLOYEE
         MANAGER
+
+        - {final} value : int
+        + UserType(value : int)
+        + int getValue()
+        + {static} UserType fromValue(value : int)
     }
 }
 
