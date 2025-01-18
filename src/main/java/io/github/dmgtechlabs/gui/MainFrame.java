@@ -297,6 +297,7 @@ public class MainFrame extends javax.swing.JFrame {
         addRoomMenuItem = new javax.swing.JMenuItem();
         addReservationMenuItem = new javax.swing.JMenuItem();
         addUserMenuItem = new javax.swing.JMenuItem();
+        addCustomerMenuItem = new javax.swing.JMenuItem();
         addHotelMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         editRoomMenuItem = new javax.swing.JMenuItem();
@@ -964,6 +965,14 @@ public class MainFrame extends javax.swing.JFrame {
         });
         addMenu.add(addUserMenuItem);
 
+        addCustomerMenuItem.setText("Customer");
+        addCustomerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addCustomerMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(addCustomerMenuItem);
+
         addHotelMenuItem.setText("Hotel");
         addHotelMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1534,6 +1543,12 @@ public class MainFrame extends javax.swing.JFrame {
 		Actions.refreshHotels();
     }//GEN-LAST:event_deleteHotelMenuItemActionPerformed
 
+    private void addCustomerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCustomerMenuItemActionPerformed
+        this.customerFrame = new CustomerFrame();
+        GUIUtils.addWindowClosedListener(this.customerFrame, Actions.refreshCustomersRunnable());
+        GUIUtils.showFrame(this.customerFrame);
+    }//GEN-LAST:event_addCustomerMenuItemActionPerformed
+
 //	private javax.swing.JMenuItem addUserMenuItem;
 //        private javax.swing.JMenuItem addHotelMenuItem;
 //        private javax.swing.JMenuItem editHotelMenuItem;
@@ -1543,6 +1558,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton acceptButton;
     private javax.swing.JLabel acceptedLabel;
     private javax.swing.JList<String> acceptedList;
+    private javax.swing.JMenuItem addCustomerMenuItem;
     private javax.swing.JMenuItem addHotelMenuItem;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem addReservationMenuItem;
