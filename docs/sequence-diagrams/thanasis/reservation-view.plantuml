@@ -1,0 +1,14 @@
+@startuml
+
+actor Employee as E
+boundary GUI as G
+database Database as D
+
+E -> G : Select "Reservations" tab
+E -> G : Select reservation from either list
+E -> G : Press "Show Info" button
+
+G -> E : Show Info frame
+
+@enduml
+

@@ -3,7 +3,7 @@
 actor Admin as A
 boundary GUI as G
 control Validator as V
-control Option as O
+control ButtonOption as O
 database Database as D
 
 A -> G : Select "Add Hotel" menu item

@@ -1,0 +1,35 @@
+@startuml
+
+actor Employee as E
+database Database as D
+boundary GUI as G
+control ArrowOption as O
+control ListOption as L
+
+E -> G : Select "Reservations" tab
+E -> G : Select reservation from either list
+G -> L : Check which reservation is selected
+
+alt Pending reservation is selected
+    E -> G : Press left/right arrow
+    G -> O : Check which arrow is pressed
+    alt Right arrow is pressed
+        O -> D : Update reservation status to Accepted
+        D -> G : Put reservation in the Accepted list
+    else Left arrow is pressed
+        O -> G : Error when changing status
+        G -> E : Show error popup
+    end
+else Accepted reservation is selected
+    E -> G : Press left/right arrow
+    G -> O : Check which arrow is pressed
+    alt Right arrow is pressed
+        O -> G : Error when changing status
+        G -> E : Show error popup
+    else Left arrow is pressed
+        O -> D : Update reservation status to Pending
+        D -> G : Put reservation in the Pending list
+    end
+end
+
+@enduml
