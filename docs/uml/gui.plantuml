@@ -14,7 +14,6 @@ package gui {
     class RoomFrame
     class StartingFrame
     class UserFrame
-    class UserManagmentFrame
 }
 
 StartingFrame --> LoginFrame : follows
@@ -30,6 +29,5 @@ MainFrame o--> ReservationFrame : contains
 MainFrame o--> RoomActionsFrame : contains
 MainFrame o--> RoomFrame : contains
 MainFrame o--> UserFrame : contains
-MainFrame o--> UserManagmentFrame : contains
 
 @enduml
