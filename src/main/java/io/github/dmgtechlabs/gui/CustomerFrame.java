@@ -11,10 +11,23 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
+
 public class CustomerFrame extends javax.swing.JFrame {
 	private Customer customer = null;
 	
+	public CustomerFrame( ){
+                initComponents();
+                GUIUtils.commonSetup(null, this);
+                
+		GUIUtils.setPlaceholder(this.fNameTextField, "First Name");
+                GUIUtils.setPlaceholder(this.lNameTextField, "Last Name");
+                GUIUtils.setPlaceholder(this.phoneTextField, "Phone");
+                GUIUtils.setPlaceholder(this.emailTextField, "Email");
 
+		this.setTitle("Add customer");
+                this.actionButton.setText("Add");
+	}
+        
 	public CustomerFrame(Customer customer){
                 this.customer = customer;
                 initComponents();
@@ -26,8 +39,25 @@ public class CustomerFrame extends javax.swing.JFrame {
                 this.emailTextField.setText(customer.getEmail());
 
 		this.setTitle("Edit " + customer.getFirstName() + " " + customer.getLastName());
+                this.actionButton.setText("Edit");
 	}
 	
+	private void addCustomer(){
+                String fName = (String) fNameTextField.getText();
+                String lName = (String) lNameTextField.getText();
+                BigInteger phone = new BigInteger(this.phoneTextField.getText());
+                String email  = (String) emailTextField.getText();
+		
+		if(!validate(fName, lName, phone, email)) return;
+                Customer c = new Customer(1, fName, lName, phone, email);
+		if(c.insert()){
+			JOptionPane.showMessageDialog(this, "Customer " + fName + " " + lName + " added successfully", "Success!", JOptionPane.INFORMATION_MESSAGE);
+			this.dispose();
+		} else {
+			GUIUtils.logUserError(this, "Could not add Customer");
+		}
+	}       
+        
 	private void editCustomer(){
                 String fName = (String) fNameTextField.getText();
                 String lName = (String) lNameTextField.getText();
@@ -80,7 +110,7 @@ public class CustomerFrame extends javax.swing.JFrame {
         lNameTextField = new javax.swing.JTextField();
         phoneTextField = new javax.swing.JTextField();
         emailTextField = new javax.swing.JTextField();
-        editButton = new javax.swing.JButton();
+        actionButton = new javax.swing.JButton();
         cancleButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -108,10 +138,10 @@ public class CustomerFrame extends javax.swing.JFrame {
             }
         });
 
-        editButton.setText("Edit");
-        editButton.addActionListener(new java.awt.event.ActionListener() {
+        actionButton.setText("Action");
+        actionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
+                actionButtonActionPerformed(evt);
             }
         });
 
@@ -132,7 +162,7 @@ public class CustomerFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancleButton)
                         .addGap(18, 18, 18)
-                        .addComponent(editButton))
+                        .addComponent(actionButton))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(fNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                         .addComponent(lNameTextField)
@@ -153,7 +183,7 @@ public class CustomerFrame extends javax.swing.JFrame {
                 .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(editButton)
+                    .addComponent(actionButton)
                     .addComponent(cancleButton))
                 .addGap(32, 32, 32))
         );
@@ -173,9 +203,10 @@ public class CustomerFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_emailTextFieldActionPerformed
 
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        editCustomer();
-    }//GEN-LAST:event_editButtonActionPerformed
+    private void actionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actionButtonActionPerformed
+        if(this.customer == null){addCustomer();}
+        else{editCustomer();}
+    }//GEN-LAST:event_actionButtonActionPerformed
 
     private void phoneTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_phoneTextFieldKeyTyped
         char c = evt.getKeyChar();
@@ -201,8 +232,8 @@ public class CustomerFrame extends javax.swing.JFrame {
     }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton actionButton;
     private javax.swing.JButton cancleButton;
-    private javax.swing.JButton editButton;
     private javax.swing.JTextField emailTextField;
     private javax.swing.JTextField fNameTextField;
     private javax.swing.JTextField lNameTextField;
