@@ -14,8 +14,8 @@ alt If validation fails
     V -> G : Validation error message
     G -> A : Show error popup
 else If validation succeeds
-    G -> D : Add hotel to database
-    D -> G : Confirm hotel added
+    G -> D : Insert hotel to database
+    D -> G : Confirm hotel insertion
     G -> A : Show success popup
 end
 @enduml
