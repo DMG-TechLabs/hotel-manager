@@ -3,19 +3,27 @@
 actor Admin as A
 boundary GUI as G
 control Validator as V
+control Option as O
 database Database as D
 
 A -> G : Select "Add Hotel" menu item
 G -> A : Display Add Hotel Form
-A -> G : Fill in hotel information and submit
-G -> V : Validate hotel information
-V -> G : Validation successful
-alt If validation fails
-    V -> G : Validation error message
-    G -> A : Show error popup
-else If validation succeeds
-    G -> D : Insert hotel to database
-    D -> G : Confirm hotel insertion
-    G -> A : Show success popup
+A -> G : Fill in hotel information
+A -> G : Press one of the buttons
+G -> O : Check which button is pressed
+alt "Cancel" button pressed
+    O -> G : Close frame
+else "Submit" button pressed
+    G -> V : Validate hotel information
+    V -> G : Validation successful
+    alt Validation fails
+        V -> G : Validation error message
+        G -> A : Show error popup
+    else Validation succeeds
+        G -> D : Insert hotel to database
+        D -> G : Confirm hotel insertion
+        G -> A : Show success popup
+    end
 end
+
 @enduml

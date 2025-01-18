@@ -1,0 +1,21 @@
+@startuml hotel-delete
+
+actor Admin as A
+boundary GUI as G
+control OptionPopup as O
+database Database as D
+
+A -> G : Select hotel from Hotel list from "Hotel" tab
+A -> G : Select "Delete Hotel" menu item
+G -> A : Show confirmation popup
+A -> O : Select option
+alt "Ok" option is selected
+    O -> D : Delete hotel from database
+    O -> G : Trigger success popup
+    G -> A : Show success popup
+else "Cancel" option is selected
+    O -> G : Close popup
+    G -> A : Cancel operation
+end
+
+@enduml
