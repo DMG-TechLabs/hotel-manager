@@ -1,0 +1,30 @@
+@startuml hotel-edit
+
+actor Admin as A
+boundary GUI as G
+control Validator as V
+control Option as O
+database Database as D
+
+A -> G : Select hotel from Hotel list from "Hotel" tab
+A -> G : Select "Edit Hotel" menu item
+G -> A : Display Edit Hotel Form
+A -> G : Modify hotel information
+A -> G : Press one of the buttons
+G -> O : Check which button is pressed
+alt "Cancel" button pressed
+    O -> G : Close frame
+else "Submit" button pressed
+    G -> V : Validate hotel information
+    V -> G : Validation successful
+    alt Validation fails
+        V -> G : Validation error message
+        G -> A : Show error popup
+    else Validation succeeds
+        G -> D : Update hotel to database
+        D -> G : Confirm hotel update
+        G -> A : Show success popup
+    end
+end
+
+@enduml
