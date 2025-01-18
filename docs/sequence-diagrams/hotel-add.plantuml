@@ -1,0 +1,21 @@
+@startuml hotel-add
+
+actor Admin as A
+boundary GUI as G
+control Validator as V
+database Database as D
+
+A -> G : Select "Add Hotel" menu item
+G -> A : Display Add Hotel Form
+A -> G : Fill in hotel information and submit
+G -> V : Validate hotel information
+V -> G : Validation successful
+alt If validation fails
+    V -> G : Validation error message
+    G -> A : Show error popup
+else If validation succeeds
+    G -> D : Add hotel to database
+    D -> G : Confirm hotel added
+    G -> A : Show success popup
+end
+@enduml
