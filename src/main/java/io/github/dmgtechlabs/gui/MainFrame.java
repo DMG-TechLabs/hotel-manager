@@ -42,8 +42,54 @@ public class MainFrame extends javax.swing.JFrame {
 	private List<JCheckBox> filterTypeCheckboxes = new ArrayList<>();
 	private List<Reservation> pendingReservations;
 	private List<Reservation> acceptedReservations;
-	private List<Customer> customers;
 	private List<Hotel> hotels;
+
+	public class Actions {
+
+		public static MainFrame frame;
+
+		public static Runnable refreshReservationsRunnable() {
+			return () -> {
+				refreshReservations();
+			};
+		}
+
+		public static Runnable refreshCustomersRunnable() {
+			return () -> {
+				refreshCustomers();
+			};
+		}
+		
+		public static Runnable refreshHotelsRunnable() {
+			return () -> {
+				refreshHotels();
+			};
+		}
+
+		public static void refreshReservations() {
+			frame.pendingReservations = Reservation.selectByReservationStatus(Reservation.Status.PENDING.getValue());
+			frame.pendingList.setListData(Reservation.listToArray(frame.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+
+			frame.acceptedReservations = Reservation.selectByReservationStatus(Reservation.Status.ACCEPTED.getValue());
+			frame.acceptedList.setListData(Reservation.listToArray(frame.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
+		}
+
+		public static void refreshCustomers() {
+			DefaultListModel<String> model = new DefaultListModel<>();
+			List<Customer> customerList = Customer.selectAll();
+			for (Customer customer : customerList) {
+				String row = "Customer ID: " + customer.getId() + " " + customer.getFirstName() + " " + customer.getLastName()
+					+ " " + customer.getPhone() + " " + customer.getEmail();
+				model.addElement(row);
+			}
+			frame.customersList.setModel(model);
+		}
+
+		public static void refreshHotels() {
+			frame.hotels = Hotel.selectAll();
+			frame.hotelList.setListData(Hotel.listToArray(frame.hotels.stream().map(hotel -> (Hotel) hotel).toList()));
+		}
+	}
 
 	/**
 	 * Creates new form MainFrame
@@ -55,7 +101,7 @@ public class MainFrame extends javax.swing.JFrame {
 		this.state.activeHotelId = hotelId;
 		this.state.LoggedInUser = user;
 		initComponents();
-		GUIUtils.commonSetup(null, this);
+		GUIUtils.commonSetup(null, MainFrame.this);
 		this.setTitle("Hotel Manager");
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,15 +111,17 @@ public class MainFrame extends javax.swing.JFrame {
 
 		this.hotels = Hotel.selectById(hotelId);
 		this.hotelNameLabel.setText(this.hotels.get(0).getName());
+		
+		Actions.frame = MainFrame.this;
 
 		accessBlockers(user);
 
 		setupFilters();
 		applyFilters();
 
-		loadReservations();
-		loadCustomers();
-		loadHotels();
+		Actions.refreshReservations();
+		Actions.refreshCustomers();
+		Actions.refreshHotels();
 
 		setupSignedInAs(user);
 	}
@@ -124,7 +172,7 @@ public class MainFrame extends javax.swing.JFrame {
 			this.confirmChangePasswordButton.setEnabled(false);
 		} else if (user.isEmployee()) {
 			disableTabs(5); // Hide statistics
-		} 
+		}
 	}
 
 	private void disableMenuItems(JMenuItem... menuItems) {
@@ -150,22 +198,7 @@ public class MainFrame extends javax.swing.JFrame {
 			}
 		}
 	}
-
-	public MainFrame() {
-		initComponents();
-		this.setTitle("Hotel Manager");
-		this.setLocationRelativeTo(null);
-
-		this.helpFrame = new HelpFrame();
-		this.aboutFrame = new AboutFrame();
-
-		setupFilters();
-		applyFilters();
-
-		loadReservations();
-		loadCustomers();
-	}
-
+	
 	private void setupFilters() {
 		GUIUtils.setPlaceholder(this.minPriceFormattedTextField, "Min");
 		GUIUtils.setPlaceholder(this.maxPriceFormattedTextField, "Max");
@@ -576,6 +609,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jScrollPane4.setViewportView(hotelList);
 
+        hotelInfoEditorPane.setEditable(false);
         hotelInfoEditorPane.setContentType("text/html"); // NOI18N
         jScrollPane6.setViewportView(hotelInfoEditorPane);
 
@@ -683,27 +717,6 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel11.setText("Total Revenue:");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jLabel11)
-                .addGap(18, 18, 18)
-                .addComponent(revenue)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(revenue)
-                    .addComponent(jLabel11))
-                .addGap(10, 10, 10))
-        );
-
         occupiedRooms.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         occupiedRooms.setText("0");
 
@@ -721,26 +734,48 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(14, 14, 14)
                 .addComponent(jLabel13)
                 .addGap(18, 18, 18)
                 .addComponent(occupiedRooms)
-                .addGap(173, 173, 173)
+                .addGap(169, 169, 169)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(occupancyRate)
-                .addContainerGap(425, Short.MAX_VALUE))
+                .addContainerGap(461, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(0, 6, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(occupiedRooms)
                     .addComponent(jLabel13)
                     .addComponent(jLabel14)
-                    .addComponent(occupancyRate))
-                .addGap(10, 10, 10))
+                    .addComponent(occupancyRate)))
+        );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(jLabel11)
+                .addGap(18, 18, 18)
+                .addComponent(revenue)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(revenue)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
 
         javax.swing.GroupLayout statisticsPanelLayout = new javax.swing.GroupLayout(statisticsPanel);
@@ -749,18 +784,13 @@ public class MainFrame extends javax.swing.JFrame {
             statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statisticsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticsPanelLayout.createSequentialGroup()
-                        .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(statisticsPanelLayout.createSequentialGroup()
-                                .addComponent(getStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(20, 20, 20))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticsPanelLayout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                .addGroup(statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(statisticsPanelLayout.createSequentialGroup()
+                        .addComponent(getStatistics, javax.swing.GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20))
         );
         statisticsPanelLayout.setVerticalGroup(
             statisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -774,9 +804,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(getStatistics, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(495, Short.MAX_VALUE))
+                .addContainerGap(527, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Statistics", statisticsPanel);
@@ -1049,32 +1077,6 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	public  Runnable refreshReservationsCustomers() {
-		return () -> {
-			MainFrame.this.loadReservations();
-			MainFrame.this.loadCustomers();
-		};
-	}
-	
-	private void loadReservations() {
-		this.pendingReservations = Reservation.selectByReservationStatus(Reservation.Status.PENDING.getValue());
-		this.pendingList.setListData(Reservation.listToArray(this.pendingReservations.stream().map(reservation -> (Reservation) reservation).toList()));
-
-		this.acceptedReservations = Reservation.selectByReservationStatus(Reservation.Status.ACCEPTED.getValue());
-		this.acceptedList.setListData(Reservation.listToArray(this.acceptedReservations.stream().map(reservation -> (Reservation) reservation).toList()));
-	}
-
-	private void loadCustomers() {
-		DefaultListModel<String> model = new DefaultListModel<>();
-		List<Customer> customerList = Customer.selectAll();
-		for (Customer customer : customerList) {
-			String row = "Customer ID: " + customer.getId() + " " + customer.getFirstName() + " " + customer.getLastName()
-				+ " " + customer.getPhone() + " " + customer.getEmail();
-			model.addElement(row);
-		}
-		customersList.setModel(model);
-	}
-
     private void helpMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
 		if (helpFrame.isShowing()) {
 			return;
@@ -1227,12 +1229,18 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_applyFiltersButtonActionPerformed
 
     private void resultFilterListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resultFilterListMouseClicked
+		if (this.resultFilterList.getSelectedIndex() < 0) {
+			JOptionPane.showMessageDialog(this, "Select a room first", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		if (evt.getButton() != MouseEvent.BUTTON3) {
 			return;
 		}
 
 		Room room = getSelectedRoom();
 		GUIUtils.showFrame(new RoomActionsFrame(room));
+		this.resultFilterList.clearSelection();
     }//GEN-LAST:event_resultFilterListMouseClicked
 
     private void deleteRoomMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRoomMenuItemActionPerformed
@@ -1295,7 +1303,7 @@ public class MainFrame extends javax.swing.JFrame {
 		this.pendingReservations.get(pendingList.getSelectedIndex()).update(2);
 		selectedRoom.markOccupiedAs(true);
 
-		loadReservations();
+		Actions.refreshReservations();
 
 		pendingList.clearSelection();
 		acceptedList.clearSelection();
@@ -1311,7 +1319,7 @@ public class MainFrame extends javax.swing.JFrame {
 		if (result == JOptionPane.OK_OPTION) {
 			this.pendingReservations.get(pendingList.getSelectedIndex()).delete();
 
-			loadReservations();
+			Actions.refreshReservations();
 		}
 
 		pendingList.clearSelection();
@@ -1413,7 +1421,10 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 
 		this.createReservationFrame = new CreateReservationFrame(getSelectedRoom());
-		GUIUtils.addWindowClosedListener(this.createReservationFrame, refreshReservationsCustomers());
+		GUIUtils.addWindowClosedListener(this.createReservationFrame, () -> {
+			Actions.refreshReservationsRunnable();
+			Actions.refreshCustomersRunnable();
+		});
 		GUIUtils.showFrame(this.createReservationFrame);
     }//GEN-LAST:event_addReservationMenuItemActionPerformed
 
@@ -1423,9 +1434,7 @@ public class MainFrame extends javax.swing.JFrame {
 			return;
 		}
 		this.customerFrame = new CustomerFrame(getSelectedCustomer());
-		GUIUtils.addWindowClosedListener(this.customerFrame, () -> {
-			this.loadCustomers();
-		});
+		GUIUtils.addWindowClosedListener(this.customerFrame, Actions.refreshCustomersRunnable());
 		GUIUtils.showFrame(this.customerFrame);
     }//GEN-LAST:event_editCustomerMenuItemActionPerformed
 
@@ -1442,7 +1451,7 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 
 		if (customer.delete()) {
-			loadCustomers();
+			Actions.refreshCustomers();
 			JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(this, "Could not delete Customer", "Failure", JOptionPane.ERROR_MESSAGE);
@@ -1462,16 +1471,11 @@ public class MainFrame extends javax.swing.JFrame {
 		selectedAccepted.update(Reservation.Status.PENDING.getValue());
 		room.markOccupiedAs(false);
 
-		loadReservations();
+		Actions.refreshReservations();
 
 		this.pendingList.clearSelection();
 		this.acceptedList.clearSelection();
     }//GEN-LAST:event_undoButtonActionPerformed
-
-	private void loadHotels() {
-		this.hotels = Hotel.selectAll();
-		this.hotelList.setListData(Hotel.listToArray(this.hotels.stream().map(hotel -> (Hotel) hotel).toList()));
-	}
 
     private void addUserMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserMenuItemActionPerformed
 		this.userFrame = new UserFrame(this.state.activeHotelId);
@@ -1480,6 +1484,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void addHotelMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addHotelMenuItemActionPerformed
 		this.hotelFrame = new HotelFrame();
+		GUIUtils.addWindowClosedListener(this.hotelFrame, Actions.refreshHotelsRunnable());
 		GUIUtils.showFrame(this.hotelFrame);
     }//GEN-LAST:event_addHotelMenuItemActionPerformed
 
@@ -1490,14 +1495,12 @@ public class MainFrame extends javax.swing.JFrame {
 			return;
 		}
 		this.hotelFrame = new HotelFrame(selected);
-		GUIUtils.addWindowClosedListener(this.hotelFrame, () -> {
-			loadHotels();
-		});
+		GUIUtils.addWindowClosedListener(this.hotelFrame, Actions.refreshHotelsRunnable());
 		GUIUtils.showFrame(this.hotelFrame);
     }//GEN-LAST:event_editHotelMenuItemActionPerformed
 
     private void customerRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerRefreshButtonActionPerformed
-		loadCustomers();
+		Actions.refreshCustomers();
     }//GEN-LAST:event_customerRefreshButtonActionPerformed
 
 	private Hotel getSelectedHotel() {
@@ -1528,7 +1531,7 @@ public class MainFrame extends javax.swing.JFrame {
 		} else {
 			GUIUtils.logUserError(this, "Could not delete hotel " + selected.getName());
 		}
-		loadHotels();
+		Actions.refreshHotels();
     }//GEN-LAST:event_deleteHotelMenuItemActionPerformed
 
 //	private javax.swing.JMenuItem addUserMenuItem;

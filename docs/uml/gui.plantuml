@@ -17,20 +17,19 @@ package gui {
     class UserManagmentFrame
 }
 
-StartingFrame --|> LoginFrame : follows
-LoginFrame --|> MainFrame : follows
+StartingFrame --> LoginFrame : follows
+LoginFrame --> MainFrame : follows
 
-MainFrame <-- AboutFrame : contained
-MainFrame <-- CreateReservationFrame : contained
-MainFrame <-- CustomerFrame : contained
-MainFrame <-- deleteUser : contained
-MainFrame <-- HelpFrame : contained
-MainFrame <-- HotelFrame : contained
-MainFrame <-- MainFrame : contained
-MainFrame <-- ReservationFrame : contained
-MainFrame <-- RoomActionsFrame : contained
-MainFrame <-- RoomFrame : contained
-MainFrame <-- UserFrame : contained
-MainFrame <-- UserManagmentFrame : contained
+MainFrame o--> AboutFrame : contains
+MainFrame o--> CreateReservationFrame : contains
+MainFrame o--> CustomerFrame : contains
+MainFrame o--> deleteUser : contains
+MainFrame o--> HelpFrame : contains
+MainFrame o--> HotelFrame : contains
+MainFrame o--> ReservationFrame : contains
+MainFrame o--> RoomActionsFrame : contains
+MainFrame o--> RoomFrame : contains
+MainFrame o--> UserFrame : contains
+MainFrame o--> UserManagmentFrame : contains
 
 @enduml
