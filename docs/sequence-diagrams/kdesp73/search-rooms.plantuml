@@ -1,0 +1,20 @@
+@startuml search-rooms
+
+actor User as U
+boundary GUI as G
+control Option as O
+database Database as D
+
+U -> G : Select the "Search" tab
+U -> G : Fill the filters form 
+U -> G : Press "Reset" or "Apply"
+G -> O : Check which button is pressed
+alt "Reset" button is pressed
+    O -> G : Clear all filters to their default state
+else "Apply" button is pressed
+    O -> D : Select the rooms that conform to the filters
+    D -> G : Update the list items
+end
+
+
+@enduml
