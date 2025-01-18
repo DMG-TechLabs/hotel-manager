@@ -1,0 +1,38 @@
+@startuml reservation-add
+
+actor User as U
+boundary GUI as G
+control Validator as V
+control ButtonOption as O
+database Database as D
+
+U -> G : Select a room from "Search" tab
+U -> G : Select "Add Reservation" menu item
+G -> U : Display Add Reservation Form
+U -> G : Fill in personal information and checkin-checkout dates
+U -> G : Press one of the buttons
+G -> O : Check which button is pressed
+alt "Cancel" button pressed
+    O -> G : Close frame
+else "Submit" button pressed
+    G -> V : Validate information
+    V -> G : Validation successful
+    alt Validation fails
+        V -> G : Validation error message
+        G -> U : Show error popup
+    else Validation succeeds
+        G -> D : Insert reservation to database
+
+        alt Customer is new
+            G -> D : Insert new customer
+        else Customer email already exists
+            G -> D : Update any information that differs
+        end
+
+        D -> G : Confirm reservation insertion
+        G -> U : Show success popup
+    end
+end
+
+
+@enduml

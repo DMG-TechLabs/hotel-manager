@@ -1,4 +1,4 @@
-@startuml room-add
+@startuml
 
 actor Employee as E
 boundary GUI as G
@@ -6,23 +6,25 @@ control Validator as V
 control ButtonOption as O
 database Database as D
 
-E -> G : Select "Add Room" menu item
-G -> E : Display Add Room Form
-E -> G : Fill in room information
+E -> G : Select room from Room list from "Search" tab
+E -> G : Select "Edit Room" menu item
+G -> E : Display Edit Room Form
+E -> G : Modify room information
 E -> G : Press one of the buttons
 G -> O : Check which button is pressed
 alt "Cancel" button pressed
-    O-> G : Close frame
+    O -> G : Close frame
 else "Submit" button pressed
-    O -> V : Validate room information
-    V -> G : Check if validation successful
+    G -> V : Validate room information
+    V -> G : Validation successful
     alt Validation fails
         V -> G : Validation error message
         G -> E : Show error popup
     else Validation succeeds
-        G -> D : Insert room to database
-        D -> G : Confirm room insertion
+        G -> D : Update room to database
+        D -> G : Confirm room update
         G -> E : Show success popup
     end
 end
+
 @enduml

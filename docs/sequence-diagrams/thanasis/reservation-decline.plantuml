@@ -1,0 +1,31 @@
+@startuml
+
+actor Employee as E
+boundary GUI as G
+control ArrowOption as O
+control ListOption as L
+control Confirmation as C
+database Database as D
+
+E -> G : Select "Reservations" tab
+E -> G : Select reservation from either list
+E -> G : Press decline button
+G -> L : Check which reservation is selected
+
+alt Pending reservation is selected
+    G -> E : Show confirmation popup
+    E -> C : Select an option
+
+    alt "Ok" option is selected
+        C -> D : Delete reservation
+        C -> G : Close popup
+        D -> G : Remove reservation from pending list
+    else "Cancel" option is selected
+        C -> G : Close popup
+    end
+else Accepted reservation is selected
+    L -> G : Error for declining accepted reservation
+    G -> E : Show error popup
+end
+
+@enduml
