@@ -1,35 +1,215 @@
 @startuml gui
 
-package gui {
-    class AboutFrame
-    class CreateReservationFrame
-    class CustomerFrame
-    class deleteUser
-    class HelpFrame
-    class HotelFrame
-    class LoginFrame
-    class MainFrame
-    class ReservationFrame
-    class RoomActionsFrame
-    class RoomFrame
-    class StartingFrame
-    class UserFrame
-    class UserManagmentFrame
+package dmgtechlabs {
+    class State {
+        + LoggedInUser: User = null
+        + activeHotelId: int = -1
+    }
+    
+    class Filters {
+    	+ state: State
+	+ types: List<Room.Type> 
+	+ priceRange: Range 
+    }
 }
+
+package gui {
+    class AboutFrame{
+	- name: String = "Name"
+	- mail: String = "example@email.com"
+	- githubURL: String = "https://github.com/username"
+	- description: String = "My awesome project"
+	- font: String = "sans-serif"
+	- projectName: String = "my-app"
+	- version: String = "1.0.0-SNAPSHOT"
+	- licensePath: String = System.getProperty("user.dir").replaceAll(Pattern.quote("\\"), "/") + "/LICENSE"
+    }
+    class CreateReservationFrame{
+    	- EMAIL_REGEX: String = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+	+ EMAIL_PATTERN: Pattern = Pattern.compile(EMAIL_REGEX)
+	- checkInPicker: JXDatePicker
+	- checkOutPicker: JXDatePicker
+	- reservations: List<Reservation>
+	- room: Room
+    }
+    class CustomerFrame{
+    	- customer: Customer = null
+    }
+    class HelpFrame{
+    	- index: int = 0
+	- size: int = 7
+    }
+    class HotelFrame{
+	- hotel: Hotel = null
+    }
+    class LoginFrame{
+    	- hotelId: int
+    }
+    class MainFrame{
+	- state: State
+	- helpFrame: HelpFrame
+	- aboutFrame: AboutFrame
+	- hotelFrame: HotelFrame
+	- roomFrame: RoomFrame
+	- customerFrame: CustomerFrame
+	- userFrame: UserFrame
+	- reservationFrame: ReservationFrame
+	- createReservationFrame: CreateReservationFrame
+	- filterTypeCheckboxes: List<JCheckBox>
+	- pendingReservations: List<Reservation>
+	- acceptedReservations: List<Reservation>
+	- hotels: List<Hotel>
+    }
+    class ReservationFrame{
+    	- reservations: List<Reservation>
+	- hotels: List<Hotel> hotels
+	- rooms: List<Room>
+	- customers: List<Customer>
+	- reservation Reservation
+    }
+    class RoomActionsFrame{
+    	- room: Room = null
+	- createReservationFrame: CreateReservationFrame
+    }
+    class RoomFrame{
+    	- room: Room = null
+	- hotelId: int
+    }
+    class StartingFrame{
+    	- hotels: List<Hotel>  = null
+    }
+    class UserFrame{
+    	- hotelid: int
+    	- users: List<User>
+    	- selectedUser: int = -1
+    }
+}
+
+package db {
+    interface Dao {
+        + insert() : boolean
+        + update(values: Object...) : boolean
+        + delete() : boolean
+    }
+}
+
+package models {
+    class Hotel {
+        - name : String
+        - address : String
+        - phone : BigInteger
+        - id : int
+        - amenities : List<Amenity>
+    }
+    class Room {
+        - id : int
+        - floor : int
+        - number : int
+        - roomId : int
+        - number : int
+        - floor : int
+        - type : Type
+        - hotelId : int
+        - price : float
+        - occupied : boolean
+    }
+    class Reservation {
+        - id : int
+        - reservationRoomFk : int
+        - reservationCustomerFk : int
+        - checkIn : String
+        - checkOut : String
+        - cost : float
+        - status : Status
+    }
+    class User {
+        - id : int
+        - username : String
+        - password : String
+        - type : int
+        - accountHotelFk : int
+    }
+    class Customer {
+        - id : int
+        - fName : String
+        - lName : String
+        - phone : BigInteger
+        - email : String
+    }
+
+    enum Amenity {
+        POOL
+        GYM
+        BAR
+        SPA
+        SAUNA
+        WIFI
+        PARKING
+    }
+    enum Status {
+        PENDING
+        ACCEPTED
+    }
+    enum Type {
+        SINGLE
+        DOUBLE
+        TWIN
+        SUITE
+        DELUXE
+        FAMILY
+        STUDIO
+        KING
+        QUEEN
+    }
+    enum UserType {
+        ADMIN
+        GUEST
+        EMPLOYEE
+        MANAGER
+    }
+}
+
+Hotel o-- Amenity
+Reservation o-- Status
+Room o-- Type
+User o-- UserType
+
+Hotel ..|> Dao : implements
+Room ..|> Dao : implements
+Reservation ..|> Dao : implements
+User ..|> Dao : implements
+Customer ..|> Dao : implements
 
 StartingFrame --> LoginFrame : follows
 LoginFrame --> MainFrame : follows
 
-MainFrame o--> AboutFrame : contains
-MainFrame o--> CreateReservationFrame : contains
-MainFrame o--> CustomerFrame : contains
-MainFrame o--> deleteUser : contains
-MainFrame o--> HelpFrame : contains
-MainFrame o--> HotelFrame : contains
-MainFrame o--> ReservationFrame : contains
-MainFrame o--> RoomActionsFrame : contains
-MainFrame o--> RoomFrame : contains
-MainFrame o--> UserFrame : contains
-MainFrame o--> UserManagmentFrame : contains
+MainFrame o-- AboutFrame : contains
+MainFrame ..> State : use
+RoomActionsFrame ..> CreateReservationFrame: contains
+RoomActionsFrame o-- Room: use
+RoomFrame ..> Room: use
+UserFrame ..> User: use
+CreateReservationFrame ..> Room: use
+CreateReservationFrame ..> Reservation: use
+CustomerFrame ..> Customer: use
+HotelFrame ..> Hotel: use
+ReservationFrame ..> Reservation: use
+ReservationFrame ..> Hotel: use
+ReservationFrame ..> Room: use
+ReservationFrame ..> Room: Customer
+State ..> User: use
+Filters ..> State: use
+Filters ..> Room: use
+
+MainFrame o-- CreateReservationFrame : contains
+MainFrame o-- CustomerFrame : contains
+MainFrame o-- HelpFrame : contains
+MainFrame o-- HotelFrame : contains
+MainFrame o-- ReservationFrame : contains
+MainFrame o-- RoomActionsFrame : contains
+MainFrame o-- RoomFrame : contains
+MainFrame o-- UserFrame : contains
+MainFrame ..> State : use
+MainFrame ..> Filters : use
 
 @enduml
