@@ -14,6 +14,7 @@ include=(
     "assets"
     "docs/sequence-diagrams"
     "docs/uml"
+    "docs/code-metrics"
 )
 
 copy() {

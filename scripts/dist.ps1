@@ -16,7 +16,8 @@ $Include = @(
     "help",
     "assets",
     "docs/sequence-diagrams",
-    "docs/uml"
+    "docs/uml",
+    "docs/code-metrics"
 )
 
 # Function to copy items to the distribution directory
