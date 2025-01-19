@@ -262,10 +262,7 @@ public class Hotel implements Dao {
 		}
 
 		for (Amenity amenity : current) {
-			if (amenity == null) {
-				continue;
-			}
-			if (!newAmenities.contains(amenity)) {
+			if (amenity == null || !newAmenities.contains(amenity)) {
 				System.out.println("Deleting " + amenity);
 				if (!deleteAmenity(amenity)) {
 					System.err.println("Could not delete amenity: " + amenity);
@@ -274,9 +271,7 @@ public class Hotel implements Dao {
 		}
 
 		for (Amenity amenity : amenities) {
-			if (amenity == null) {
-				continue;
-			}
+			if(amenity == null) continue;
 			if (!currentAmenities.contains(amenity)) {
 				System.out.println("Adding " + amenity);
 				if (!insertAmenities(amenity)) {

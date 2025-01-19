@@ -87,6 +87,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 		public static void refreshHotels() {
 			frame.hotels = Hotel.selectAll();
+			frame.hotels.forEach(h -> h.selectAmenities());
 			frame.hotelList.setListData(Hotel.listToArray(frame.hotels.stream().map(hotel -> (Hotel) hotel).toList()));
 		}
 	}
