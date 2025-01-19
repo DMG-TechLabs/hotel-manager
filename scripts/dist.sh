@@ -3,7 +3,8 @@
 
 DIST_DIR="dist"
 
-mkdir -p $DIST_DIR
+rm -rf $DIST_DIR && echo "[INFO] Removed $DIST_DIR/ directory"
+mkdir -p $DIST_DIR && echo "[INFO] Created $DIST_DIR/"
 
 include=(
     "src"
@@ -14,6 +15,7 @@ include=(
     "assets"
     "docs/sequence-diagrams"
     "docs/uml"
+    "docs/code-metrics"
 )
 
 copy() {
@@ -24,6 +26,7 @@ copy() {
 
 for inc in "${include[@]}"; do
     copy "$inc"
+    echo "[INFO] Copied $inc"
 done
 
 
