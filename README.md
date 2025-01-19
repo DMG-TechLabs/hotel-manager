@@ -1,7 +1,7 @@
 # hotel-manager
 
 - [Repository](https://github.com/DMG-TechLabs/hotel-manager)
-- [Tutorial Video]()
+- [Tutorial Video](https://www.youtube.com/watch?v=WiVzPF23d2Y)
 
 ## References
 
